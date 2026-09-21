@@ -1,2 +1,86 @@
-# vector-ops
-Vector Operations System
+# VECTOR OPS
+
+**Vector Operations System**
+
+A modular operations coordination platform for distributed teams, autonomous assets and complex operational environments.
+
+> **Project status:** Discovery / concept validation  
+> **Version:** 0.1  
+> **Started:** 21 September 2026
+
+## What is VECTOR OPS?
+
+VECTOR OPS explores a simple but important problem: operational teams often use separate tools for situational awareness, mission planning, fleet status, logistics, communications and incident management.
+
+The challenge is not only seeing more data. It is understanding **what requires attention, why it matters, what will become a problem next, and what action should be taken**.
+
+VECTOR OPS is conceived as a modular system that combines a shared operational picture with tasking, assets, logistics, communications and decision support.
+
+Its core hypothesis is that the strongest value comes from **cross-domain operational consequences** rather than from another dashboard full of disconnected alerts.
+
+## Core idea
+
+Instead of showing four separate warnings:
+
+- UAV battery low
+- communication quality falling
+- charging point occupied
+- sector coverage at risk
+
+the system should express the operational consequence:
+
+> **Sector Bravo coverage will be lost in 11 minutes.**
+
+…and show the dependencies behind that conclusion together with operator-reviewable options.
+
+## Design principles
+
+- **Modular by design**
+- **Shared operational model**
+- **Decision-oriented**
+- **Cross-domain reasoning**
+- **Graceful degradation**
+- **Explainable state**
+- **Real demonstrator**
+
+## Initial capability areas
+
+- Common Operational Picture
+- Mission / Task Planning
+- Asset Management
+- Logistics
+- Communications
+- Incident / Tasking
+- Forecast / Decision Support
+
+## Public demo direction
+
+The first demonstrator is expected to use a **non-weaponized operational scenario**, most likely search-and-rescue or distributed emergency response.
+
+## Documentation
+
+- [Discovery Brief](docs/discovery/discovery-brief.md)
+- [Information Architecture](docs/architecture/information-architecture.md)
+- [Decision Log](docs/decisions/decision-log.md)
+
+## Current discovery questions
+
+- Which exact operational scenario should define MVP success?
+- Who is the primary operator persona?
+- Which existing products solve adjacent parts of the workflow?
+- Where does cross-domain decision friction still remain?
+- Which 3–4 modules are necessary to demonstrate the concept credibly?
+- What is the minimum viable consequence / forecast engine?
+- What should be simulated in-browser and what, if anything, needs a backend?
+
+## Non-goals
+
+The public demonstrator is **not** intended to include weapon control, target engagement, autonomous lethal decision-making, sensitive real-world operational data or production-grade military security infrastructure.
+
+## Next step
+
+Map the adjacent product landscape and use that research to select one precise operational scenario for the MVP.
+
+---
+
+**VECTOR OPS** is currently an independent exploratory product and portfolio project.
