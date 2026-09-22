@@ -2,6 +2,7 @@
 
 **Version:** 0.1  
 **Date:** 21 September 2026  
+**Last updated:** 22 September 2026  
 **Status:** Discovery
 
 ## 1. Problem
@@ -141,6 +142,13 @@ Discovery can be considered complete enough to begin interaction design when:
 
 ## 13. Next discovery pass
 
-The next iteration should not begin with screen design. It should map the adjacent product landscape, identify cross-domain decision friction, select one primary scenario and operator, reduce the MVP to the minimum module set, and only then proceed to flows, wireframes and prototyping.
+With the adjacent product landscape reviewed, the next iteration should:
+
+- complete the cross-domain decision-friction research in issue #2,
+- select one primary operator and define their decision responsibilities,
+- select one primary operational scenario,
+- reduce the MVP to the minimum credible module set.
+
+Only after these decisions should the project proceed to flows, wireframes and prototyping.
 
 **Working principle:** show the reasoning trail, not only the final interface.
