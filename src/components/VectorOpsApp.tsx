@@ -1,19 +1,24 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import type {
   EntityId,
   Observation,
   ObservationSource,
 } from '../core/contracts';
 import {
-  scenario01Entities,
-  scenario01EntityIds,
-} from '../scenarios/scenario-01/baseline';
-import {
-  SCENARIO_01_START_TIME,
-  scenario01BaselineObservations,
-} from '../scenarios/scenario-01/baseline-observations';
+  getEntities,
+  getEntity,
+  getEntityObservations,
+} from '../core/runtime-state';
+import { scenario01InitialState } from '../scenarios/scenario-01/scenario';
 
 const MAX_SELECTED_OBSERVATIONS = 3;
+const runtimeState = scenario01InitialState;
+const entities = getEntities(runtimeState);
+const initialEntityId = runtimeState.entityOrder[0];
+
+if (!initialEntityId) {
+  throw new Error('Scenario 01 runtime state contains no entities.');
+}
 
 const metricLabels: Record<string, string> = {
   'power.supplyState': 'Supply',
@@ -59,29 +64,14 @@ function formatSource(source: ObservationSource) {
 }
 
 export default function VectorOpsApp() {
-  const [selectedEntityId, setSelectedEntityId] = useState<EntityId>(
-    scenario01EntityIds.gridSubstation,
+  const [selectedEntityId, setSelectedEntityId] =
+    useState<EntityId>(initialEntityId);
+
+  const selectedEntity = getEntity(runtimeState, selectedEntityId);
+  const selectedObservations = getEntityObservations(
+    runtimeState,
+    selectedEntityId,
   );
-
-  const observationsByEntity = useMemo(() => {
-    const grouped = new Map<EntityId, Observation[]>();
-
-    for (const entity of scenario01Entities) {
-      grouped.set(entity.id, []);
-    }
-
-    for (const observation of scenario01BaselineObservations) {
-      grouped.get(observation.entityId)?.push(observation);
-    }
-
-    return grouped;
-  }, []);
-
-  const selectedEntity = scenario01Entities.find(
-    (entity) => entity.id === selectedEntityId,
-  );
-  const selectedObservations =
-    observationsByEntity.get(selectedEntityId) ?? [];
   const visibleSelectedObservations = selectedObservations.slice(
     0,
     MAX_SELECTED_OBSERVATIONS,
@@ -94,20 +84,25 @@ export default function VectorOpsApp() {
           <p className="eyebrow">VECTOR OPS</p>
           <h1>Operational workspace</h1>
           <p className="scenario-name">
-            Scenario 01 — Infrastructure disruption, Mazowieckie Voivodeship
+            {runtimeState.scenario.title}
           </p>
         </div>
 
         <div className="scenario-clock" aria-label="Scenario time">
           <span>Scenario time</span>
-          <strong>{formatScenarioTime(SCENARIO_01_START_TIME)}</strong>
+          <strong>{formatScenarioTime(runtimeState.now)}</strong>
         </div>
       </header>
 
       <section className="system-bar" aria-label="System and data status">
         <span><strong>Modules:</strong> 4 active</span>
-        <span><strong>Data:</strong> 14 baseline observations</span>
-        <span><strong>Entities:</strong> 6 monitored</span>
+        <span>
+          <strong>Data:</strong> {runtimeState.observations.length} baseline
+          observations
+        </span>
+        <span>
+          <strong>Entities:</strong> {runtimeState.entityOrder.length} monitored
+        </span>
       </section>
 
       <div className="workspace">
@@ -117,12 +112,15 @@ export default function VectorOpsApp() {
               <p className="eyebrow">Current operational picture</p>
               <h2 id="entities-title">Monitored entities</h2>
             </div>
-            <span>6 entities currently monitored</span>
+            <span>{runtimeState.entityOrder.length} entities currently monitored</span>
           </div>
 
           <div className="entity-grid">
-            {scenario01Entities.map((entity) => {
-              const observations = observationsByEntity.get(entity.id) ?? [];
+            {entities.map((entity) => {
+              const observations = getEntityObservations(
+                runtimeState,
+                entity.id,
+              );
               const selected = entity.id === selectedEntityId;
 
               return (
@@ -222,7 +220,7 @@ export default function VectorOpsApp() {
             </p>
             <p className="panel-meta">
               Confidence: high · Recalculated at{' '}
-              {formatScenarioTime(SCENARIO_01_START_TIME)}
+              {formatScenarioTime(runtimeState.now)}
             </p>
           </section>
 
