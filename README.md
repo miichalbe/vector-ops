@@ -4,7 +4,7 @@
 
 A modular operations coordination platform for distributed teams, autonomous assets and complex operational environments.
 
-> **Project status:** Discovery / concept validation  
+> **Project status:** M2 System Definition / M3 Interaction Design  
 > **Version:** 0.1  
 > **Started:** 21 September 2026  
 > **Last updated:** 22 September 2026
@@ -73,15 +73,17 @@ The public alpha is intentionally narrow: one operator, one operational area and
 - [Cross-Domain Decision Friction](docs/research/cross-domain-decision-friction.md)
 - [Primary Operator — Polish Context](docs/research/primary-operator-polish-context.md)
 - [Scenario Experience Contract](docs/scenario/scenario-experience-contract.md)
+- [Primary Scenario Package](docs/scenario/primary-scenario-package.md)
+- [Primary Operational View](docs/design/primary-operational-view.md)
 - [Evidence Library](docs/research/evidence-library.md)
 
-## Current discovery questions
+## Current definition questions
 
-- Which exact synthetic disruption should define MVP success?
-- Which decisions may the WCZK duty officer initiate, recommend or escalate?
-- Which 3–4 modules are necessary to demonstrate the concept credibly?
-- What is the minimum viable consequence / forecast engine?
-- What should be simulated in-browser and what, if anything, needs a backend?
+- What is the final typed domain and dependency schema?
+- What event taxonomy and module contract should drive implementation?
+- How should the reusable Action Review work?
+- What exact second-by-second flow produces the strongest credible first run?
+- Which onboarding elements remain necessary after the base interface exists?
 
 ## Non-goals
 
@@ -89,8 +91,8 @@ The public demonstrator is **not** intended to include weapon control, target en
 
 ## Next step
 
-Select the exact synthetic scenario, define the WCZK duty officer's decision boundaries and reduce the public-alpha scope to the minimum credible module set.
+Finalize the shared domain, event and module contracts, then map the accepted scenario into the primary operator flow and working vertical slice.
 
 ---
 
-**VECTOR OPS** is currently an independent exploratory product and portfolio project.
+**VECTOR OPS** is an independent Polish project exploring how contemporary design, software development and AI-assisted tools can support operational resilience and safety.
