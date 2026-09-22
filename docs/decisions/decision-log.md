@@ -73,3 +73,12 @@ This document records product decisions made during discovery so that future cha
 
 **Consequence:** Breadth, full responsiveness, broad usability validation, live integrations and the final portfolio case study may follow after the alpha. The time box must not justify disposable architecture or hard-coded UI-specific scenario logic.
 
+### D11 — Primary operator
+**Decision:** Use the **Dyżurny operacyjny Wojewódzkiego Centrum Zarządzania Kryzysowego (WCZK)** as the primary operator for the public alpha. Use **Duty Operations Officer — Voivodeship Crisis Management Centre** as the English portfolio label.
+
+**Reasoning:** Polish law and current civil-service recruitment establish a real 24-hour role responsible for threat monitoring, analysis and forecasting, report evaluation, rapid information flow, procedure activation, cooperation with multiple public bodies and documentation. This provides credible cross-domain grounding without inventing a new occupation.
+
+**Authority boundary:** The duty officer is not the independent commander of electricity, telecommunications, water or transport operators. Regional crisis-management authority belongs to the voivode, supported by the WZZK, while infrastructure operators retain operational control of their systems.
+
+**Consequence:** VECTOR OPS should support assessment, information verification, procedure activation, recommendation, escalation and audit. Actions outside the user's mandate must be represented as requests, recommendations or approvals by the responsible authority—not as direct execution by the duty officer.
+
