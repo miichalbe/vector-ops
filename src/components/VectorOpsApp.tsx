@@ -384,11 +384,24 @@ export default function VectorOpsApp() {
         }
 
         .entity-card {
+          position: relative;
           display: flex;
           height: 100%;
           flex-direction: column;
           padding: 17px;
           border-left: 4px solid #4f657d;
+          transition:
+            border-color 140ms ease,
+            background-color 140ms ease,
+            box-shadow 140ms ease,
+            transform 140ms ease;
+        }
+
+        .entity-card:hover {
+          border-color: #47729e;
+          border-left-color: #62a9f2;
+          background: rgba(21, 34, 48, 0.98);
+          transform: translateY(-1px);
         }
 
         .entity-card--selected {
@@ -465,10 +478,22 @@ export default function VectorOpsApp() {
           cursor: pointer;
         }
 
+        .details-button::after {
+          position: absolute;
+          inset: 0;
+          border-radius: 10px;
+          content: '';
+        }
+
         .details-button:hover,
         .details-button:focus-visible {
           border-color: #62a9f2;
           outline: none;
+        }
+
+        .details-button:focus-visible::after {
+          outline: 2px solid #8bc4ff;
+          outline-offset: 3px;
         }
 
         .intelligence-column {
