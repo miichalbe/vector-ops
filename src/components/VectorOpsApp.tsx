@@ -215,11 +215,11 @@ export default function VectorOpsApp() {
       </div>
 
       <style>{`
-        :global(*) {
+        * {
           box-sizing: border-box;
         }
 
-        :global(body) {
+        body {
           margin: 0;
           background: #0b0f14;
           color: #e7edf5;
