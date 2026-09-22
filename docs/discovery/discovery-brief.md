@@ -48,7 +48,7 @@ and:
 ## 5. Product principles
 
 ### Modular by design
-Capabilities are added as modules/plugins rather than by rewriting the core.
+Capabilities are added as modules/plugins rather than by rewriting the core. The first release may use a modular frontend monolith, but shared entities, event contracts, scenario data and consequence rules must remain separate from presentation components so additional modules can be added without replacing the application shell.
 
 ### Shared operational model
 All modules operate on common entities, events, tasks, locations, time and permissions.
@@ -67,6 +67,12 @@ Every alert, consequence or recommendation should expose the dependencies that p
 
 ### Demo as real software
 The demonstrator should contain real state, events, interactions and causality — not only static prototype screens.
+
+### Feasible by default
+The public demonstrator should be deployable as a browser-based static application using the existing GitHub and OVH resources. Paid services, live operational integrations, an always-on local server, runtime AI and a custom backend must not be required for the core experience.
+
+### Narrow first release, durable foundation
+The first public alpha should be a deliberately narrow vertical slice. Its scope may be limited to one operator, one scenario and a small number of decisions, but its architecture must support additional modules, scenarios and interactions in later iterations.
 
 ## 6. Initial capability areas
 
@@ -113,6 +119,7 @@ Important constraint: do not present this as a reconstruction of the real respon
 - Excessive breadth unless one narrow operational scenario drives the MVP.
 - Opaque or gimmicky predictive decision support.
 - Over-engineered plugin architecture for a portfolio demonstrator.
+- A rushed public alpha that hard-codes scenario logic into UI components and prevents later extension.
 - Unsafe or sensitive implications in public presentation.
 
 ## 11. Open discovery questions
