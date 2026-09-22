@@ -83,15 +83,21 @@ The demonstrator will not attempt to provide weapon control, target engagement, 
 
 ## 8. Initial demonstration hypothesis
 
-The first scenario may use a **search-and-rescue / distributed-response mission**.
+The first scenario may use a **critical infrastructure cascading-disruption scenario**.
 
-Example: multiple teams and UAVs cover an area while battery levels change, communications quality deteriorates, task priorities evolve and assets become unavailable.
+Example: 
 
-Instead of presenting four independent warnings, VECTOR OPS should create one operational consequence:
+- fictional / synthetic operational scenario grounded in real infrastructure dependencies,
+- operator coordinates a developing situation across power, telecoms, water, transport/access, field teams and constrained resources,
+- the experience behaves like an interactive operational scenario rather than a static dashboard,
+- the user reviews projected consequences, inspects dependencies and assumptions, compares interventions and sees downstream effects,
+- public demo remains non-weaponized.
 
-> **Sector Bravo coverage will be lost in 11 minutes.**
+Potential portfolio framing:
 
-It can then present an explainable operator-reviewable option, such as reallocating UAV-12, together with expected delay and remaining reserve.
+*Scenario inspired by documented cross-sector infrastructure impacts observed during Storm Éowyn in Scotland, January 2025.*
+
+Important constraint: do not present this as a reconstruction of the real response unless evidence later supports that. Use the real incident as an evidence-backed reference case for the structure of cascading dependencies, then build a synthetic scenario around it.
 
 ## 9. Discovery assumptions
 
