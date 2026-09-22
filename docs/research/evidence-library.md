@@ -1,10 +1,10 @@
 # VECTOR OPS — Evidence Library
 
-**Version:** 0.2  
+**Version:** 0.3  
 **Date:** 21 September 2026  
 **Last updated:** 22 September 2026  
 **Milestone:** Discovery  
-**Primary issue:** #2 — Identify cross-domain decision friction  
+**Primary issues:** #2 — Cross-domain decision friction; #3 — Primary operator persona  
 **Status:** Living research document
 
 ---
@@ -70,6 +70,7 @@ Before a public case study, portfolio article or promotional post is published, 
 | **RC** | Reference case | Provides a real incident or programme from which scenario structure may be derived |
 | **AP** | Adjacent product / project | Shows that relevant capabilities or approaches already exist |
 | **IM** | Interaction-model evidence | Supports a specific operator interaction or explanation need |
+| **UR** | User-role evidence | Establishes a real role, responsibility, environment or authority boundary |
 
 **Relevance:**
 
@@ -93,6 +94,11 @@ Before a public case study, portfolio article or promotional post is published, 
 | E-008 | FERC, NERC and Regional Entity Staff, *February 2021 Cold Weather Outages* | Official joint inquiry | OF, RC | **Core** | Gas–electric dependency, critical-load identification and systemic feedback |
 | E-009 | GAO-21-297, Hurricane Maria communications restoration | Government audit | OF, RC | **Core** | Communications damage, role clarity and coordination friction |
 | E-010 | GAO-19-296, Puerto Rico and USVI grid restoration | Government audit | OF, RC | Supporting | Restoration capacity, logistics and external-resource constraints |
+| E-011 | Act of 26 April 2007 on Crisis Management, current consolidated text | Polish legislation | PF, UR | **Core** | Legal position, duties and authority boundaries of voivode, WZZK and WCZK |
+| E-012 | Podlaskie Voivodeship Office, 2026 Duty Operations Officer recruitment | Official role description | UR, IM | **Core** | Current title, tasks, skills, 12-hour work pattern and procedure role |
+| E-013 | Dolnośląskie Voivodeship Office, 2023 WCZK duty recruitment | Official role description | UR, IM | **Core** | Cooperation network, systems, communications and procedural work |
+| E-014 | RCB, information flow and the role of RCB | Official guidance | PF, UR | Supporting | National–regional–local information flow and permanent duty contacts |
+| E-015 | Voivodeship-office crisis-management branch descriptions | Official organisational descriptions | UR | Supporting | Reporting, monitoring, warning and inter-centre cooperation tasks |
 
 ---
 
@@ -438,6 +444,154 @@ It must not be presented as a reconstruction or simulation of the actual respons
 
 ---
 
+
+### E-011 — Act of 26 April 2007 on Crisis Management
+
+**Publisher:** Chancellery of the Sejm / ISAP  
+**Type:** Polish legislation; current consolidated text reviewed 22 September 2026  
+**URL:** https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU20070890590  
+**Role:** Problem framing; user-role evidence  
+**Relevance:** **Core**  
+**Review status:** Articles 14 and 16 and related provisions reviewed for Issue #3
+
+#### Supports
+
+- The voivode is the competent crisis-management authority in the voivodeship and directs monitoring, planning, response and recovery.
+- The voivodeship-office crisis-management unit gathers and processes data, assesses, monitors and forecasts threats, supports the WZZK, processes critical-infrastructure information and plans support.
+- The WZZK evaluates threats and prepares action proposals for the voivode.
+- WCZK maintains a 24-hour information-flow duty, cooperates with other centres and response organisations, supports warning systems and documents its actions.
+
+#### VECTOR OPS use
+
+- Establishes the institutional home of the primary user.
+- Defines a crucial separation between the duty officer's continuous operational work, the WZZK's advisory role and the voivode's authority.
+- Supports information flow, forecasting, documentation, warning and escalation capabilities.
+
+#### Do not overclaim
+
+- The Act defines institutions and tasks, not the detailed actions of every individual duty officer.
+- It does not authorise the WCZK duty officer to directly command independent infrastructure operators.
+- It does not validate a particular software interface.
+
+---
+
+### E-012 — Podlaskie Voivodeship Office: Duty Operations Officer recruitment, 2026
+
+**Publisher:** Chancellery of the Prime Minister civil-service recruitment service / Podlaskie Voivodeship Office  
+**Type:** Official role description  
+**Published:** 27 February 2026  
+**URL:** https://nabory.kprm.gov.pl/podlaskie/bialystok/inspektor-wojewodzkiinspektorka-wojewodzka,161226,v7  
+**Role:** User-role and interaction-model evidence  
+**Relevance:** **Core**  
+**Review status:** Detailed extraction completed for Issue #3
+
+#### Supports
+
+- The official title *dyżurny operacyjny / dyżurna operacyjna* is used in a current voivodeship-office recruitment.
+- Duties include 24-hour threat monitoring, analysis and forecasting, report and message evaluation, preparation of threat information and launching procedures from crisis-management plans.
+- The post requires communication, argumentation and stress resistance.
+- The working environment includes substantial screen, document and telephone work and generally 12-hour working periods.
+- The post may require high-level security clearance.
+
+#### VECTOR OPS use
+
+- Primary evidence for persona name, tasks, environment, time pressure and competence.
+- Supports a desktop-first operational interface.
+- Supports report evaluation, forecasting, procedure activation and handover/audit features.
+
+#### Do not overclaim
+
+- One recruitment notice does not prove identical practice in all voivodeships.
+- The posting does not describe detailed software pain points or procurement demand.
+
+---
+
+### E-013 — Dolnośląskie Voivodeship Office: Senior Specialist performing WCZK duty
+
+**Publisher:** Chancellery of the Prime Minister civil-service recruitment service / Dolnośląskie Voivodeship Office  
+**Type:** Official role description  
+**Published:** 4 December 2023; corroborated by similar 2024 recruitment  
+**URL:** https://nabory.kprm.gov.pl/dolnoslaskie/wroclaw/starszy-specjalista,131073,v7  
+**Role:** User-role and interaction-model evidence  
+**Relevance:** **Core**  
+**Review status:** Detailed extraction completed for Issue #3
+
+#### Supports
+
+- WCZK duty is performed in a shift-based continuous operation.
+- The role exchanges reports with RCB, ministries, neighbouring voivodeships, powiat and municipal centres, public services, inspections, guards and response organisations.
+- It initiates and carries out crisis-response procedures and monitors environmental, meteorological and other threats.
+- It uses several ICT and communications systems, including warning, videoconference and digital-radio tools, and handles classified and unclassified communication.
+- It receives and routes messages and instructions outside normal office hours.
+
+#### VECTOR OPS use
+
+- Grounds the multi-source operational picture and communication-network model.
+- Supports explicit source, recipient, procedure and message status.
+- Supports a unified audit trail across multiple channels without claiming current system replacement.
+
+#### Do not overclaim
+
+- Named systems and cross-border duties are specific to the Dolnośląskie context.
+- The posting does not show whether information fragmentation is a primary operator pain point.
+
+---
+
+### E-014 — Information flow and the role of RCB in the crisis-management system
+
+**Publisher:** Rządowe Centrum Bezpieczeństwa  
+**Type:** Official guidance  
+**URL:** https://www.gov.pl/web/rcb/obieg-informacji-i-rola-rcb-w-systemie-zarzadzania-kryzysowego  
+**Role:** Problem framing; user-role evidence  
+**Relevance:** Supporting  
+**Review status:** Initial review completed for Issue #3
+
+#### Supports
+
+- During national-level crisis events, RCB supports information flow between national government, ministers, voivodes, starosts and mayors.
+- Cooperating institutions maintain continuously available duty-service telephone numbers and email addresses.
+
+#### VECTOR OPS use
+
+- Grounds the vertical information-flow model connecting regional and national levels.
+- Supports persistent contact and recipient state in the scenario.
+
+#### Do not overclaim
+
+- The source does not describe a complete data architecture or specific WCZK user interface.
+- Telephone and email availability alone does not establish inadequate tooling.
+
+---
+
+### E-015 — Official voivodeship crisis-management branch descriptions
+
+**Publishers:** Zachodniopomorskie and Łódzkie Voivodeship Offices  
+**Type:** Official organisational descriptions  
+**URLs:**  
+- https://www.gov.pl/web/uw-zachodniopomorski/oddzial-bezpieczenstwa-publicznego-i-zarzadzania-kryzysowego  
+- https://www.gov.pl/web/uw-lodzki/oddzial-zarzadzania-kryzysowego  
+**Role:** User-role evidence  
+**Relevance:** Supporting  
+**Review status:** Initial review completed for Issue #3
+
+#### Supports
+
+- Voivodeship crisis-management units maintain continuous duty and cooperate with other centres, response actors and environmental monitoring.
+- Documented activities include gathering and forwarding current security data and preparing situation and daily reports for RCB.
+- Duties include warning, alerting and maintaining information flow.
+
+#### VECTOR OPS use
+
+- Corroborates the statutory and recruitment-based role model across more than one office.
+- Supports reporting, warning and inter-centre cooperation as core persona activities.
+
+#### Do not overclaim
+
+- Organisational webpages describe unit-level tasks and should not all be assigned to one person.
+- They do not validate the detailed workflow proposed for the demonstrator.
+
+---
+
 ## 6. Updated claim register
 
 This register maps likely project claims to their present evidence strength.
@@ -455,6 +609,9 @@ This register maps likely project claims to their present evidence strength.
 | Existing tools do not adequately expose causal chains, assumptions and counterfactual trade-offs. | **Unproven** | Adjacent-product research only | Do not state as fact; continue product and user research. |
 | Progressive transparency will improve operational decisions. | **Unproven** | No direct source yet | Treat as an interaction hypothesis requiring evaluation. |
 | VECTOR OPS addresses a unique market gap. | **Unproven and currently discouraged** | Existing adjacent products challenge the claim | Do not claim uniqueness. |
+| A real Polish WCZK duty role performs continuous monitoring, analysis, forecasting, information routing, procedure activation and documentation. | **Strong** | E-011–E-015 | May be stated as evidence-backed, noting regional variation in job titles and practice. |
+| The WCZK duty officer independently commands infrastructure operators or their resources. | **Contradicted by the authority model** | E-011–E-013 | Do not represent this in the scenario; use recommendation, escalation, request and approval. |
+| A WCZK duty officer is a plausible primary user for the demonstrator. | **Strong role fit; product need unvalidated** | E-011–E-015 plus Issue #2 findings | Present as a design decision grounded in a real role, not as validated adoption demand. |
 
 ---
 
@@ -464,7 +621,7 @@ The cross-case incident pass for Issue #2 is complete. It establishes recurring 
 
 Next research should focus on:
 
-- interviews or reviews with infrastructure and emergency-response operators,
+- interviews with current or former WCZK/PCZK duty staff and infrastructure operators,
 - how dependency and criticality information is currently assembled during live incidents,
 - which decisions belong to one coordinating role and which remain distributed across organisations,
 - how uncertainty, data age and restoration estimates are communicated,
@@ -500,4 +657,6 @@ The evidence strongly supports the existence of cross-sector infrastructure depe
 Issue #2 has identified five recurring friction patterns and documents them in `cross-domain-decision-friction.md`. The strongest defensible opportunity is an inspectable decision layer connecting state, dependencies, time, uncertainty, interventions and downstream consequences.
 
 The evidence still does **not** validate VECTOR OPS as the correct solution, prove that current tools are universally inadequate or establish product uniqueness. Those remain product and interaction hypotheses requiring operator validation.
+
+Issue #3 establishes the **Dyżurny operacyjny Wojewódzkiego Centrum Zarządzania Kryzysowego** as a credible real Polish primary operator. The evidence also constrains the interaction model: the user may assess, initiate authorised procedures, recommend, escalate and document, but should not be portrayed as directly commanding independent infrastructure operators.
 
