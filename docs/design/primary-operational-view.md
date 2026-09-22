@@ -1,9 +1,9 @@
 # VECTOR OPS — Primary Operational View
 
-**Version:** 0.1  
+**Version:** 0.2  
 **Date:** 22 September 2026  
 **Related issue:** #13  
-**Status:** Information hierarchy and structural direction accepted
+**Status:** Information hierarchy and structural direction accepted for implementation
 
 ---
 
@@ -21,6 +21,8 @@ The view must communicate:
 - active modules and data health.
 
 All application UI copy is English.
+
+The end-to-end run behaviour, opening variation, decision timing and scenario runtime are defined in [Primary Operator Flow & Scenario Runtime Contract](primary-operator-flow.md).
 
 ---
 
@@ -226,6 +228,8 @@ Preventive examples:
 Avoid several exposed buttons on every tile. Show one primary contextual action when necessary plus an Actions menu and View details.
 
 Every entry point opens the same reusable Action Review and records the same action lifecycle and audit data.
+
+The vertical slice may begin with the mandatory decision gates defined in the Primary Operator Flow. The exact reusable Action Review visual treatment remains an implementation-time refinement under issue #14.
 
 ---
 
