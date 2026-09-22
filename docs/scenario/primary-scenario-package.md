@@ -1,9 +1,9 @@
 # VECTOR OPS — Primary Scenario Package
 
-**Version:** 0.1  
+**Version:** 0.2  
 **Date:** 22 September 2026  
 **Related issues:** #4, #5, #12  
-**Status:** Accepted for system definition and implementation planning
+**Status:** Accepted for implementation
 
 ---
 
@@ -16,6 +16,8 @@ The scenario has no narrative or marketing title. In the product it is identifie
 > **Scenario 01 — Infrastructure disruption, Mazowieckie Voivodeship**
 
 All user-facing application copy is English.
+
+The detailed second-by-second flow and runtime/data contract are maintained in [Primary Operator Flow & Scenario Runtime Contract](../design/primary-operator-flow.md).
 
 ---
 
@@ -282,15 +284,15 @@ Modules register definitions, units, formatting and scenario thresholds. The cor
 
 ### Act 1 — Detection and correlation
 
-Within the first 10–20 seconds, GPZ Brzeziny reports short power-quality disturbances that appear to clear automatically.
+Within the first 10–20 seconds, one of three opening variants introduces the first apparently local anomaly:
 
-Within the next 10–20 seconds:
+- **power-first** — GPZ Brzeziny reports a short power-quality disturbance,
+- **communications-first** — R-4 reports rising packet loss or latency,
+- **water-first** — SUW Kępa reports a controller restart / falling pressure trend.
 
-- a SUW pump controller restarts and output pressure begins to fall,
-- R-4 reports rising packet loss or latency,
-- the observations initially remain individually plausible.
+Within the next 10–20 seconds, the other two opening observations arrive in a bounded profile/seed-dependent order. Individually they remain plausible local issues.
 
-VECTOR OPS detects temporal, geographic and dependency correlation and creates an assessment with inspectable evidence.
+VECTOR OPS detects temporal and dependency correlation and creates an Assessment with inspectable evidence. The opening variant may change the initial Assessment emphasis without changing the underlying fixed three-act spine.
 
 **Decision 1: information posture**
 
@@ -300,7 +302,7 @@ VECTOR OPS detects temporal, geographic and dependency correlation and creates a
 
 ### Act 2 — Dependency and constrained resource
 
-Feeder F-12 trips and remains isolated. SUW operates with reduced pumping capacity. R-4 moves to backup power. Route Z-17 becomes restricted and delays field access.
+Feeder F-12 later trips and remains isolated. SUW operates with reduced pumping capacity. R-4 moves to backup power. Route Z-17 becomes restricted and delays field access.
 
 One AG-400 generator is available.
 
@@ -335,20 +337,31 @@ Actions outside the duty officer's authority remain requests, recommendations or
 
 ## 10. Randomisation
 
-Every run has a deterministic seed and selects:
+Every run has a deterministic seed and selects two independent variation axes:
 
-- one dominant profile,
-- one weaker modifier,
-- bounded values for timing, endurance, data delay and external response.
+1. one **opening variant** controlling how the operator first discovers the situation;
+2. one **dominant condition profile** plus one weaker, different **secondary modifier** controlling which operational constraint is strongest across the run.
 
-Profiles:
+Opening variants:
 
-- **communications-fragile**,
-- **access-constrained**,
-- **resource-constrained**,
-- **low-confidence-data**.
+- **power-first**,
+- **communications-first**,
+- **water-first**.
+
+Condition profiles:
+
+- **communications-fragile** — lower communications margin, faster degradation and earlier visibility loss;
+- **access-constrained** — stronger Z-17 restrictions and longer inspection/deployment travel times;
+- **resource-constrained** — tighter SUW/resource margins and sharper displaced-risk trade-offs;
+- **low-confidence-data** — slower confirmation, lower-confidence reports and earlier stale/manual data conditions.
+
+The seed also resolves bounded values for timing, endurance, data delay, route delay, external response and other explicitly modelled ranges.
+
+Opening variant and condition profiles are configuration inputs to one scenario definition. They must not be implemented as duplicated hand-authored scenario branches.
 
 Randomisation may change relative decision value but may not remove required decisions, conceal decisive information, break causality or change legal authority.
+
+The public live UI may show the run seed but does not reveal the selected opening/profile configuration before or during the run. The After-Action Report may expose it.
 
 ---
 
@@ -409,7 +422,7 @@ Do not show:
 
 Required content:
 
-- session version, profile and seed,
+- session version, opening variant, dominant profile, secondary modifier and seed,
 - initial state,
 - complete event and decision timeline,
 - evidence available at each decision,
@@ -439,7 +452,10 @@ Implement:
 - typed semantic dependencies,
 - six to eight consequence rules,
 - three primary decisions,
-- four tested randomisation profiles,
+- three opening variants,
+- four tested condition profiles,
+- one weaker secondary modifier per run,
+- deterministic seeded parameter ranges,
 - generic measurement rendering,
 - dependency/evidence inspection,
 - append-only audit trail,
@@ -460,13 +476,12 @@ Do not require:
 
 ## 15. Handoff
 
-This package completes scenario selection and MVP module selection.
+Scenario selection, MVP module selection, opening variation and randomisation model are now accepted for implementation.
 
-The next work is intentionally separate:
+Detailed implementation behaviour is defined in:
 
-- #8 — finalise the shared domain model,
-- #9 — define the technical module contract,
-- #10 — define event taxonomy,
-- #11 — formalise consequence schema and rules,
-- #12 — map the second-by-second operator flow,
-- #14 — design the reusable decision-review interaction.
+- [System Contract](../architecture/system-contract.md),
+- [Primary Operator Flow & Scenario Runtime Contract](../design/primary-operator-flow.md),
+- [Primary Operational View](../design/primary-operational-view.md).
+
+Further scenario-model changes should be driven by concrete implementation findings rather than speculative completeness.
