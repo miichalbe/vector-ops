@@ -93,3 +93,32 @@ This document records product decisions made during discovery so that future cha
 
 **Consequence:** The scenario must be data-driven and reconstructable from its definition, run configuration and append-only event log. The same scenario version, seed and decisions must reproduce the same outcome.
 
+
+### D13 — Primary scenario package
+**Decision:** Use a synthetic cascading-infrastructure disruption in fictional Nowy Brzeg County, Mazowieckie Voivodeship. The scenario has no narrative title and the application UI is English.
+
+**Operational spine:** Power-quality disturbances progress into a feeder interruption affecting a water station and regional communications gateway. Deteriorating communications reduce both coordination and visibility. One compatible mobile generator creates a cross-domain trade-off, followed by a bounded coordination/escalation decision.
+
+**Reasoning:** The scenario grounds VECTOR OPS in a real Polish administrative context while keeping all infrastructure, values and topology fictional. It demonstrates cross-domain consequences without requiring cause attribution, sensitive data or unrealistic WCZK command authority.
+
+**Consequence:** The accepted definition is maintained in [Primary Scenario Package](../scenario/primary-scenario-package.md). Issue #4 may close; the detailed second-by-second operator flow remains separate work under issue #12.
+
+### D14 — MVP modules and shared information model
+**Decision:** Use four operational modules for the public alpha: Power, Water, Communications, and Critical Services & Response, supported by the shared core.
+
+**Model:** Separate physical, observed, assessed, projected and data states. Modules publish sourced observations through a common envelope and use typed semantic dependencies rather than adding scenario-specific fields to a universal asset.
+
+**Reasoning:** This is the minimum set that demonstrates a power–communications–water–critical-service cascade while preserving a path to later UAV, vehicle, weather, field-team and logistics modules.
+
+**Consequence:** Alpha uses a compile-time module registry inside a modular frontend monolith. Dynamic plugin loading is not required.
+
+### D15 — Primary operational view and trust pattern
+**Decision:** Use a desktop-first tile dashboard occupying approximately 70% of the workspace and a 30% intelligence column with Assessment above Projection.
+
+**Details:** One tile represents one entity and may receive content from several modules. Both Assessment and Projection support multiple prioritised items. Operational severity is distinct from data freshness. Actions may be entered from an entity, Assessment or Projection but share one domain and audit record.
+
+**Trust requirement:** Every verbal or derived claim must expose source observations or reports, timestamps, rules, dependencies, assumptions and uncertainty through a consistent evidence path.
+
+**Outcome presentation:** End the session with factual state comparison and timeline rather than a user score, success/failure verdict or named outcome class.
+
+**Consequence:** The accepted structure is maintained in [Primary Operational View](../design/primary-operational-view.md).
