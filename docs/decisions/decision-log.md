@@ -38,3 +38,38 @@ This document records product decisions made during discovery so that future cha
 **Decision:** Keep documentation in version-controlled Markdown and derive public-facing artifacts from it.
 
 **Reasoning:** Git history should preserve the reasoning trail, while the same source material can later support the project website and downloadable PDF.
+
+## 22 September 2026 — v0.2
+
+### D8 — Feasibility boundary
+**Decision:** The public demonstrator must be buildable and operable with the project's available resources: a free GitHub account, the existing OVH-hosted `michalbiernacki.com` site and, where useful, a local Ubuntu environment on the Huidun H20.
+
+**Reasoning:** The project is primarily a portfolio case study. Its credibility depends on reaching a working public result without requiring paid cloud services, proprietary operational data or infrastructure that cannot be maintained independently.
+
+**Consequence:** The initial demonstrator should be a browser-based static application with deterministic local state and scenario data. No paid API, live external integration, always-on local server, runtime LLM, authentication system or database may be mandatory for the public experience.
+
+### D9 — Extensible implementation architecture
+**Decision:** Implement the first release as a modular frontend monolith with a shared typed domain model, central state, event contracts, module registry, data-driven scenarios and consequence rules separated from presentation components.
+
+**Reasoning:** The first public slice will be deliberately narrow, but it must accept additional operational modules, scenarios and interactions in subsequent days and weeks without rewriting the application core.
+
+**Consequence:** New modules should be addable through an explicit module contract and registration step. Full third-party plugin installation, dynamic loading, a plugin marketplace, microservices and separate repositories per module are outside the initial scope.
+
+### D10 — Time-boxed public alpha
+**Decision:** Target a testable vertical slice by 24 September 2026 and a public alpha by 25 September 2026.
+
+**Reasoning:** A short delivery cycle creates a concrete portfolio artifact and enables early feedback. The release label must accurately communicate that the experience is an evolving demonstrator rather than a production system.
+
+**Initial alpha boundary:**
+
+- one primary operator,
+- one synthetic cascading-infrastructure scenario,
+- one operational area,
+- three meaningful decision moments,
+- inspectable dependencies and projected consequences,
+- constrained-resource trade-offs,
+- an audit trail,
+- scenario reset and replay.
+
+**Consequence:** Breadth, full responsiveness, broad usability validation, live integrations and the final portfolio case study may follow after the alpha. The time box must not justify disposable architecture or hard-coded UI-specific scenario logic.
+
