@@ -106,7 +106,7 @@ Before a public case study, portfolio article or promotional post is published, 
 **DOI:** https://doi.org/10.1038/s44304-025-00161-9  
 **Role:** Operational friction; reference case  
 **Relevance:** **Core**  
-**Review status:** Initial review completed; detailed extraction for Issue #2 still required
+**Review status:** Detailed extraction completed for Issue #2
 
 #### Supports
 
