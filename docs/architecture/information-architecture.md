@@ -1,11 +1,14 @@
 # VECTOR OPS — Information Architecture
 
-**Version:** 0.1  
-**Date:** 21 September 2026
+**Version:** 0.2  
+**Date:** 21 September 2026  
+**Last updated:** 22 September 2026
 
 ## 1. Architecture goal
 
 The architecture is defined before visual design in order to separate stable product foundations from replaceable modules, support future capabilities, keep modules loosely coupled and make dependencies visible.
+
+For the public alpha, VECTOR OPS will use a modular frontend monolith: one deployable browser application with explicit internal module boundaries. This preserves extension points without introducing a premature distributed or third-party plugin architecture.
 
 ## 2. System layers
 
@@ -25,7 +28,7 @@ The architecture is defined before visual design in order to separate stable pro
 - Permissions
 - Time / Simulation Clock
 - Audit Trail
-- Plugin Registry
+- Module Registry
 
 ### Operational Modules
 - Teams
@@ -45,7 +48,8 @@ The architecture is defined before visual design in order to separate stable pro
 - decision-option generation
 
 ### Data / Simulation Adapters
-- synthetic scenario engine
+- data-driven synthetic scenario engine
+- scenario definitions and initial state
 - imported static data
 - future external APIs
 - future real-time feeds
@@ -102,15 +106,50 @@ Instead, they communicate through shared entities, typed events, common time, sh
 
 Every module should be able to:
 
-1. register one or more entity types or extend existing entities,
-2. read relevant shared state,
-3. emit typed events,
-4. subscribe to events without knowing the emitting module,
-5. expose one or more UI surfaces,
-6. contribute alert or decision rules,
-7. fail independently without corrupting the shared operational picture.
+1. expose stable metadata and register through the Module Registry,
+2. register one or more entity types or extend existing entities,
+3. read relevant shared state,
+4. emit typed events,
+5. subscribe to events without knowing the emitting module,
+6. expose one or more UI surfaces,
+7. contribute alert, dependency or decision rules,
+8. fail independently without corrupting the shared operational picture.
 
-## 6. Example cross-domain consequence
+Adding a module should not require changes to the application shell or existing module internals beyond explicit shared-contract evolution.
+
+## 6. Scenario contract
+
+Scenario content must remain separate from presentation components.
+
+A scenario definition should be able to provide:
+
+- metadata and version,
+- initial entities and state,
+- dependency relationships,
+- timed and conditional events,
+- decision points and available actions,
+- rule inputs and projected consequences,
+- synthetic assumptions, confidence and data age,
+- completion and replay conditions.
+
+This allows a future scenario to reuse the same shell, modules and consequence engine without copying the application.
+
+## 7. Public-alpha implementation boundary
+
+The initial implementation should:
+
+- run as a browser-based static application,
+- use TypeScript contracts for shared entities, events and module manifests,
+- keep scenario data and consequence rules outside UI components,
+- use deterministic local state and a simulation clock,
+- deploy through the existing GitHub and OVH resources,
+- require no paid API, database, authentication service, runtime LLM or always-on Huidun H20 server.
+
+The first release does not require dynamic third-party code loading, a plugin marketplace, microservices or separate repositories for modules.
+
+A practical architecture test is whether a new module such as Weather or Field Teams can be added through a module directory, manifest registration, event subscriptions, rules and UI surface without rewriting the core.
+
+## 8. Example cross-domain consequence
 
 **UAV module:** UAV-07 battery 24%  
 **Communications module:** projected link loss in 8 minutes  
@@ -127,7 +166,7 @@ It may then present:
 
 with effects such as coverage restored, +6 minute response delay and estimated landing reserve of 18%.
 
-## 7. Why this architecture matters
+## 9. Why this architecture matters
 
 VECTOR OPS should not be defined by a fixed collection of dashboards.
 
