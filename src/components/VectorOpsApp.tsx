@@ -13,6 +13,8 @@ import {
   scenario01BaselineObservations,
 } from '../scenarios/scenario-01/baseline-observations';
 
+const MAX_SELECTED_OBSERVATIONS = 3;
+
 const metricLabels: Record<string, string> = {
   'power.supplyState': 'Supply',
   'power.feederState': 'Feeder F-12',
@@ -80,6 +82,10 @@ export default function VectorOpsApp() {
   );
   const selectedObservations =
     observationsByEntity.get(selectedEntityId) ?? [];
+  const visibleSelectedObservations = selectedObservations.slice(
+    0,
+    MAX_SELECTED_OBSERVATIONS,
+  );
 
   return (
     <main className="vector-ops">
@@ -185,12 +191,13 @@ export default function VectorOpsApp() {
               Details for the highlighted entity tile
             </p>
             <p>
-              {selectedObservations.length} current observation
-              {selectedObservations.length === 1 ? '' : 's'}
+              {selectedObservations.length > MAX_SELECTED_OBSERVATIONS
+                ? `Showing ${MAX_SELECTED_OBSERVATIONS} of ${selectedObservations.length} current observations`
+                : `${selectedObservations.length} current observation${selectedObservations.length === 1 ? '' : 's'}`}
             </p>
 
             <ul>
-              {selectedObservations.map((observation) => (
+              {visibleSelectedObservations.map((observation) => (
                 <li key={observation.id}>
                   <strong>
                     {metricLabels[observation.metric] ?? observation.metric}
@@ -496,6 +503,10 @@ export default function VectorOpsApp() {
         }
 
         .entity-detail--selected {
+          display: flex;
+          height: 430px;
+          flex-direction: column;
+          overflow: hidden;
           border-color: #4d90d8;
           border-left: 4px solid #62a9f2;
           background:
@@ -524,6 +535,8 @@ export default function VectorOpsApp() {
 
         .entity-detail ul {
           display: grid;
+          flex: 1;
+          align-content: start;
           gap: 11px;
           margin: 0;
           padding: 0;
