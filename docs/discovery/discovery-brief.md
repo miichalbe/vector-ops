@@ -1,9 +1,9 @@
 # VECTOR OPS — Discovery Brief
 
-**Version:** 0.1  
+**Version:** 0.2  
 **Date:** 21 September 2026  
 **Last updated:** 22 September 2026  
-**Status:** Discovery
+**Status:** M1 discovery direction accepted; M2 system definition active
 
 ## 1. Problem
 
@@ -39,17 +39,17 @@ The public demonstrator will remain non-weaponized and suitable for open present
 
 ## 4. Core value proposition
 
-VECTOR OPS should answer not only:
+> **VECTOR OPS turns cross-domain operational observations into explainable assessments, time-dependent projections and operator-reviewable actions.**
 
-> What is happening and where?
+It should answer:
 
-but also:
+- What is happening and where?
+- Which observations and dependencies support that assessment?
+- What may become a problem if nothing changes?
+- How current and reliable is the information?
+- Which action is available within the operator's authority?
 
-> What will become a problem if nothing changes?
-
-and:
-
-> Which dependencies create that problem, and what action can the operator take?
+The differentiator is not a larger dashboard. It is a traceable reasoning path from source evidence to operational consequence and bounded action.
 
 ## 5. Product principles
 
@@ -94,24 +94,30 @@ The first public alpha should be a deliberately narrow vertical slice. Its scope
 
 The demonstrator will not attempt to provide weapon control, target engagement, autonomous lethal decision-making, sensitive real-world operational data, production-grade military security or support for every possible operational domain in the first release.
 
-## 8. Initial demonstration hypothesis
+## 8. Selected public-alpha scenario and modules
 
-The first scenario may use a **critical infrastructure cascading-disruption scenario**.
+The selected scenario is a synthetic cascading-infrastructure disruption in fictional Nowy Brzeg County, Mazowieckie Voivodeship.
 
-Example: 
+Six initial entities represent power distribution, water supply, regional communications, a county hospital, one constrained mobile generator and a technical access route.
 
-- fictional / synthetic operational scenario grounded in real infrastructure dependencies,
-- the WCZK duty officer coordinates information and procedures across power, telecoms, water, transport/access, field teams and constrained resources,
-- the experience behaves like an interactive operational scenario rather than a static dashboard,
-- the user reviews projected consequences, inspects dependencies and assumptions, compares coordination options and sees downstream effects,
-- actions outside the duty officer's authority are escalated or recommended rather than directly executed,
-- public demo remains non-weaponized.
+The WCZK duty officer receives fragmented observations, reviews cross-domain Assessments and Projections, and makes three bounded choices:
 
-Potential portfolio framing:
+1. information/correlation posture,
+2. constrained-resource recommendation,
+3. coordination/escalation posture.
 
-*Scenario inspired by documented cross-sector infrastructure impacts observed during Storm Éowyn in Scotland, January 2025.*
+The root cause remains unconfirmed. The scenario uses English UI, seeded bounded variation and a factual after-action report without scoring.
 
-Important constraint: do not present this as a reconstruction of the real response unless evidence later supports that. Use the real incident as an evidence-backed reference case for the structure of cascading dependencies, then build a synthetic scenario around it.
+MVP operational modules:
+
+- Power,
+- Water,
+- Communications,
+- Critical Services & Response.
+
+The implementation remains a browser-based modular frontend monolith with shared entities, typed observations and dependencies, data-driven scenarios and no required backend.
+
+See [Primary Scenario Package](../scenario/primary-scenario-package.md).
 
 ## 9. Discovery assumptions
 
@@ -129,17 +135,17 @@ Important constraint: do not present this as a reconstruction of the real respon
 - A rushed public alpha that hard-codes scenario logic into UI components and prevents later extension.
 - Unsafe or sensitive implications in public presentation.
 
-## 11. Open discovery questions
+## 11. Questions carried into system definition
 
-- Which exact operational scenario should define MVP success?
-- Which decisions may the WCZK duty officer initiate directly, and which require escalation or approval?
-- What existing products solve adjacent parts of the workflow?
-- Where does operator friction remain?
-- Which 3–4 modules are necessary for a credible MVP?
-- What is the minimum credible consequence / forecast engine?
-- What interactions create the strongest “wow” moment without becoming theatrical?
-- What should persist on a server versus remain simulated in-browser?
-- What security and privacy constraints should shape the public demo?
+Discovery has resolved the operator, scenario, value proposition, MVP module set and deployment boundary.
+
+Questions now owned by M2 and M3:
+
+- What is the final typed schema for entities, capabilities, observations, dependencies, Assessments, Projections and Actions?
+- Which event catalogue and rule format provides enough extension without over-engineering?
+- How should Action Review expose authority, evidence, alternatives and expected effects?
+- Which exact interaction and pacing choices survive prototype testing?
+- Which contextual onboarding is necessary after the base interface exists?
 
 ## 12. Discovery exit criteria
 
@@ -153,15 +159,15 @@ Discovery can be considered complete enough to begin interaction design when:
 - the demonstration story is defined from start state through decision to outcome,
 - the technical deployment approach for the public demo is confirmed.
 
-## 13. Next discovery pass
+## 13. Next phase
 
-With the adjacent product landscape reviewed, the next iteration should:
+Proceed to M2 System Definition and M3 Interaction Design in a tightly coupled vertical slice:
 
-- complete the cross-domain decision-friction research in issue #2,
-- define the selected WCZK duty officer's exact decision and escalation boundaries in the scenario,
-- select one primary operational scenario,
-- reduce the MVP to the minimum credible module set.
-
-Only after these decisions should the project proceed to flows, wireframes and prototyping.
+- finalise the shared domain and dependency model,
+- define module and event contracts,
+- formalise Assessment, Projection and Action schemas,
+- map the second-by-second operator flow,
+- implement the accepted primary operational view,
+- validate pacing and explainability against the selected scenario.
 
 **Working principle:** show the reasoning trail, not only the final interface.
