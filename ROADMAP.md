@@ -59,15 +59,17 @@ The time box changes delivery breadth, not the architectural principles. Shared 
 - Decision / consequence logic defined
 - Scenario state model documented
 
+**Canonical implementation contract:** [System Contract](docs/architecture/system-contract.md)
+
 ### Planned work
-- [ ] Refine core entity model
-- [ ] Define module contracts
-- [ ] Define module registration contract
-- [ ] Define event types
-- [ ] Define shared state model
-- [ ] Define dependency model
-- [ ] Define operational consequence model
-- [ ] Define audit-trail requirements
+- [x] Refine core entity model
+- [x] Define module contracts
+- [x] Define module registration contract
+- [x] Define event types
+- [x] Define shared state model
+- [x] Define dependency model
+- [x] Define operational consequence model
+- [x] Define audit-trail requirements
 - [ ] Define scenario state machine
 - [ ] Define data-driven scenario format
 
@@ -190,3 +192,4 @@ The time box changes delivery breadth, not the architectural principles. Shared 
 6. **Decisions and changes remain documented in Git history.**
 7. **Time-box scope, not architectural integrity.**
 8. **New modules and scenarios must not require rewriting the application core.**
+9. **Do not expand the architecture conceptually without a concrete implementation need.**
