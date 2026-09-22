@@ -25,9 +25,15 @@ The system combines a shared operational picture, planning and tasking, asset st
 
 Its primary value is **cross-domain orchestration**: modules exchange state and events so the system can expose operational consequences instead of presenting disconnected alerts.
 
-## 3. Primary users
+## 3. Primary user
 
-Potential user groups include operations coordinators, mission planners, field and command operators, search-and-rescue teams, emergency-response teams, infrastructure operators, public-safety organizations and defence-adjacent users.
+The primary operator for the public alpha is the **Dyżurny operacyjny Wojewódzkiego Centrum Zarządzania Kryzysowego (WCZK)** — presented in English as **Duty Operations Officer — Voivodeship Crisis Management Centre**.
+
+This real Polish civil-service role maintains a 24-hour operational picture, monitors and analyses threats, evaluates reports, forecasts development, supports information flow, activates authorised procedures, escalates recommendations and documents actions.
+
+The operator does not independently command infrastructure operators. Actions outside the role's authority must be represented as requests, recommendations, escalations or approvals by the responsible organisation or authority.
+
+Potential later user groups include powiat crisis-management duty staff, RCB duty staff, critical-infrastructure protection coordinators, emergency-response organisations and infrastructure operators.
 
 The public demonstrator will remain non-weaponized and suitable for open presentation.
 
@@ -95,9 +101,10 @@ The first scenario may use a **critical infrastructure cascading-disruption scen
 Example: 
 
 - fictional / synthetic operational scenario grounded in real infrastructure dependencies,
-- operator coordinates a developing situation across power, telecoms, water, transport/access, field teams and constrained resources,
+- the WCZK duty officer coordinates information and procedures across power, telecoms, water, transport/access, field teams and constrained resources,
 - the experience behaves like an interactive operational scenario rather than a static dashboard,
-- the user reviews projected consequences, inspects dependencies and assumptions, compares interventions and sees downstream effects,
+- the user reviews projected consequences, inspects dependencies and assumptions, compares coordination options and sees downstream effects,
+- actions outside the duty officer's authority are escalated or recommended rather than directly executed,
 - public demo remains non-weaponized.
 
 Potential portfolio framing:
@@ -125,8 +132,7 @@ Important constraint: do not present this as a reconstruction of the real respon
 ## 11. Open discovery questions
 
 - Which exact operational scenario should define MVP success?
-- Who is the primary operator persona?
-- What decisions are they responsible for?
+- Which decisions may the WCZK duty officer initiate directly, and which require escalation or approval?
 - What existing products solve adjacent parts of the workflow?
 - Where does operator friction remain?
 - Which 3–4 modules are necessary for a credible MVP?
@@ -152,7 +158,7 @@ Discovery can be considered complete enough to begin interaction design when:
 With the adjacent product landscape reviewed, the next iteration should:
 
 - complete the cross-domain decision-friction research in issue #2,
-- select one primary operator and define their decision responsibilities,
+- define the selected WCZK duty officer's exact decision and escalation boundaries in the scenario,
 - select one primary operational scenario,
 - reduce the MVP to the minimum credible module set.
 
