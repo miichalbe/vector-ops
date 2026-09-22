@@ -1,6 +1,6 @@
 # VECTOR OPS — Information Architecture
 
-**Version:** 0.3  
+**Version:** 0.4  
 **Date:** 21 September 2026  
 **Last updated:** 22 September 2026
 
@@ -176,7 +176,6 @@ Its identity is the combination of a shared operational model, independent modul
 
 A future module should be able to use existing teams, assets, routes, communications, logistics and tasks without requiring redesign of the entire platform.
 
-
 ## 10. Accepted domain refinements
 
 The shared model distinguishes:
@@ -239,7 +238,28 @@ This distinguishes loss of physical service, monitoring, control, access and sup
 
 Every status, Assessment, Projection and recommendation must be traceable to source observations, reports, rules, dependencies and assumptions.
 
-See:
+## 11. Canonical M2 implementation contract
 
+The detailed shared contract for issues #8–#11 is maintained in [System Contract](system-contract.md).
+
+The System Contract is authoritative for:
+
+- TypeScript domain interfaces,
+- ownership boundaries,
+- module manifests and registration,
+- event envelope and catalogue,
+- Assessment and Projection lifecycle,
+- Action and Decision separation,
+- prioritisation,
+- confidence, freshness and timestamps,
+- append-only audit behaviour,
+- module failure behaviour,
+- extensibility rules.
+
+This Information Architecture remains the conceptual architecture overview. If implementation exposes a genuine missing requirement, evolve the shared contract explicitly rather than adding scenario-specific fields or logic to UI components.
+
+See also:
+
+- [System Contract](system-contract.md)
 - [Primary Scenario Package](../scenario/primary-scenario-package.md)
 - [Primary Operational View](../design/primary-operational-view.md)
