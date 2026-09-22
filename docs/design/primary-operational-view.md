@@ -24,6 +24,8 @@ All application UI copy is English.
 
 The end-to-end run behaviour, opening variation, decision timing and scenario runtime are defined in [Primary Operator Flow & Scenario Runtime Contract](primary-operator-flow.md).
 
+Accepted implementation-level interaction requirements are maintained in the living [UX Requirements](ux-requirements.md) document.
+
 ---
 
 ## 2. Desktop structure
