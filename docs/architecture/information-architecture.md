@@ -1,6 +1,6 @@
 # VECTOR OPS — Information Architecture
 
-**Version:** 0.2  
+**Version:** 0.3  
 **Date:** 21 September 2026  
 **Last updated:** 22 September 2026
 
@@ -31,21 +31,23 @@ For the public alpha, VECTOR OPS will use a modular frontend monolith: one deplo
 - Module Registry
 
 ### Operational Modules
+
+Public-alpha modules:
+
 - Power
-- Telecommunications
 - Water
-- Access / Transport
-- Field Teams
-- Logistics / Resources
-- Incidents
-- Weather
+- Communications
+- Critical Services & Response
+
+Future modules may include Access / Transport, Field Teams, UAVs, Vehicles, Weather, Logistics and other operational domains. The alpha modules do not define a closed platform taxonomy.
 
 ### Decision Layer
 - rule evaluation
 - dependency analysis
-- forecast logic
+- Assessment generation and prioritisation
+- Projection / forecast logic
 - operational consequence generation
-- decision-option generation
+- action availability and decision-option generation
 
 ### Data / Simulation Adapters
 - data-driven synthetic scenario engine
@@ -173,3 +175,71 @@ VECTOR OPS should not be defined by a fixed collection of dashboards.
 Its identity is the combination of a shared operational model, independent modules, explicit dependencies, explainable consequences and operator-controlled decisions.
 
 A future module should be able to use existing teams, assets, routes, communications, logistics and tasks without requiring redesign of the entire platform.
+
+
+## 10. Accepted domain refinements
+
+The shared model distinguishes:
+
+- **Entity** — physical or logical operational object;
+- **Capability** — service or ability provided by an entity;
+- **Observation** — sourced measurement or human report;
+- **Dependency** — typed relationship between entities or capabilities;
+- **Event** — time-stamped state change;
+- **Assessment** — current evidence-based operational interpretation;
+- **Projection / Consequence** — possible future operational effect;
+- **Action** — an available request, recommendation, notification or escalation;
+- **Decision** — operator selection with evidence, alternatives and audit record.
+
+Every entity may receive observations and UI contributions from several modules. Modules do not own exclusive dashboards.
+
+### State separation
+
+For each relevant entity, the system separates:
+
+1. physical simulated state,
+2. observed state,
+3. assessed state,
+4. projected state,
+5. data state and confidence.
+
+Loss of telemetry is a loss of visibility, not proof of physical failure.
+
+### Observation envelope
+
+All modules publish observations through a stable envelope containing:
+
+- entity ID,
+- namespaced metric key,
+- value and unit,
+- observed and received timestamps,
+- source,
+- quality,
+- confidence,
+- related event.
+
+Modules register metric definitions and presentation metadata. Future metric keys can be added without changing the core entity schema.
+
+### Typed dependencies
+
+The initial dependency vocabulary includes:
+
+- `poweredBy`,
+- `communicatesVia`,
+- `monitoredVia`,
+- `controlledVia`,
+- `suppliedBy`,
+- `accessedVia`,
+- `supportedBy`,
+- `providesServiceTo`.
+
+This distinguishes loss of physical service, monitoring, control, access and supporting capacity.
+
+### Explainability rule
+
+Every status, Assessment, Projection and recommendation must be traceable to source observations, reports, rules, dependencies and assumptions.
+
+See:
+
+- [Primary Scenario Package](../scenario/primary-scenario-package.md)
+- [Primary Operational View](../design/primary-operational-view.md)
