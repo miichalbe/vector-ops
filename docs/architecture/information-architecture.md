@@ -31,13 +31,13 @@ For the public alpha, VECTOR OPS will use a modular frontend monolith: one deplo
 - Module Registry
 
 ### Operational Modules
-- Teams
-- UAVs
-- Vehicles
-- Logistics
-- Communications
+- Power
+- Telecommunications
+- Water
+- Access / Transport
+- Field Teams
+- Logistics / Resources
 - Incidents
-- Sensors
 - Weather
 
 ### Decision Layer
@@ -151,20 +151,20 @@ A practical architecture test is whether a new module such as Weather or Field T
 
 ## 8. Example cross-domain consequence
 
-**UAV module:** UAV-07 battery 24%  
-**Communications module:** projected link loss in 8 minutes  
-**Mission module:** UAV-07 is the only asset covering Sector Bravo  
-**Logistics module:** nearest charging point is occupied
+**Power module:** substation P-03 is offline  
+**Telecommunications module:** relay T-07 has 18 minutes of backup power  
+**Water module:** pumping station W-02 depends on relay T-07 for remote control  
+**Access module:** the shortest generator route is blocked
 
 Instead of four separate warnings, VECTOR OPS creates:
 
-> **Sector Bravo coverage will be lost in 11 minutes.**
+> **Remote control of pumping station W-02 will be lost in 18 minutes, increasing the risk of service interruption for the North district.**
 
 It may then present:
 
-> Reallocate UAV-12 to Sector Bravo.
+> Assign the available mobile generator to relay T-07.
 
-with effects such as coverage restored, +6 minute response delay and estimated landing reserve of 18%.
+with inspectable effects such as communications continuity preserved, water-control risk delayed and another restoration site remaining without backup power.
 
 ## 9. Why this architecture matters
 
