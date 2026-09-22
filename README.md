@@ -73,8 +73,6 @@ The public alpha is intentionally narrow: one coordinating operator, one operati
 
 ## Current discovery questions
 
-- Which exact operational scenario should define MVP success?
-- Who is the primary operator persona?
 - Which coordinating operator role should own the first scenario decisions?
 - Which exact synthetic disruption should define MVP success?
 - Which 3–4 modules are necessary to demonstrate the concept credibly?
