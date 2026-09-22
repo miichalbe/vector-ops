@@ -1,10 +1,10 @@
 # VECTOR OPS — Scenario Experience Contract
 
-**Version:** 0.1  
+**Version:** 0.2  
 **Date:** 22 September 2026  
 **Milestone:** M1 — Discovery Complete / prerequisite for M2 and M3  
 **Related issue:** #4 — Define primary demonstration scenario  
-**Status:** Experience contract agreed; concrete scenario content pending
+**Status:** Experience contract agreed; concrete scenario package accepted
 
 ---
 
@@ -22,7 +22,7 @@ It specifies:
 - what the implementation must support,
 - which design and content decisions remain open.
 
-It does **not** yet define the exact fictional region, infrastructure assets, numerical values, event sequence or final scenario branches. Those belong to the concrete scenario definition produced under Issue #4.
+The concrete instantiation is defined separately in the [Primary Scenario Package](primary-scenario-package.md). Keeping the experience contract separate from scenario content allows future scenarios to reuse the same interaction and integrity rules.
 
 The contract exists to prevent the scenario from becoming:
 
@@ -89,7 +89,7 @@ VECTOR OPS should be described as:
 
 The introduction must make clear that:
 
-- this is a portfolio and research demonstrator,
+- this is an independent exploratory project,
 - it is not an official Polish government system,
 - it is not connected to live infrastructure,
 - the scenario, organisations, locations, parameters and procedures are synthetic,
@@ -100,7 +100,9 @@ The introduction must make clear that:
 
 The project may include a concise civic/patriotic motivation:
 
-> VECTOR OPS was created as an independent Polish portfolio exploration: an attempt to use contemporary design, software and AI-assisted tools to build the foundation of something that could contribute to the resilience and safety of modern Poland.
+> VECTOR OPS is an independent Polish project exploring how cross-domain operational information can be transformed into understandable consequences and actionable decisions.
+>
+> The project is an attempt to use contemporary design, software development and AI-assisted tools to build the foundations of a system that could contribute to the resilience and safety of modern Poland.
 
 The statement must remain:
 
@@ -171,14 +173,9 @@ This prevents the simulation from teaching an inaccurate role model.
 
 ### 4.4 UI onboarding
 
-Onboarding should be contextual and minimal. It may point to no more than four primary areas:
+Contextual onboarding remains required before public release, but its detailed callouts are deliberately deferred until the primary interface is implemented and can be evaluated.
 
-1. **Operational picture** — where assets, areas and incidents appear;
-2. **Attention queue** — where new reports and consequences require review;
-3. **Consequence panel** — where dependencies, evidence and forecasts are inspected;
-4. **Action / decision panel** — where the user requests, recommends, activates or escalates.
-
-The interface should remain understandable without a long tutorial.
+The interface should remain understandable without a long tutorial. Onboarding must explain only interactions that are not already self-evident.
 
 ### 4.5 Timing
 
@@ -560,7 +557,7 @@ The system may track:
 - procedure and communication completion,
 - documentation completeness.
 
-These may be shown as qualitative bands or operational values rather than one total score.
+These are internal state dimensions and may support factual report content. The user-facing ending should prioritise raw operational values, per-entity status and observed effects. Do not turn them into a user score, success/failure verdict or named outcome class.
 
 ### 10.3 Engagement sources
 
@@ -670,7 +667,7 @@ It must avoid judging earlier decisions using information that was unavailable a
 
 #### A. Session summary
 
-- scenario title and version,
+- neutral scenario identifier and version,
 - fictional region,
 - role,
 - start/end scenario time,
@@ -728,15 +725,16 @@ For each relevant domain/entity:
 
 Required domains are determined by the concrete scenario.
 
-#### F. Outcome dimensions
+#### F. Operational effects
 
 - essential-service continuity,
 - exposed population/services,
 - remaining response capacity,
-- situational confidence,
+- situational confidence and data freshness,
 - unresolved dependencies,
-- procedure/communication status,
-- documentation completeness.
+- procedure/communication status.
+
+Present these as factual values and status changes rather than an evaluation of the user.
 
 #### G. Counterfactual insight
 
@@ -865,9 +863,10 @@ interface AfterActionReport {
   timeline: AuditEvent[];
   decisions: DecisionReview[];
   finalState: StateSnapshot;
-  outcomes: OutcomeDimension[];
+  operationalEffects: OperationalEffect[];
   counterfactuals: Counterfactual[];
   handover: OpenItem[];
+  contact: ProjectContact;
 }
 ```
 
@@ -965,28 +964,28 @@ The cause may remain unknown throughout the scenario.
 
 A concrete scenario is ready for implementation when:
 
-- [ ] the fictional geography and starting context are defined,
-- [ ] the initial state is understandable within 10 seconds,
-- [ ] the first anomaly appears within 10–20 seconds,
-- [ ] the first consequence becomes visible within 35–50 seconds,
-- [ ] three primary decisions match the required decision types,
-- [ ] every option has an explainable benefit, cost and uncertainty,
-- [ ] at least one cross-domain dependency is essential to understanding the outcome,
-- [ ] at least one observation may become stale, contradicted or confirmed,
-- [ ] at least one action requires escalation or external approval,
-- [ ] the duty officer never receives fictional command authority,
-- [ ] randomisation cannot break narrative invariants,
-- [ ] the same seed and decisions reproduce the same run,
-- [ ] all synthetic values are labelled as such,
-- [ ] no real sensitive infrastructure data is used,
-- [ ] every run produces a reconstructable timeline,
-- [ ] initial and final state can be compared,
-- [ ] a poor decision worsens conditions without blocking completion,
-- [ ] the fast path completes in 3–4 minutes,
-- [ ] the intended path completes in 5–7 minutes,
-- [ ] optional inspection can extend the experience to 8–10 minutes,
-- [ ] the report distinguishes knowledge available then from hindsight,
-- [ ] the scenario can be authored outside UI components.
+- [x] the fictional geography and starting context are defined,
+- [ ] the implemented initial state is understandable within 10 seconds,
+- [x] the authored first anomaly appears within 10–20 seconds,
+- [x] the authored first consequence becomes visible within 35–50 seconds,
+- [x] three primary decisions match the required decision types,
+- [x] every option has an explainable benefit, cost and uncertainty,
+- [x] at least one cross-domain dependency is essential to understanding the outcome,
+- [x] at least one observation may become stale, contradicted or confirmed,
+- [x] at least one action requires escalation or external approval,
+- [x] the duty officer never receives fictional command authority,
+- [x] randomisation cannot break narrative invariants,
+- [ ] implementation proves the same seed and decisions reproduce the same run,
+- [x] all scenario values are synthetic,
+- [x] no real sensitive infrastructure data is used,
+- [x] every authored run produces a reconstructable timeline,
+- [x] initial and final state can be compared,
+- [x] a poor decision worsens conditions without blocking completion,
+- [ ] implemented fast path completes in 3–4 minutes,
+- [ ] implemented intended path completes in 5–7 minutes,
+- [ ] implemented optional inspection can extend the experience to 8–10 minutes,
+- [x] the report distinguishes knowledge available then from hindsight,
+- [x] the scenario is authored outside UI components.
 
 ---
 
@@ -1009,73 +1008,35 @@ Minimum deterministic tests should cover:
 
 ---
 
-## 20. Decisions still required
+## 20. Resolved scenario directions
 
-The contract is sufficiently complete to design the concrete scenario. The following choices remain:
+The public-alpha scenario uses:
 
-### A. Primary language
+- English application UI,
+- no narrative scenario title,
+- real Mazowieckie administrative context with fictional Nowy Brzeg County,
+- six synthetic entities,
+- Power, Water, Communications, and Critical Services & Response modules,
+- three phased predefined decisions,
+- seeded bounded randomisation,
+- a desktop-first entity dashboard with Assessment and Projection,
+- factual final-state reporting without scoring or outcome labels,
+- the report footer:
 
-Options:
+> **VECTOR OPS — Simulation developed by Michał Biernacki**  
+> michalbiernacki@protonmail.com | michalbiernacki.com
 
-- Polish-first;
-- English-first with Polish institutional terminology;
-- bilingual from alpha.
+Detailed onboarding is deferred until the base interface exists.
 
-**Recommendation:** Polish-first public alpha with all copy stored in a localisation dictionary and English added immediately after the first stable run. This best serves the Polish context while preserving the international portfolio path.
+See:
 
-### B. Fictional geography
-
-Choose whether the region is:
-
-- clearly fictional but recognisably Polish,
-- an unnamed generic voivodeship,
-- a fictionalised composite inspired by central/eastern Poland.
-
-**Recommendation:** a named fictional composite, without copying real infrastructure geography.
-
-### C. Exact scenario cause and conditions
-
-Define:
-
-- environmental backdrop,
-- initial anomaly,
-- systems affected,
-- constrained resource,
-- data uncertainty,
-- three decision moments,
-- possible final states.
-
-**Recommendation:** keep root cause unconfirmed and focus entirely on observable service and sensor effects.
-
-### D. Outcome presentation
-
-Choose qualitative or numerical emphasis.
-
-**Recommendation:** operational values and qualitative outcome bands, without one total score.
-
-### E. Sharing scope
-
-Decide whether the Friday alpha needs:
-
-- only replay/print,
-- shareable seed URL,
-- PDF export.
-
-**Recommendation:** replay and print are required; shareable seed URL if implementation time remains; PDF export after alpha.
+- [Primary Scenario Package](primary-scenario-package.md)
+- [Primary Operational View](../design/primary-operational-view.md)
 
 ---
 
 ## 21. Completion definition
 
-This experience contract is complete when it is accepted as the stable boundary for Issue #4.
+The experience contract and primary scenario selection are complete for Issue #4.
 
-Issue #4 itself remains open until a concrete scenario definition supplies:
-
-- fictional place and starting state,
-- infrastructure entities and dependencies,
-- event sequence,
-- randomisation profiles and bounds,
-- three decisions and options,
-- consequence rules,
-- endings and final-state model,
-- user-facing briefing copy.
+Implementation validation remains responsible for deterministic replay, pacing, accessibility, responsive behaviour and the complete report output. Detailed operator chronology continues under Issue #12, while the technical model continues under Issues #8–#11.
