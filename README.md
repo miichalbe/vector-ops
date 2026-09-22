@@ -72,6 +72,7 @@ The public alpha is intentionally narrow: one operator, one operational area and
 - [Adjacent Product Landscape](docs/research/adjacent-product-landscape.md)
 - [Cross-Domain Decision Friction](docs/research/cross-domain-decision-friction.md)
 - [Primary Operator — Polish Context](docs/research/primary-operator-polish-context.md)
+- [Scenario Experience Contract](docs/scenario/scenario-experience-contract.md)
 - [Evidence Library](docs/research/evidence-library.md)
 
 ## Current discovery questions
