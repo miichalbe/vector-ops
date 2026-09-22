@@ -1,7 +1,8 @@
 # VECTOR OPS — Evidence Library
 
-**Version:** 0.1  
+**Version:** 0.2  
 **Date:** 21 September 2026  
+**Last updated:** 22 September 2026  
 **Milestone:** Discovery  
 **Primary issue:** #2 — Identify cross-domain decision friction  
 **Status:** Living research document
@@ -87,6 +88,11 @@ Before a public case study, portfolio article or promotional post is published, 
 | E-003 | OECD, *Ensuring the resilience of critical infrastructure* | Intergovernmental report chapter | PF | Supporting | Systems-based, all-hazards problem framing |
 | E-004 | ENISA, *NIS360 2026* | EU agency assessment | PF | Supporting | Current European criticality and maturity context |
 | E-005 | Connected Places Catapult, *Unlocking climate resilience through connected digital twins* / CReDO | First-party project case study | AP, RC | **Core** | Existing cross-sector modelling approach and adjacency check |
+| E-006 | Energy Emergencies Executive Committee, *Storm Arwen Review: Final Report* | Official post-incident review | OF, RC | **Core** | Cross-sector dependencies, prioritisation and generator/access constraints |
+| E-007 | Ofgem, *Final report on the review into the networks' response to Storm Arwen* | Regulator post-incident review | OF, RC | **Core** | Restoration estimates, communications and operational-data gaps |
+| E-008 | FERC, NERC and Regional Entity Staff, *February 2021 Cold Weather Outages* | Official joint inquiry | OF, RC | **Core** | Gas–electric dependency, critical-load identification and systemic feedback |
+| E-009 | GAO-21-297, Hurricane Maria communications restoration | Government audit | OF, RC | **Core** | Communications damage, role clarity and coordination friction |
+| E-010 | GAO-19-296, Puerto Rico and USVI grid restoration | Government audit | OF, RC | Supporting | Restoration capacity, logistics and external-resource constraints |
 
 ---
 
@@ -278,7 +284,161 @@ It must not be presented as a reconstruction or simulation of the actual respons
 
 ---
 
-## 6. Initial claim register
+
+### E-006 — Storm Arwen Review: Final Report
+
+**Publisher:** Energy Emergencies Executive Committee, UK Government  
+**Type:** Official post-incident review  
+**Published:** June 2022  
+**URL:** https://assets.publishing.service.gov.uk/media/629fa8b1d3bf7f0371a9b0ca/storm-arwen-review-final-report.pdf  
+**Role:** Operational friction; reference case  
+**Relevance:** **Core**  
+**Review status:** Detailed extraction completed for Issue #2
+
+#### Supports
+
+- Electricity outages affected telecommunications, emergency communications and water services.
+- Remote sites could be difficult to reach with mobile generators when roads or access were disrupted.
+- Water-sector impact information helped electricity operators understand consequences beyond direct electricity-customer counts.
+- Restoration involved cross-sector prioritisation rather than independent asset repair.
+
+#### VECTOR OPS use
+
+- Evidence for dependency-aware restoration priorities.
+- Grounding for constrained generator, fuel, crew and access decisions.
+- Support for representing communications as both an affected service and a recovery dependency.
+
+#### Do not overclaim
+
+- The review does not establish that all operators lacked dependency information.
+- It does not evaluate the proposed VECTOR OPS interface.
+- It does not prove that automated recommendations would improve restoration outcomes.
+
+---
+
+### E-007 — Final report on the review into the networks' response to Storm Arwen
+
+**Publisher:** Ofgem  
+**Type:** Regulator post-incident review  
+**Published:** June 2022  
+**URL:** https://www.ofgem.gov.uk/sites/default/files/2022-06/Final%20report%20on%20the%20review%20into%20the%20networks%27%20response%20to%20Storm%20Arwen.pdf  
+**Role:** Operational friction; reference case  
+**Relevance:** **Core**  
+**Review status:** Detailed extraction completed for Issue #2
+
+#### Supports
+
+- More than one million customers lost electricity, with some outages lasting several days.
+- Customer communications and restoration-time estimates were significant response problems.
+- Better operational data, including more accurate outage visibility, could improve response.
+- Mobile generation introduced logistics involving transport, installation and refuelling.
+
+#### VECTOR OPS use
+
+- Evidence for data-age, confidence and restoration-estimate treatment.
+- Grounding for time-dependent consequence projection.
+- Support for audit-trail and decision-context requirements.
+
+#### Do not overclaim
+
+- Customer-communication findings are not equivalent to evidence about a multi-domain operator UI.
+- The review does not prove that a consequence engine would have prevented the documented problems.
+
+---
+
+### E-008 — The February 2021 Cold Weather Outages in Texas and the South Central United States
+
+**Publisher:** FERC, NERC and Regional Entity Staff  
+**Type:** Official joint inquiry  
+**Published:** December 2021  
+**URL:** https://www.ferc.gov/media/february-2021-cold-weather-outages-texas-and-south-central-united-states-ferc-nerc-and  
+**Role:** Operational friction; reference case  
+**Relevance:** **Core**  
+**Review status:** Detailed extraction completed for Issue #2
+
+#### Supports
+
+- The event produced exceptionally large manually controlled load shedding.
+- Natural-gas production and supply failures contributed substantially to unavailable electricity generation.
+- Electricity loss at parts of the gas supply chain could further reduce fuel availability, creating a gas–electric feedback loop.
+- The inquiry recommended stronger gas–electric coordination and identification of critical gas infrastructure.
+
+#### VECTOR OPS use
+
+- Strong example of a locally rational action creating a larger cross-system consequence.
+- Evidence for criticality mapping and inspectable dependency chains.
+- Grounding for a decision in which direct load reduction conflicts with preservation of an enabling service.
+
+#### Do not overclaim
+
+- The report does not attribute the entire event to missing visualisation or operator-interface design.
+- Weatherisation, market structure, regulation and physical system failures remain major causal factors.
+- VECTOR OPS must not imply that one coordination interface could have prevented the disaster.
+
+---
+
+### E-009 — FCC Assisted in Hurricane Maria Network Restoration, but a Clarified Disaster Response Role and Enhanced Communication Are Needed
+
+**Publisher:** U.S. Government Accountability Office  
+**Report:** GAO-21-297  
+**Type:** Government audit  
+**Published:** April 2021  
+**URL:** https://www.gao.gov/products/gao-21-297  
+**Role:** Operational friction; reference case  
+**Relevance:** **Core**  
+**Review status:** Detailed extraction completed for Issue #2
+
+#### Supports
+
+- Hurricane Maria severely damaged communications infrastructure.
+- Federal guidance did not clearly define the FCC's disaster-response role.
+- Unclear roles and incomplete accounts of response activity could contribute to confusion, delays and weaker future learning.
+
+#### VECTOR OPS use
+
+- Evidence that coordination friction can concern responsibility and decision ownership, not only sensor data.
+- Support for explicit operator role, decision responsibility and audit trail.
+- Corroboration for communications as a critical dependency during response.
+
+#### Do not overclaim
+
+- The audit addresses federal disaster-response coordination, not a single operational control room.
+- It does not prove that software alone can resolve institutional ambiguity.
+
+---
+
+### E-010 — Federal Support for Electricity Grid Restoration in the U.S. Virgin Islands and Puerto Rico
+
+**Publisher:** U.S. Government Accountability Office  
+**Report:** GAO-19-296  
+**Type:** Government audit  
+**Published:** April 2019  
+**URL:** https://www.gao.gov/products/gao-19-296  
+**Role:** Operational friction; reference case  
+**Relevance:** Supporting  
+**Review status:** Detailed extraction completed for Issue #2
+
+#### Supports
+
+- Hurricane Maria caused extensive and prolonged electricity disruption.
+- FEMA and the U.S. Army Corps of Engineers assumed unusually direct restoration roles because local capacity was insufficient.
+- Transporting restoration personnel, materials and equipment to the islands was difficult and time-consuming.
+- Recovery depended on external capacity and constrained logistics.
+
+#### VECTOR OPS use
+
+- Grounding for shared-resource and logistics constraints.
+- Evidence for modelling travel and access delay as part of consequence timing.
+- Support for showing the limits of available response capacity.
+
+#### Do not overclaim
+
+- The exceptional island context limits generalisation.
+- The report is stronger evidence for logistics and capacity constraints than for a specific real-time interaction pattern.
+
+---
+
+## 6. Updated claim register
 
 This register maps likely project claims to their present evidence strength.
 
@@ -287,32 +447,32 @@ This register maps likely project claims to their present evidence strength.
 | Critical infrastructure sectors are interdependent and disruption can cascade across sectors. | **Strong** | E-001, E-002, E-003, E-005 | May be stated as evidence-backed. |
 | Energy and telecommunications are important enabling dependencies for other essential services and recovery. | **Moderate to strong** | E-001, E-002 | State with incident or dependency context; avoid universal absolutes. |
 | Infrastructure data and models are often managed in organisational silos. | **Moderate** | E-005; further independent evidence needed | Attribute to the source or describe as a research finding, not a universal fact. |
-| Operators must manually reconstruct cross-domain consequences during live incidents. | **Emerging** | E-001; detailed extraction and more cases required | Treat as an Issue #2 hypothesis. |
+| During live multi-infrastructure incidents, dependency and impact information can be incomplete, unevenly shared or insufficiently connected to prioritisation decisions. | **Moderate to strong** | E-001, E-006–E-010 | May be stated with incident context; avoid presenting it as universal. |
+| Power loss can degrade communications and thereby reduce visibility and coordination during recovery. | **Strong** | E-001, E-006, E-009 | May be stated as evidence-backed for the reviewed cases. |
+| Restoration priorities can change when downstream critical services are considered. | **Strong** | E-006, E-008 | May be stated as evidence-backed with case attribution. |
+| Scarce generators, fuel, crews, transport and access create cross-domain allocation trade-offs. | **Moderate to strong** | E-001, E-006, E-007, E-010 | Use as scenario grounding; synthetic quantities must remain labelled. |
+| Operators always reconstruct cross-domain consequences manually. | **Unproven** | No source supports this universal wording | Do not state as fact; validate with operators. |
 | Existing tools do not adequately expose causal chains, assumptions and counterfactual trade-offs. | **Unproven** | Adjacent-product research only | Do not state as fact; continue product and user research. |
 | Progressive transparency will improve operational decisions. | **Unproven** | No direct source yet | Treat as an interaction hypothesis requiring evaluation. |
 | VECTOR OPS addresses a unique market gap. | **Unproven and currently discouraged** | Existing adjacent products challenge the claim | Do not claim uniqueness. |
 
 ---
 
-## 7. Research gaps for Issue #2
+## 7. Remaining research and validation gaps
 
-The next evidence pass should add at least two independent incident cases and seek direct support for:
+The cross-case incident pass for Issue #2 is complete. It establishes recurring coordination and prioritisation frictions, but it does not validate the proposed product interaction.
 
-- real-time prioritisation conflicts across infrastructure sectors,
-- resource reallocation trade-offs,
-- degraded communications and stale or conflicting operational data,
-- restoration decisions based on downstream critical services rather than direct customer count,
-- how operators currently combine information from multiple organisations or systems,
-- uncertainty communication during live response,
-- differences between strategic resilience modelling and operational incident coordination.
+Next research should focus on:
 
-Priority source types:
+- interviews or reviews with infrastructure and emergency-response operators,
+- how dependency and criticality information is currently assembled during live incidents,
+- which decisions belong to one coordinating role and which remain distributed across organisations,
+- how uncertainty, data age and restoration estimates are communicated,
+- comparison with existing operational products rather than strategic resilience-modelling tools,
+- evaluation of consequence cards, intervention comparison and progressive explanation,
+- whether the first synthetic scenario feels plausible without implying reconstruction of a real incident.
 
-1. post-incident reviews from infrastructure operators or regulators,
-2. peer-reviewed case studies,
-3. public inquiry or government resilience reports,
-4. operator interviews, conference talks or documented exercises,
-5. first-party product documentation for adjacency checks.
+The priority is now operator and interaction validation, not accumulating additional incident examples unless scenario design reveals a specific evidence gap.
 
 ---
 
@@ -335,7 +495,9 @@ When an issue is closed, its completion comment should link to a commit-specific
 
 ## 9. Working conclusion
 
-The current evidence strongly supports the existence of cross-sector infrastructure dependencies and cascading service consequences. It also establishes that connected, cross-sector modelling is already an active field with credible adjacent projects such as CReDO.
+The evidence strongly supports the existence of cross-sector infrastructure dependencies, cascading service consequences, dependency-aware prioritisation, constrained restoration resources and degraded information during live response.
 
-The evidence does **not yet** establish VECTOR OPS's central product claim. Issue #2 must determine whether a recurring, operationally meaningful friction remains around understanding consequences, prioritising interventions, inspecting uncertainty and comparing downstream trade-offs during live response.
+Issue #2 has identified five recurring friction patterns and documents them in `cross-domain-decision-friction.md`. The strongest defensible opportunity is an inspectable decision layer connecting state, dependencies, time, uncertainty, interventions and downstream consequences.
+
+The evidence still does **not** validate VECTOR OPS as the correct solution, prove that current tools are universally inadequate or establish product uniqueness. Those remain product and interaction hypotheses requiring operator validation.
 
