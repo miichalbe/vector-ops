@@ -151,3 +151,14 @@ This document records product decisions made during discovery so that future cha
 **Trade-offs:** The main operational workspace will likely run as one hydrated React application rather than many isolated islands. This makes Astro a relatively thin shell and introduces React runtime cost, component lifecycle rules and potential unnecessary re-rendering. Fast-changing values such as the scenario clock must therefore use focused subscriptions, and accessibility, keyboard behaviour and focus management remain explicit design responsibilities.
 
 **Consequence:** Add the official Astro React integration. Keep reusable presentation components separate from the shared runtime and module logic. Do not introduce additional UI frameworks unless a concrete implementation need justifies the cost.
+
+### D18 — Living UX requirements contract
+**Decision:** Maintain a living [UX Requirements](../design/ux-requirements.md) document for accepted implementation-level interaction, layout, accessibility and trust-presentation requirements.
+
+**Boundary:** The UX Requirements document supplements the Primary Operational View and records refinements discovered against working software. It does not replace domain, scenario or runtime contracts, and provisional implementation choices must be identified as provisional.
+
+**Maintenance rule:** When an accepted UX decision changes operator behaviour, information hierarchy, interaction semantics, accessibility, layout stability or trust presentation, update the UX Requirements document in the same change or before the related work is considered complete. Small visual tuning that does not change behaviour or hierarchy does not require a new requirement.
+
+**Reasoning:** Interaction decisions were already emerging through implementation and usability inspection of the working interface. Recording them only in code or conversation would make the rationale difficult to recover and would allow later changes to accidentally reverse accepted behaviour.
+
+**Consequence:** Current requirements include stable entity-tile geometry, a persistent `View details` label, full-tile details selection, separate future action controls, stable Selected entity panel placement and height, a three-observation preview, native keyboard activation and explicit deferral of arrow-key grid navigation.
