@@ -156,7 +156,7 @@ export default function VectorOpsApp() {
                     aria-pressed={selected}
                     onClick={() => setSelectedEntityId(entity.id)}
                   >
-                    'View details'
+                    View details
                   </button>
                 </article>
               );
