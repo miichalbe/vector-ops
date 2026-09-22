@@ -9,6 +9,15 @@ This roadmap tracks the evolution of VECTOR OPS from early discovery to a public
 
 The roadmap is intentionally outcome-based. Each milestone should leave behind a visible artifact or working capability.
 
+## Near-term delivery target
+
+**Testable vertical slice:** 24 September 2026  
+**Public alpha:** 25 September 2026
+
+The alpha is a narrow end-to-end demonstration: one primary operator, one synthetic cascading-infrastructure scenario, one operational area and three meaningful decision moments. It must remain structurally open to additional modules and scenarios after launch.
+
+The time box changes delivery breadth, not the architectural principles. Shared entities, state, events, module registration, scenario data and consequence rules must not be hard-coded into individual UI components.
+
 ---
 
 ## M1 — Discovery Complete
@@ -53,12 +62,14 @@ The roadmap is intentionally outcome-based. Each milestone should leave behind a
 ### Planned work
 - [ ] Refine core entity model
 - [ ] Define module contracts
+- [ ] Define module registration contract
 - [ ] Define event types
 - [ ] Define shared state model
 - [ ] Define dependency model
 - [ ] Define operational consequence model
 - [ ] Define audit-trail requirements
 - [ ] Define scenario state machine
+- [ ] Define data-driven scenario format
 
 ---
 
@@ -94,6 +105,7 @@ The roadmap is intentionally outcome-based. Each milestone should leave behind a
 ### Outcomes
 - Frontend application shell
 - Shared state / entity registry
+- Module registry
 - Simulation clock
 - Event bus
 - Initial operational modules
@@ -104,6 +116,7 @@ The roadmap is intentionally outcome-based. Each milestone should leave behind a
 - [ ] Set up Astro / application shell
 - [ ] Define repository app structure
 - [ ] Implement shared entity registry
+- [ ] Implement module registry
 - [ ] Implement simulation clock
 - [ ] Implement event bus
 - [ ] Implement map / operational picture
@@ -175,3 +188,5 @@ The roadmap is intentionally outcome-based. Each milestone should leave behind a
 4. **Real system behavior before presentation polish.**
 5. **Every milestone leaves a visible artifact.**
 6. **Decisions and changes remain documented in Git history.**
+7. **Time-box scope, not architectural integrity.**
+8. **New modules and scenarios must not require rewriting the application core.**
