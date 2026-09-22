@@ -138,3 +138,16 @@ This document records product decisions made during discovery so that future cha
 **Reasoning:** This provides enough structure to support the 24 September vertical slice and later module/scenario extension without introducing a backend, runtime plugin framework, rules DSL, graph database or other premature platform infrastructure.
 
 **Consequence:** The canonical implementation contract is maintained in [System Contract](../architecture/system-contract.md). Architecture should not be expanded conceptually unless a concrete implementation need appears.
+
+### D17 — Astro and React presentation boundary
+**Decision:** Use Astro as the application shell and static-build layer, with React as the client-side presentation and interaction layer for the operational workspace.
+
+**Architecture boundary:** The deterministic scenario runtime, shared domain state, event processing, rules, Assessments, Projections, Actions, Decisions and audit history remain framework-independent TypeScript. React consumes runtime snapshots, presents them to the operator and dispatches explicit operator commands; it must not become the source of truth for simulated state or operational logic.
+
+**UI-state boundary:** React may own presentation state such as the selected entity, open panel, active filter, expanded evidence path and focus state. Domain facts, scenario time, action lifecycle and decision records belong to the shared runtime.
+
+**Reasoning:** VECTOR OPS requires a highly interactive, data-driven operational interface in which multiple components respond consistently to the same changing state. React provides a mature component and state model, strong TypeScript support and a widely understood implementation approach. Astro remains useful for the static application shell, straightforward deployment and possible public context or documentation surfaces around the operational application.
+
+**Trade-offs:** The main operational workspace will likely run as one hydrated React application rather than many isolated islands. This makes Astro a relatively thin shell and introduces React runtime cost, component lifecycle rules and potential unnecessary re-rendering. Fast-changing values such as the scenario clock must therefore use focused subscriptions, and accessibility, keyboard behaviour and focus management remain explicit design responsibilities.
+
+**Consequence:** Add the official Astro React integration. Keep reusable presentation components separate from the shared runtime and module logic. Do not introduce additional UI frameworks unless a concrete implementation need justifies the cost.
