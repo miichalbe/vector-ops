@@ -1,6 +1,7 @@
 import {
   createInitialRuntimeState,
   type ScenarioInitialData,
+  type ScenarioRunConfig,
 } from '../../core/runtime-state';
 import {
   scenario01Capabilities,
@@ -23,6 +24,16 @@ export const scenario01InitialData = {
   observations: scenario01BaselineObservations,
 } satisfies ScenarioInitialData;
 
+export const scenario01DefaultRunConfig = {
+  scenarioId: scenario01InitialData.id,
+  scenarioVersion: scenario01InitialData.version,
+  seed: '8F4C',
+  openingVariant: 'power-first',
+  dominantProfile: 'communications-fragile',
+  secondaryModifier: 'access-constrained',
+} satisfies ScenarioRunConfig;
+
 export const scenario01InitialState = createInitialRuntimeState(
   scenario01InitialData,
+  scenario01DefaultRunConfig,
 );

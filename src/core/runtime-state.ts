@@ -27,6 +27,26 @@ export type ScenarioPhase =
   | 'escalation'
   | 'resolution';
 
+export type OpeningVariantId =
+  | 'power-first'
+  | 'communications-first'
+  | 'water-first';
+
+export type ConditionProfileId =
+  | 'communications-fragile'
+  | 'access-constrained'
+  | 'resource-constrained'
+  | 'low-confidence-data';
+
+export interface ScenarioRunConfig {
+  scenarioId: string;
+  scenarioVersion: string;
+  seed: string;
+  openingVariant: OpeningVariantId;
+  dominantProfile: ConditionProfileId;
+  secondaryModifier: ConditionProfileId;
+}
+
 export interface ScenarioInitialData {
   id: string;
   version: string;
@@ -46,6 +66,7 @@ export interface ScenarioMetadata {
 
 export interface ScenarioRuntimeState {
   scenario: ScenarioMetadata;
+  run: ScenarioRunConfig;
   now: ScenarioTime;
   status: ScenarioRunStatus;
   phase: ScenarioPhase;
@@ -107,7 +128,30 @@ function assertDependencyRef(
 
 export function createInitialRuntimeState(
   data: ScenarioInitialData,
+  run: ScenarioRunConfig,
 ): ScenarioRuntimeState {
+  if (run.scenarioId !== data.id) {
+    throw new Error(
+      `Run config scenario id ${run.scenarioId} does not match ${data.id}.`,
+    );
+  }
+
+  if (run.scenarioVersion !== data.version) {
+    throw new Error(
+      `Run config scenario version ${run.scenarioVersion} does not match ${data.version}.`,
+    );
+  }
+
+  if (!run.seed.trim()) {
+    throw new Error('Run config seed must not be empty.');
+  }
+
+  if (run.dominantProfile === run.secondaryModifier) {
+    throw new Error(
+      'Run config dominant profile and secondary modifier must be different.',
+    );
+  }
+
   const entitiesById = createIndex(data.entities, 'entity');
   const capabilitiesById = createIndex(data.capabilities, 'capability');
 
@@ -151,6 +195,7 @@ export function createInitialRuntimeState(
       version: data.version,
       title: data.title,
     },
+    run: { ...run },
     now: data.initialTime,
     status: 'running',
     phase: 'baseline',
