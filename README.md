@@ -60,7 +60,9 @@ the system should express the operational consequence:
 
 The first demonstrator will use a **non-weaponized synthetic cascading-infrastructure scenario** grounded in documented dependencies between power, telecommunications, water, access and constrained restoration resources.
 
-The public alpha is intentionally narrow: one coordinating operator, one operational area and three meaningful decision moments. It is being implemented on an extensible modular foundation so later modules and scenarios can be added without rewriting the application core.
+The primary operator is a **Dyżurny operacyjny Wojewódzkiego Centrum Zarządzania Kryzysowego (WCZK)** — a real Polish 24-hour crisis-management role responsible for monitoring, analysis, information flow, procedure activation, escalation and documentation.
+
+The public alpha is intentionally narrow: one operator, one operational area and three meaningful coordination or escalation moments. It is being implemented on an extensible modular foundation so later modules and scenarios can be added without rewriting the application core.
 
 ## Documentation
 
@@ -69,12 +71,13 @@ The public alpha is intentionally narrow: one coordinating operator, one operati
 - [Decision Log](docs/decisions/decision-log.md)
 - [Adjacent Product Landscape](docs/research/adjacent-product-landscape.md)
 - [Cross-Domain Decision Friction](docs/research/cross-domain-decision-friction.md)
+- [Primary Operator — Polish Context](docs/research/primary-operator-polish-context.md)
 - [Evidence Library](docs/research/evidence-library.md)
 
 ## Current discovery questions
 
-- Which coordinating operator role should own the first scenario decisions?
 - Which exact synthetic disruption should define MVP success?
+- Which decisions may the WCZK duty officer initiate, recommend or escalate?
 - Which 3–4 modules are necessary to demonstrate the concept credibly?
 - What is the minimum viable consequence / forecast engine?
 - What should be simulated in-browser and what, if anything, needs a backend?
@@ -85,7 +88,7 @@ The public demonstrator is **not** intended to include weapon control, target en
 
 ## Next step
 
-Define the primary operator, select the exact synthetic scenario and reduce the public-alpha scope to the minimum credible module set.
+Select the exact synthetic scenario, define the WCZK duty officer's decision boundaries and reduce the public-alpha scope to the minimum credible module set.
 
 ---
 
