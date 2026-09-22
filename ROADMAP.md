@@ -1,7 +1,7 @@
 # VECTOR OPS — Roadmap
 
-**Current phase:** System Definition / Interaction Design  
-**Current milestone:** M2 — System Definition  
+**Current phase:** Working Prototype / Interaction Refinement  
+**Current milestone:** M4 — Working Prototype, with M3 interaction refinement continuing against working UI  
 **Project status:** Active  
 **Last updated:** 22 September 2026
 
@@ -59,7 +59,8 @@ The time box changes delivery breadth, not the architectural principles. Shared 
 - Decision / consequence logic defined
 - Scenario state model documented
 
-**Canonical implementation contract:** [System Contract](docs/architecture/system-contract.md)
+**Canonical implementation contract:** [System Contract](docs/architecture/system-contract.md)  
+**Scenario/runtime handoff:** [Primary Operator Flow & Scenario Runtime Contract](docs/design/primary-operator-flow.md)
 
 ### Planned work
 - [x] Refine core entity model
@@ -70,14 +71,18 @@ The time box changes delivery breadth, not the architectural principles. Shared 
 - [x] Define dependency model
 - [x] Define operational consequence model
 - [x] Define audit-trail requirements
-- [ ] Define scenario state machine
-- [ ] Define data-driven scenario format
+- [x] Define scenario state machine
+- [x] Define data-driven scenario format
+
+**Status:** Complete for vertical-slice implementation. Future contract changes should be driven by concrete implementation needs.
 
 ---
 
 ## M3 — Interaction Design
 
 **Goal:** Translate system behavior into clear operator interactions.
+
+M3 no longer blocks implementation. Remaining interaction work is intentionally refined against the working interface rather than completed entirely as speculative documentation.
 
 ### Outcomes
 - Primary operator flow
@@ -88,15 +93,17 @@ The time box changes delivery breadth, not the architectural principles. Shared 
 - Low-fidelity prototype
 
 ### Planned work
-- [ ] Map end-to-end operator flow
-- [ ] Define information hierarchy
-- [ ] Design Common Operational Picture structure
+- [x] Map end-to-end operator flow
+- [x] Define information hierarchy
+- [x] Design Common Operational Picture structure
 - [ ] Design alert / attention queue
 - [ ] Design asset detail interaction
 - [ ] Design decision-review flow
 - [ ] Design degraded-state interactions
 - [ ] Create low-fidelity wireframes
 - [ ] Validate against primary scenario
+
+Primary flow and runtime behaviour are specified in [Primary Operator Flow & Scenario Runtime Contract](docs/design/primary-operator-flow.md). The reusable Action Review pattern remains tracked separately and should be refined while implementing the actual component.
 
 ---
 
@@ -127,6 +134,23 @@ The time box changes delivery breadth, not the architectural principles. Shared 
 - [ ] Implement operational consequence logic
 - [ ] Implement operator decisions
 - [ ] Add audit trail
+
+### First implementation sequence
+
+```text
+application shell
+→ shared types/state
+→ seeded scenario configuration
+→ simulation clock/runtime
+→ event processing
+→ observations + dependency registry
+→ Assessment/Projection rules
+→ primary operational view
+→ Decision / Action Review
+→ audit timeline
+→ After-Action Report
+→ profile/seed validation and polish
+```
 
 ---
 
@@ -193,3 +217,4 @@ The time box changes delivery breadth, not the architectural principles. Shared 
 7. **Time-box scope, not architectural integrity.**
 8. **New modules and scenarios must not require rewriting the application core.**
 9. **Do not expand the architecture conceptually without a concrete implementation need.**
+10. **Once the implementation contract is sufficient, resolve remaining interaction detail against working software.**
