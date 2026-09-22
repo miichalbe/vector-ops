@@ -39,7 +39,7 @@ The time box changes delivery breadth, not the architectural principles. Shared 
 - [x] Review UAV ground-control systems
 - [x] Review fleet and logistics tools
 - [x] Review emergency-management / C2-adjacent tools
-- [ ] Identify cross-domain decision friction
+- [x] Identify cross-domain decision friction
 - [ ] Define primary operator
 - [ ] Define primary scenario
 - [ ] Select MVP modules
