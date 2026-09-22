@@ -6,7 +6,8 @@ A modular operations coordination platform for distributed teams, autonomous ass
 
 > **Project status:** Discovery / concept validation  
 > **Version:** 0.1  
-> **Started:** 21 September 2026
+> **Started:** 21 September 2026  
+> **Last updated:** 22 September 2026
 
 ## What is VECTOR OPS?
 
@@ -42,6 +43,8 @@ the system should express the operational consequence:
 - **Graceful degradation**
 - **Explainable state**
 - **Real demonstrator**
+- **Feasible by default**
+- **Narrow first release, durable foundation**
 
 ## Initial capability areas
 
@@ -55,20 +58,25 @@ the system should express the operational consequence:
 
 ## Public demo direction
 
-The first demonstrator is expected to use a **non-weaponized operational scenario**, most likely search-and-rescue or distributed emergency response.
+The first demonstrator will use a **non-weaponized synthetic cascading-infrastructure scenario** grounded in documented dependencies between power, telecommunications, water, access and constrained restoration resources.
+
+The public alpha is intentionally narrow: one coordinating operator, one operational area and three meaningful decision moments. It is being implemented on an extensible modular foundation so later modules and scenarios can be added without rewriting the application core.
 
 ## Documentation
 
 - [Discovery Brief](docs/discovery/discovery-brief.md)
 - [Information Architecture](docs/architecture/information-architecture.md)
 - [Decision Log](docs/decisions/decision-log.md)
+- [Adjacent Product Landscape](docs/research/adjacent-product-landscape.md)
+- [Cross-Domain Decision Friction](docs/research/cross-domain-decision-friction.md)
+- [Evidence Library](docs/research/evidence-library.md)
 
 ## Current discovery questions
 
 - Which exact operational scenario should define MVP success?
 - Who is the primary operator persona?
-- Which existing products solve adjacent parts of the workflow?
-- Where does cross-domain decision friction still remain?
+- Which coordinating operator role should own the first scenario decisions?
+- Which exact synthetic disruption should define MVP success?
 - Which 3–4 modules are necessary to demonstrate the concept credibly?
 - What is the minimum viable consequence / forecast engine?
 - What should be simulated in-browser and what, if anything, needs a backend?
@@ -79,7 +87,7 @@ The public demonstrator is **not** intended to include weapon control, target en
 
 ## Next step
 
-Map the adjacent product landscape and use that research to select one precise operational scenario for the MVP.
+Define the primary operator, select the exact synthetic scenario and reduce the public-alpha scope to the minimum credible module set.
 
 ---
 
