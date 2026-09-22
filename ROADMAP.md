@@ -30,7 +30,7 @@ The roadmap is intentionally outcome-based. Each milestone should leave behind a
 - [x] Review UAV ground-control systems
 - [x] Review fleet and logistics tools
 - [x] Review emergency-management / C2-adjacent tools
-- [x] Identify cross-domain decision friction
+- [ ] Identify cross-domain decision friction
 - [ ] Define primary operator
 - [ ] Define primary scenario
 - [ ] Select MVP modules
