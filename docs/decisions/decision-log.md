@@ -82,3 +82,14 @@ This document records product decisions made during discovery so that future cha
 
 **Consequence:** VECTOR OPS should support assessment, information verification, procedure activation, recommendation, escalation and audit. Actions outside the user's mandate must be represented as requests, recommendations or approvals by the responsible authority—not as direct execution by the duty officer.
 
+### D12 — Scenario experience contract
+**Decision:** Structure the public alpha as a replayable 5–7 minute operational simulation with a short product context layer, scenario briefing, three-act live run, three bounded decision moments and a reconstructable after-action report.
+
+**Reasoning:** The demo must communicate the project to a first-time visitor, reveal its central value within the first minute, support deeper 8–10 minute exploration and remain credible for a real WCZK duty role.
+
+**Randomisation:** Use seeded, bounded variation around a fixed narrative spine. Randomness may vary timing, data quality, access, resource availability and external responses, but must not remove required decisions, break causal logic or produce untestable runs.
+
+**Outcome:** Every run must preserve the initial state, event and decision timeline, final state, evidence available at each decision, expected effects, observed effects, unresolved items and scenario seed.
+
+**Consequence:** The scenario must be data-driven and reconstructable from its definition, run configuration and append-only event log. The same scenario version, seed and decisions must reproduce the same outcome.
+
