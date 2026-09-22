@@ -93,7 +93,6 @@ This document records product decisions made during discovery so that future cha
 
 **Consequence:** The scenario must be data-driven and reconstructable from its definition, run configuration and append-only event log. The same scenario version, seed and decisions must reproduce the same outcome.
 
-
 ### D13 — Primary scenario package
 **Decision:** Use a synthetic cascading-infrastructure disruption in fictional Nowy Brzeg County, Mazowieckie Voivodeship. The scenario has no narrative title and the application UI is English.
 
@@ -122,3 +121,20 @@ This document records product decisions made during discovery so that future cha
 **Outcome presentation:** End the session with factual state comparison and timeline rather than a user score, success/failure verdict or named outcome class.
 
 **Consequence:** The accepted structure is maintained in [Primary Operational View](../design/primary-operational-view.md).
+
+### D16 — M2 shared system contract
+**Decision:** Adopt one lightweight shared implementation contract across issues #8–#11 rather than separate entity, module, event and consequence frameworks.
+
+**Core model:** Use a small open `Entity`, optional `Capability`, append-only `Observation`, typed `Dependency`, separate `Assessment` and `Projection`, distinct `Action` and `Decision`, and one versioned `DomainEvent` envelope.
+
+**Rules:** Assessments and Projections are produced by deterministic, side-effect-free TypeScript rules that expose evidence, dependencies, assumptions and uncertainty. Derived claims are revisioned rather than silently overwritten.
+
+**Modules:** Operational modules are compile-time packages registered through a lightweight manifest and registration API. Modules contribute metrics, observations, rules, actions, event handlers and UI surfaces to shared entities but do not exclusively own entity instances.
+
+**Prioritisation:** Use explicit deterministic ordering based on attention, severity, time-to-impact and recent material change. Do not introduce an opaque composite score for the alpha.
+
+**Audit:** Material domain events form an append-only history that preserves what evidence was available when a decision was made.
+
+**Reasoning:** This provides enough structure to support the 24 September vertical slice and later module/scenario extension without introducing a backend, runtime plugin framework, rules DSL, graph database or other premature platform infrastructure.
+
+**Consequence:** The canonical implementation contract is maintained in [System Contract](../architecture/system-contract.md). Architecture should not be expanded conceptually unless a concrete implementation need appears.
