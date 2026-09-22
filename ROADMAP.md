@@ -3,7 +3,7 @@
 **Current phase:** Discovery  
 **Current milestone:** M1 — Discovery Complete  
 **Project status:** Active  
-**Last updated:** 21 September 2026
+**Last updated:** 22 September 2026
 
 This roadmap tracks the evolution of VECTOR OPS from early discovery to a public working demonstrator and portfolio case study.
 
@@ -25,12 +25,12 @@ The roadmap is intentionally outcome-based. Each milestone should leave behind a
 - Discovery brief updated to v0.2
 
 ### Planned work
-- [ ] Map adjacent products and categories
-- [ ] Review TAK / ATAK ecosystem
-- [ ] Review UAV ground-control systems
-- [ ] Review fleet and logistics tools
-- [ ] Review emergency-management / C2-adjacent tools
-- [ ] Identify cross-domain decision friction
+- [x] Map adjacent products and categories
+- [x] Review TAK / ATAK ecosystem
+- [x] Review UAV ground-control systems
+- [x] Review fleet and logistics tools
+- [x] Review emergency-management / C2-adjacent tools
+- [x] Identify cross-domain decision friction
 - [ ] Define primary operator
 - [ ] Define primary scenario
 - [ ] Select MVP modules
