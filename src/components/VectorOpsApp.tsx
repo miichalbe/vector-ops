@@ -156,7 +156,7 @@ export default function VectorOpsApp() {
                     aria-pressed={selected}
                     onClick={() => setSelectedEntityId(entity.id)}
                   >
-                    {selected ? 'Viewing details' : 'View details'}
+                    'View details'
                   </button>
                 </article>
               );
@@ -165,31 +165,25 @@ export default function VectorOpsApp() {
         </section>
 
         <aside className="intelligence-column">
-          <section className="intelligence-panel">
-            <p className="eyebrow">Assessment</p>
-            <h2>No material cross-domain issue detected</h2>
-            <p>
-              Baseline observations do not currently indicate a material
-              multi-service disruption.
-            </p>
-            <p className="panel-meta">
-              Confidence: high · Recalculated at{' '}
-              {formatScenarioTime(SCENARIO_01_START_TIME)}
-            </p>
-          </section>
+          <div className="section-heading intelligence-heading">
+            <div>
+              <p className="eyebrow">Inspection context</p>
+              <h2>Selection details</h2>
+            </div>
+          </div>
 
-          <section className="intelligence-panel">
-            <p className="eyebrow">Projection</p>
-            <h2>No active projections</h2>
-            <p>
-              Time-dependent consequences will appear when observations and
-              dependencies meet a defined rule.
-            </p>
-          </section>
-
-          <section className="intelligence-panel entity-detail">
-            <p className="eyebrow">Selected entity</p>
+          <section
+            className="intelligence-panel entity-detail entity-detail--selected"
+            aria-live="polite"
+          >
+            <div className="selection-label">
+              <span aria-hidden="true">↳</span>
+              <p className="eyebrow">Selected entity</p>
+            </div>
             <h2>{selectedEntity?.name}</h2>
+            <p className="selection-context">
+              Details for the highlighted entity tile
+            </p>
             <p>
               {selectedObservations.length} current observation
               {selectedObservations.length === 1 ? '' : 's'}
@@ -210,6 +204,28 @@ export default function VectorOpsApp() {
                 </li>
               ))}
             </ul>
+          </section>
+
+          <section className="intelligence-panel">
+            <p className="eyebrow">Assessment</p>
+            <h2>No material cross-domain issue detected</h2>
+            <p>
+              Baseline observations do not currently indicate a material
+              multi-service disruption.
+            </p>
+            <p className="panel-meta">
+              Confidence: high · Recalculated at{' '}
+              {formatScenarioTime(SCENARIO_01_START_TIME)}
+            </p>
+          </section>
+
+          <section className="intelligence-panel">
+            <p className="eyebrow">Projection</p>
+            <h2>No active projections</h2>
+            <p>
+              Time-dependent consequences will appear when observations and
+              dependencies meet a defined rule.
+            </p>
           </section>
         </aside>
       </div>
@@ -349,6 +365,7 @@ export default function VectorOpsApp() {
         .entity-grid {
           display: grid;
           grid-template-columns: repeat(2, minmax(0, 1fr));
+          grid-auto-rows: 1fr;
           gap: 14px;
         }
 
@@ -360,6 +377,9 @@ export default function VectorOpsApp() {
         }
 
         .entity-card {
+          display: flex;
+          height: 100%;
+          flex-direction: column;
           padding: 17px;
           border-left: 4px solid #4f657d;
         }
@@ -429,6 +449,7 @@ export default function VectorOpsApp() {
 
         .details-button {
           width: 100%;
+          margin-top: auto;
           padding: 8px 10px;
           border: 1px solid #33465b;
           border-radius: 6px;
@@ -449,6 +470,15 @@ export default function VectorOpsApp() {
           gap: 14px;
         }
 
+        .intelligence-heading {
+          margin-bottom: 0;
+        }
+
+        .intelligence-heading h2 {
+          margin-bottom: 0;
+          font-size: 1.25rem;
+        }
+
         .intelligence-panel {
           padding: 18px;
         }
@@ -463,6 +493,33 @@ export default function VectorOpsApp() {
           margin-bottom: 0;
           color: #8295a8;
           font-size: 0.74rem;
+        }
+
+        .entity-detail--selected {
+          border-color: #4d90d8;
+          border-left: 4px solid #62a9f2;
+          background:
+            linear-gradient(135deg, rgba(50, 105, 162, 0.18), transparent 55%),
+            rgba(17, 25, 35, 0.98);
+          box-shadow: 0 0 0 1px rgba(98, 169, 242, 0.12);
+        }
+
+        .selection-label {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          color: #62a9f2;
+        }
+
+        .selection-label .eyebrow {
+          margin-bottom: 0;
+          color: #9ccaff;
+        }
+
+        .selection-context {
+          margin-top: -4px;
+          color: #9ccaff !important;
+          font-size: 0.76rem !important;
         }
 
         .entity-detail ul {
