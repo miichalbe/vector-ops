@@ -1,7 +1,7 @@
 # VECTOR OPS — Roadmap
 
-**Current phase:** Discovery  
-**Current milestone:** M1 — Discovery Complete  
+**Current phase:** System Definition / Interaction Design  
+**Current milestone:** M2 — System Definition  
 **Project status:** Active  
 **Last updated:** 22 September 2026
 
@@ -41,9 +41,9 @@ The time box changes delivery breadth, not the architectural principles. Shared 
 - [x] Review emergency-management / C2-adjacent tools
 - [x] Identify cross-domain decision friction
 - [x] Define primary operator
-- [ ] Define primary scenario
-- [ ] Select MVP modules
-- [ ] Update Discovery Brief
+- [x] Define primary scenario
+- [x] Select MVP modules
+- [x] Update Discovery Brief
 
 ---
 
