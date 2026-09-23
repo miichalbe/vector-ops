@@ -177,15 +177,16 @@ export default function ActionReview({
       return undefined;
     }
 
+    const focusPanel = panel;
     const focusableSelector = [
       'button:not([disabled])',
       'input:not([disabled])',
       'summary',
       '[tabindex]:not([tabindex="-1"])',
     ].join(',');
-    const firstFocusable = panel.querySelector<HTMLElement>(focusableSelector);
+    const firstFocusable = focusPanel.querySelector<HTMLElement>(focusableSelector);
 
-    (firstFocusable ?? panel).focus();
+    (firstFocusable ?? focusPanel).focus();
 
     function trapFocus(event: KeyboardEvent) {
       if (event.key !== 'Tab') {
@@ -193,12 +194,12 @@ export default function ActionReview({
       }
 
       const focusable = [
-        ...panel.querySelectorAll<HTMLElement>(focusableSelector),
+        ...focusPanel.querySelectorAll<HTMLElement>(focusableSelector),
       ].filter((element) => element.offsetParent !== null);
 
       if (focusable.length === 0) {
         event.preventDefault();
-        panel.focus();
+        focusPanel.focus();
         return;
       }
 
@@ -218,8 +219,8 @@ export default function ActionReview({
       }
     }
 
-    panel.addEventListener('keydown', trapFocus);
-    return () => panel.removeEventListener('keydown', trapFocus);
+    focusPanel.addEventListener('keydown', trapFocus);
+    return () => focusPanel.removeEventListener('keydown', trapFocus);
   }, []);
 
   return (
