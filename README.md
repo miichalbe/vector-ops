@@ -71,14 +71,14 @@ The active vertical slice currently includes:
 - Astro application shell with a React interaction layer
 - Shared TypeScript domain contracts
 - Scenario 01 entity, capability, dependency and baseline-observation registries
-- Deterministic seeded run configuration
+- Deterministic seeded run resolution across three opening variants and four condition profiles
 - Immutable scenario runtime state
 - Primary operational view driven by runtime selectors
 - Minimal simulation clock with explicit pause rules
 - Deterministic scenario-time event processing with append-only event and Observation effects
 - Automated runtime tests, project type checking and production build verification
 
-The runtime now activates each due scenario-time event once in deterministic order, preserves an append-only event history and applies validated Observation effects. In the power-first opening, a short GPZ Brzeziny power-quality disturbance at 07:44 creates the first time-driven Observation.
+The runtime now resolves the opening variant, dominant profile and different secondary modifier from the scenario version and seed. At 07:44 it activates exactly one matching opening event: a GPZ disturbance, R-4 link degradation or SUW controller restart. Each event creates one validated, causally linked Observation without leaking data from the other variants. The documented seed `8F4C` resolves to `water-first`, `access-constrained` and `low-confidence-data`.
 
 ## Documentation
 
@@ -107,7 +107,7 @@ The public demonstrator is **not** intended to include weapon control, target en
 
 ## Next step
 
-Add the second and third opening Observations for Scenario 01, then begin Assessment and Projection rule evaluation over the accumulating evidence.
+Apply dominant and secondary profile modifiers to bounded timing and evidence quality, then add the second and third opening Observations before Assessment and Projection rule evaluation.
 
 ---
 

@@ -5,7 +5,10 @@ import type {
   ScenarioTime,
 } from './contracts';
 import { canAdvanceScenarioTime } from './runtime-clock';
-import type { ScenarioRuntimeState } from './runtime-state';
+import type {
+  OpeningVariantId,
+  ScenarioRuntimeState,
+} from './runtime-state';
 
 export interface AppendObservationEffect {
   type: 'appendObservation';
@@ -16,6 +19,7 @@ export type ScenarioEventEffect = AppendObservationEffect;
 
 export interface ScenarioTimeEventDefinition<T = unknown> {
   id: string;
+  openingVariants?: readonly OpeningVariantId[];
   trigger: {
     type: 'scenarioTime';
     at: ScenarioTime;
@@ -191,7 +195,13 @@ export function processDueScenarioTimeEvents(
     .filter(
       (definition) =>
         definition.trigger.at <= state.now &&
-        !processedEventIds.has(definition.id),
+        !processedEventIds.has(definition.id) &&
+        (
+          definition.openingVariants === undefined ||
+          definition.openingVariants.includes(
+            state.run.openingVariant,
+          )
+        ),
     )
     .sort(compareDefinitions);
 
