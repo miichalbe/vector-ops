@@ -1,6 +1,6 @@
 # VECTOR OPS — UX Requirements
 
-**Version:** 0.5  
+**Version:** 0.6  
 **Date:** 23 September 2026  
 **Status:** Living implementation contract  
 **Related artifacts:** [Primary Operational View](primary-operational-view.md), [Primary Operator Flow](primary-operator-flow.md), [System Contract](../architecture/system-contract.md)
@@ -58,6 +58,12 @@ Important interactions should remain visibly discoverable while also supporting 
 
 Colour may reinforce state, selection or attention, but text, structure and focus treatment must carry the meaning independently.
 
+### UX-P07 — Progressive transparency
+
+The default interface should expose enough reasoning to support a timely operational choice without forcing the operator to process every evidence and assumption detail.
+
+Deeper evidence, unknowns, assumptions and rule context must remain inspectable on demand. More consequential or uncertain states may justify stronger disclosure, but routine operation should remain low-noise.
+
 ---
 
 ## 4. Primary workspace
@@ -107,7 +113,7 @@ Module software state must not be described as infrastructure state.
 **Provisional alpha requirement:** the opening advances automatically at one scenario minute per four real-time seconds.
 
 - A visible native `Pause` / `Resume` control must remain keyboard accessible.
-- The current opening automatically pauses when the first Projection appears so the operator can inspect the complete initial reasoning chain.
+- A blocking Decision changes runtime status to `awaitingDecision`; runtime time progression stops because of runtime state rather than presentation-local auto-pause logic.
 - Pausing affects progression only; it must not clear selection, evidence or derived claims.
 - Final pacing remains subject to scenario validation and may change without altering the domain timeline.
 
@@ -268,7 +274,124 @@ The disclosure must support keyboard activation and visible focus. Expanding it 
 
 ---
 
-## 8. Keyboard and accessibility
+## 8. Decision Focus Mode and Action Review
+
+### UX-D01 — Action Review is a workspace mode
+
+Action Review is not treated as an ordinary intelligence panel or a separate navigation destination. A blocking Decision switches the Operational Workspace into **Decision Focus Mode**.
+
+The operator remains in the same operational context, but the interface must visibly communicate that the system is now waiting for a consequential operator choice.
+
+### UX-D02 — Blocking decisions in VS1
+
+VS1 supports only blocking Decisions.
+
+When a blocking Decision opens:
+
+- runtime status becomes `awaitingDecision`;
+- scenario time progression stops;
+- the operator must record one available Action before the runtime resumes;
+- the underlying Operational Workspace remains visible for orientation but is visually suppressed and non-interactive while Decision Focus Mode is active.
+
+The target implementation may later support both blocking and non-blocking Decisions and multiple simultaneously open Decisions. That behaviour is explicitly deferred beyond VS1.
+
+### UX-D03 — Visually distinct mode
+
+Decision Focus Mode must look materially different from routine workspace operation, not merely like another bordered panel.
+
+The first implementation uses a cooler, higher-contrast blue treatment, mode strip and stronger visual separation while preserving VECTOR OPS typography and information discipline.
+
+The normal workspace remains visible beneath a dimmed overlay at approximately half prominence. The intent is to preserve orientation without competing with the current decision.
+
+### UX-D04 — Decision information hierarchy
+
+The default Action Review hierarchy is:
+
+1. explicit `Decision required` state;
+2. decision question;
+3. concise `Why now` summary;
+4. comparable Action options;
+5. selected-option summary and confirmation.
+
+Evidence, unknowns and assumptions must remain available but are secondary to the decision itself.
+
+### UX-D05 — Progressive reasoning disclosure
+
+The default `Why now` summary should communicate the minimum sufficient reasoning context, such as:
+
+- number of correlated observations;
+- active Assessment count;
+- Projection count;
+- current confidence level.
+
+Full evidence, unknowns and assumptions are exposed through an explicit `Review reasoning` disclosure.
+
+Assumptions are treated primarily as explainability material rather than mandatory first-level decision content.
+
+### UX-D06 — Comparable Action cards
+
+Available Actions should be shown as directly comparable cards when the option count and viewport support it.
+
+Each Action card exposes at minimum:
+
+- title;
+- authority boundary;
+- reversibility;
+- expected effects;
+- displaced risk or cost;
+- affected entities.
+
+No option is visually or verbally labelled as the recommended or correct choice unless a future rule explicitly produces such a recommendation and its reasoning is inspectable.
+
+### UX-D07 — Full-card selection
+
+The complete Action card is the selection target. A native radio control remains visible to preserve explicit state and predictable keyboard semantics.
+
+Hover, keyboard focus and selected states must be visually distinct. Selection itself does not record the Decision; the operator must separately confirm it.
+
+### UX-D08 — Short confirmation CTA
+
+The confirmation button uses a short stable label such as `Confirm selection`.
+
+Do not place the complete Action title inside the button because Action names may be long. The currently selected Action may instead be repeated in nearby supporting text before confirmation.
+
+### UX-D09 — Authority wording
+
+Action Review must describe the operator's actual authority rather than implying direct control that does not exist.
+
+Where the operator can recommend but not execute a broader escalation, the UI should communicate recommendation authority explicitly. External acceptance/approval state remains a future lifecycle concern where applicable.
+
+### UX-D10 — Focus containment
+
+A blocking Decision must prevent accidental interaction with the suppressed workspace.
+
+Keyboard interaction should remain within the Action Review while it is active. The current implementation uses native controls and a contained tab sequence. Final focus-return behaviour after confirmation remains subject to refinement against the running UI.
+
+### UX-D11 — Action-recorded receipt
+
+After confirmation, the interface must provide immediate acknowledgement that the Action was recorded before the operator fully returns to routine work.
+
+The acknowledgement must use factual language such as `Action recorded`, not `Success`, because recording an Action does not mean the operational outcome succeeded.
+
+The receipt may expose recorded expected effects and displaced risks through progressive disclosure.
+
+### UX-D12 — Operational history entry point
+
+The application header reserves a global `History` entry point near scenario time so previously recorded Decisions and Action lifecycle events can later be revisited without relying only on the final After-Action Report.
+
+The detailed History interaction is not implemented in VS1. The eventual history should preserve the distinction between:
+
+- decision context available at the time;
+- selected Action;
+- subsequent Action lifecycle events;
+- expected effects;
+- observed effects.
+
+A neighbouring Notifications entry point is also reserved for future attention items such as open Decisions or Action responses. Placeholder controls must not pretend to perform unavailable functionality; they may communicate `Coming soon` on hover.
+
+---
+
+## 9. Keyboard and accessibility
 
 ### UX-A01 — Native primary-control behaviour
 
@@ -297,7 +420,7 @@ If arrow-key navigation is introduced later, it must use a coherent composite-wi
 
 ---
 
-## 9. Content and terminology
+## 10. Content and terminology
 
 ### UX-C01 — Application language
 
@@ -323,13 +446,18 @@ The operational experience and After-Action Report must not use:
 
 ---
 
-## 10. Deferred UX work
+## 11. Deferred UX work
 
 The following remain intentionally unresolved:
 
 - final entity-detail surface beyond the three-observation preview;
 - final contextual action and `Actions` menu behaviour;
-- reusable Action Review layout;
+- non-blocking Decision behaviour;
+- multiple simultaneous open Decisions, prioritisation and deferral;
+- final Operational History list/detail interaction;
+- Notifications interaction and attention model;
+- final external-response presentation inside Action Review / Action lifecycle;
+- final focus-return behaviour after a blocking Decision;
 - arrow-key navigation within the entity grid;
 - full responsive and mobile behaviour;
 - user-controlled workspace resizing;
@@ -343,7 +471,7 @@ Deferred work should be resolved against running scenario behaviour rather than 
 
 ---
 
-## 11. Current acceptance checklist
+## 12. Current acceptance checklist
 
 The implemented baseline should satisfy all of the following:
 
@@ -362,21 +490,26 @@ The implemented baseline should satisfy all of the following:
 - [x] `Tab`, `Enter` and `Space` support the primary details interaction.
 - [x] Arrow-key navigation is explicitly deferred.
 - [x] Scenario progression has a visible keyboard-accessible Pause / Resume control.
-- [x] The opening pauses when the first complete Assessment → Projection chain is available.
+- [x] The first blocking Decision pauses runtime through `awaitingDecision` rather than local React auto-pause state.
 - [x] Active derived claims expose keyboard-accessible evidence disclosure.
 - [x] Operational severity is derived from active Assessment and Projection state rather than baseline UI copy.
 - [x] Data condition is derived from Observation quality and delivery timing rather than represented as a static baseline label.
 - [ ] Dependencies are inspectable from the entity context.
 - [x] Assessment and Projection are generated from deterministic rules and expose their current runtime revisions.
-- [ ] Contextual actions use shared Action objects.
+- [x] Decision 1 Actions use shared runtime Action objects and one runtime Decision record.
+- [x] Decision Focus Mode visually suppresses and blocks the routine workspace while a blocking Decision is open.
+- [x] Action Review uses progressive reasoning disclosure and full-card Action selection.
+- [x] Confirming a Decision produces an `Action recorded` receipt before routine work continues visually.
+- [x] Header reserves History and Notifications entry points without pretending the future features are already available.
 - [x] Complete current observation history is accessible from the Selected entity scroll region.
 
 ---
 
-## 12. Change log
+## 13. Change log
 
 | Date | Version | Change |
 |---|---:|---|
+| 23 September 2026 | 0.6 | Defined Decision Focus Mode, VS1 blocking-Decision behaviour, progressive Action Review hierarchy, full-card Action selection, factual post-confirmation receipt, and future History / Notifications entry points. Documented non-blocking and multiple simultaneous Decisions as post-VS1 work. |
 | 23 September 2026 | 0.5 | Replaced the three-observation truncation with a keyboard-accessible internal scroll region while preserving the Selected entity panel's stable height. |
 | 23 September 2026 | 0.4 | Restricted entity-status tooltips to direct badge hover and protected first-click tile selection from tooltip interference. |
 | 23 September 2026 | 0.3 | Added accessible hover and keyboard-focus explanations for read-only entity status badges. |

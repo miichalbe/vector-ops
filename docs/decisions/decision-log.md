@@ -162,3 +162,20 @@ This document records product decisions made during discovery so that future cha
 **Reasoning:** Interaction decisions were already emerging through implementation and usability inspection of the working interface. Recording them only in code or conversation would make the rationale difficult to recover and would allow later changes to accidentally reverse accepted behaviour.
 
 **Consequence:** Current requirements include stable entity-tile geometry, a persistent `View details` label, full-tile details selection, separate future action controls, stable Selected entity panel placement and height, a three-observation preview, native keyboard activation and explicit deferral of arrow-key grid navigation.
+
+## 23 September 2026 — v0.3
+
+### D19 — Decision Focus Mode and Action Review
+**Decision:** Treat Action Review as a distinct **Decision Focus Mode** of the Operational Workspace. VS1 supports one blocking Decision at a time. The target product model must later support blocking and non-blocking Decisions, including the possibility of multiple simultaneously open Decisions, without assuming that several full review surfaces are displayed at once.
+
+**Interaction:** A blocking Decision pauses runtime through `awaitingDecision`, visually suppresses and blocks the routine workspace, and presents one focused Action Review. The default review prioritises the decision question, a concise `Why now` explanation and directly comparable Action options. Full evidence, unknowns and assumptions remain inspectable through progressive disclosure.
+
+**Action selection:** The complete Action card is selectable. Selection is separate from confirmation. The confirmation CTA remains short (`Confirm selection`) and authority wording must reflect the operator's actual mandate rather than imply direct control.
+
+**Acknowledgement:** Recording a Decision produces a factual `Action recorded` receipt. The UI must not describe the operational outcome as successful merely because the Action was recorded.
+
+**History and attention:** Reserve global History and Notifications entry points near scenario time. Operational History must eventually combine contemporaneous Decision context with later Action lifecycle and observed effects. Notifications may later surface open Decisions, deadlines, external responses and other attention items. Detailed History and Notifications behaviour are outside VS1.
+
+**Reasoning:** The first working Decision 1 screen exposed two problems: too much reasoning detail competed with the actual choice, and the Action Review looked too similar to routine monitoring. A dedicated focus mode better matches the consequence of a blocking decision while progressive transparency keeps the reasoning inspectable without forcing all detail into the default view.
+
+**Consequence:** The reusable interaction contract is maintained in [Action Review Pattern](../design/action-review-pattern.md) and [UX Requirements](../design/ux-requirements.md). Future Decision 2 and Decision 3 implementations should reuse this pattern rather than introduce separate decision-specific presentation logic.

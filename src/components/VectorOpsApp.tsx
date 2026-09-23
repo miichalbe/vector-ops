@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
+import ActionReceipt from './ActionReceipt';
 import ActionReview from './ActionReview';
+import HeaderUtilities from './HeaderUtilities';
 import type {
   ActionId,
   Assessment,
+  DecisionId,
   EntityId,
   Observation,
   ObservationSource,
@@ -231,12 +234,19 @@ function ClaimEvidence({
   );
 }
 
+interface ReceiptReference {
+  decisionId: DecisionId;
+  actionId: ActionId;
+}
+
 export default function VectorOpsApp() {
   const [runtimeState, setRuntimeState] =
     useState<ScenarioRuntimeState>(scenario01InitialState);
   const [selectedEntityId, setSelectedEntityId] =
     useState<EntityId>(initialEntityId);
   const [isManuallyPaused, setIsManuallyPaused] = useState(false);
+  const [receiptReference, setReceiptReference] =
+    useState<ReceiptReference | null>(null);
 
   useEffect(() => {
     if (isManuallyPaused || runtimeState.status !== 'running') {
@@ -310,6 +320,16 @@ export default function VectorOpsApp() {
       : isManuallyPaused
         ? 'Resume'
         : 'Pause';
+  const receiptDecision = receiptReference
+    ? runtimeState.decisions.find(
+        (decision) => decision.id === receiptReference.decisionId,
+      )
+    : undefined;
+  const receiptAction = receiptReference
+    ? runtimeState.actions.find(
+        (action) => action.id === receiptReference.actionId,
+      )
+    : undefined;
 
   function handleDecisionConfirm(actionId: ActionId) {
     if (!pendingDecision) {
@@ -326,6 +346,7 @@ export default function VectorOpsApp() {
         new Date().toISOString(),
       ),
     );
+    setReceiptReference({ decisionId, actionId });
   }
 
   return (
@@ -340,6 +361,7 @@ export default function VectorOpsApp() {
         </div>
 
         <div className="scenario-controls">
+          <HeaderUtilities />
           <div className="scenario-clock" aria-label="Scenario time">
             <span>Scenario time</span>
             <strong>{formatScenarioTime(runtimeState.now)}</strong>
@@ -372,6 +394,14 @@ export default function VectorOpsApp() {
           <strong>Run:</strong> {runStatusLabel}
         </span>
       </section>
+
+      {receiptDecision && receiptAction ? (
+        <ActionReceipt
+          action={receiptAction}
+          decision={receiptDecision}
+          onDismiss={() => setReceiptReference(null)}
+        />
+      ) : null}
 
       {decisionRequired && pendingDecision && pendingDecisionGate ? (
         <ActionReview
@@ -683,7 +713,7 @@ export default function VectorOpsApp() {
         .scenario-controls {
           display: flex;
           align-items: end;
-          gap: 14px;
+          gap: 12px;
         }
 
         .scenario-clock {
