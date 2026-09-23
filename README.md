@@ -75,10 +75,10 @@ The active vertical slice currently includes:
 - Immutable scenario runtime state
 - Primary operational view driven by runtime selectors
 - Minimal simulation clock with explicit pause rules
-- Deterministic scenario-time event processing with append-only event history
+- Deterministic scenario-time event processing with append-only event and Observation effects
 - Automated runtime tests, project type checking and production build verification
 
-The runtime now activates each due scenario-time event once in deterministic order and preserves an append-only event history. The next capability is applying event effects, beginning with time-driven Observations.
+The runtime now activates each due scenario-time event once in deterministic order, preserves an append-only event history and applies validated Observation effects. In the power-first opening, a short GPZ Brzeziny power-quality disturbance at 07:44 creates the first time-driven Observation.
 
 ## Documentation
 
@@ -95,7 +95,7 @@ The runtime now activates each due scenario-time event once in deterministic ord
 
 ## Current implementation questions
 
-- How should processed event effects append Observations and update hidden scenario state?
+- How should hidden physical state remain separate from operator-visible Observations?
 - How should Assessment and Projection rules expose causal reasoning?
 - How should the reusable Action Review work?
 - What exact second-by-second flow produces the strongest credible first run?
@@ -107,7 +107,7 @@ The public demonstrator is **not** intended to include weapon control, target en
 
 ## Next step
 
-Use the deterministic event processor to introduce the first time-driven Observation in Scenario 01, then begin Assessment and Projection rule evaluation.
+Add the second and third opening Observations for Scenario 01, then begin Assessment and Projection rule evaluation over the accumulating evidence.
 
 ---
 

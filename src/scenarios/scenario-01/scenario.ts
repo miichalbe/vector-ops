@@ -37,3 +37,5 @@ export const scenario01InitialState = createInitialRuntimeState(
   scenario01InitialData,
   scenario01DefaultRunConfig,
 );
+
+export { scenario01TimeEvents } from './timeline';

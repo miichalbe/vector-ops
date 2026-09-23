@@ -8,6 +8,7 @@ import type {
   ScenarioRunStatus,
   ScenarioRuntimeState,
 } from './runtime-state';
+import { scenario01EntityIds } from '../scenarios/scenario-01/baseline';
 import { scenario01InitialState } from '../scenarios/scenario-01/scenario';
 
 const RECORDED_AT = '2026-09-23T10:00:00.000Z';
@@ -191,5 +192,157 @@ describe('scenario time event processing', () => {
         '   ',
       ),
     ).toThrow('Event recording time must not be empty.');
+  });
+});
+
+
+interface ObservationDefinitionOptions {
+  observationId?: string;
+  entityId?: string;
+  relatedEventId?: string;
+  receivedAt?: number;
+  observedAt?: number;
+}
+
+function eventDefinitionWithObservation(
+  id: string,
+  at: number,
+  options: ObservationDefinitionOptions = {},
+): ScenarioTimeEventDefinition {
+  const observationId =
+    options.observationId ?? `observation.for.${id}`;
+
+  return {
+    ...eventDefinition(id, at),
+    effects: [
+      {
+        type: 'appendObservation',
+        observation: {
+          id: observationId,
+          entityId:
+            options.entityId ?? scenario01EntityIds.gridSubstation,
+          metric: 'test.metric',
+          value: 'warning',
+          observedAt: options.observedAt ?? at,
+          receivedAt: options.receivedAt ?? at,
+          source: {
+            type: 'scenario',
+            id: 'runtime-events-test',
+          },
+          quality: 'good',
+          confidence: {
+            level: 'high',
+          },
+          classification: 'fact',
+          relatedEventId: options.relatedEventId ?? id,
+        },
+      },
+    ],
+  };
+}
+
+describe('scenario event observation effects', () => {
+  it('appends an Observation linked to its due Domain Event', () => {
+    const initialTime = scenario01InitialState.now;
+    const initialState = stateAt(initialTime);
+    const definition = eventDefinitionWithObservation(
+      'event.with-observation',
+      initialTime,
+    );
+
+    const processedState = processDueScenarioTimeEvents(
+      initialState,
+      [definition],
+      RECORDED_AT,
+    );
+    const appendedObservation =
+      processedState.observations.at(-1);
+
+    expect(processedState.observations).toHaveLength(
+      initialState.observations.length + 1,
+    );
+    expect(appendedObservation).toMatchObject({
+      id: 'observation.for.event.with-observation',
+      entityId: scenario01EntityIds.gridSubstation,
+      relatedEventId: 'event.with-observation',
+      receivedAt: initialTime,
+    });
+    expect(initialState.observations).toHaveLength(
+      scenario01InitialState.observations.length,
+    );
+  });
+
+  it('rejects duplicate Observation ids before processing', () => {
+    const initialTime = scenario01InitialState.now;
+    const observationId = 'observation.duplicate';
+
+    expect(() =>
+      processDueScenarioTimeEvents(
+        stateAt(initialTime),
+        [
+          eventDefinitionWithObservation('event.first', initialTime, {
+            observationId,
+          }),
+          eventDefinitionWithObservation('event.second', initialTime, {
+            observationId,
+          }),
+        ],
+        RECORDED_AT,
+      ),
+    ).toThrow(`Duplicate observation id: ${observationId}`);
+  });
+
+  it('rejects an Observation for an unknown entity', () => {
+    const initialTime = scenario01InitialState.now;
+
+    expect(() =>
+      processDueScenarioTimeEvents(
+        stateAt(initialTime),
+        [
+          eventDefinitionWithObservation('event.unknown-entity', initialTime, {
+            entityId: 'entity.unknown',
+          }),
+        ],
+        RECORDED_AT,
+      ),
+    ).toThrow(
+      'Observation observation.for.event.unknown-entity references unknown entity: entity.unknown',
+    );
+  });
+
+  it('requires the Observation to identify its causal event', () => {
+    const initialTime = scenario01InitialState.now;
+
+    expect(() =>
+      processDueScenarioTimeEvents(
+        stateAt(initialTime),
+        [
+          eventDefinitionWithObservation('event.causal', initialTime, {
+            relatedEventId: 'event.other',
+          }),
+        ],
+        RECORDED_AT,
+      ),
+    ).toThrow(
+      'Observation observation.for.event.causal must reference its scenario event: event.causal',
+    );
+  });
+
+  it('requires the Observation reception time to match the event time', () => {
+    const initialTime = scenario01InitialState.now;
+
+    expect(() =>
+      processDueScenarioTimeEvents(
+        stateAt(initialTime),
+        [
+          eventDefinitionWithObservation('event.time-link', initialTime, {
+            receivedAt: initialTime + 1,
+          }),
+        ],
+        RECORDED_AT,
+      ),
+    ).toThrow(
+      'Observation observation.for.event.time-link must be received at its scenario event time.',
+    );
   });
 });
