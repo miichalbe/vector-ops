@@ -4,10 +4,10 @@
 
 A modular operations coordination platform for distributed teams, autonomous assets and complex operational environments.
 
-> **Project status:** M2 System Definition / M3 Interaction Design  
+> **Project status:** M4 Working Prototype / vertical-slice implementation  
 > **Version:** 0.1  
 > **Started:** 21 September 2026  
-> **Last updated:** 22 September 2026
+> **Last updated:** 23 September 2026
 
 ## What is VECTOR OPS?
 
@@ -64,6 +64,21 @@ The primary operator is a **Dyżurny operacyjny Wojewódzkiego Centrum Zarządza
 
 The public alpha is intentionally narrow: one operator, one operational area and three meaningful coordination or escalation moments. It is being implemented on an extensible modular foundation so later modules and scenarios can be added without rewriting the application core.
 
+## Current implementation
+
+The active vertical slice currently includes:
+
+- Astro application shell with a React interaction layer
+- Shared TypeScript domain contracts
+- Scenario 01 entity, capability, dependency and baseline-observation registries
+- Deterministic seeded run configuration
+- Immutable scenario runtime state
+- Primary operational view driven by runtime selectors
+- Minimal simulation clock with explicit pause rules
+- Automated runtime tests, project type checking and production build verification
+
+The next runtime capability is deterministic event processing: advancing scenario time must activate each due scenario event once and preserve an explainable event history.
+
 ## Documentation
 
 - [Discovery Brief](docs/discovery/discovery-brief.md)
@@ -77,10 +92,10 @@ The public alpha is intentionally narrow: one operator, one operational area and
 - [Primary Operational View](docs/design/primary-operational-view.md)
 - [Evidence Library](docs/research/evidence-library.md)
 
-## Current definition questions
+## Current implementation questions
 
-- What is the final typed domain and dependency schema?
-- What event taxonomy and module contract should drive implementation?
+- How should deterministic event processing turn scheduled scenario data into state changes?
+- How should Assessment and Projection rules expose causal reasoning?
 - How should the reusable Action Review work?
 - What exact second-by-second flow produces the strongest credible first run?
 - Which onboarding elements remain necessary after the base interface exists?
@@ -91,7 +106,7 @@ The public demonstrator is **not** intended to include weapon control, target en
 
 ## Next step
 
-Finalize the shared domain, event and module contracts, then map the accepted scenario into the primary operator flow and working vertical slice.
+Implement deterministic scenario event processing with automated tests, then use it to introduce the first time-driven observation in Scenario 01.
 
 ---
 

@@ -3,7 +3,7 @@
 **Current phase:** Working Prototype / Interaction Refinement  
 **Current milestone:** M4 — Working Prototype, with M3 interaction refinement continuing against working UI  
 **Project status:** Active  
-**Last updated:** 22 September 2026
+**Last updated:** 23 September 2026
 
 This roadmap tracks the evolution of VECTOR OPS from early discovery to a public working demonstrator and portfolio case study.
 
@@ -122,11 +122,11 @@ Primary flow and runtime behaviour are specified in [Primary Operator Flow & Sce
 - Cross-module consequence generation
 
 ### Planned work
-- [ ] Set up Astro / application shell
-- [ ] Define repository app structure
-- [ ] Implement shared entity registry
+- [x] Set up Astro / application shell
+- [x] Define repository app structure
+- [x] Implement shared entity registry
 - [ ] Implement module registry
-- [ ] Implement simulation clock
+- [x] Implement simulation clock
 - [ ] Implement event bus
 - [ ] Implement map / operational picture
 - [ ] Implement first 3–4 MVP modules
@@ -134,6 +134,8 @@ Primary flow and runtime behaviour are specified in [Primary Operator Flow & Sce
 - [ ] Implement operational consequence logic
 - [ ] Implement operator decisions
 - [ ] Add audit trail
+
+**Current implementation checkpoint:** The application shell, shared contracts and entity registry, Scenario 01 baseline data, deterministic seeded run configuration, runtime state, primary operational view and tested simulation clock are in place. The next implementation step is deterministic event processing.
 
 ### First implementation sequence
 
