@@ -43,3 +43,4 @@ export const scenario01TimeEvents = createScenario01TimeEvents(
 );
 
 export { scenario01AssessmentRules } from './assessments';
+export { scenario01ProjectionRules } from './projections';
