@@ -41,3 +41,5 @@ export const scenario01InitialState = createInitialRuntimeState(
 export const scenario01TimeEvents = createScenario01TimeEvents(
   scenario01DefaultRunConfig,
 );
+
+export { scenario01AssessmentRules } from './assessments';

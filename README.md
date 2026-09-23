@@ -77,9 +77,12 @@ The active vertical slice currently includes:
 - Primary operational view driven by runtime selectors
 - Minimal simulation clock with explicit pause rules
 - Deterministic scenario-time event processing with append-only event and Observation effects
+- Deterministic Assessment rule evaluation with inspectable evidence, dependencies and append-only material revisions
 - Automated runtime tests, project type checking and production build verification
 
 The runtime resolves the opening variant, dominant profile, different secondary modifier and bounded run parameters from the scenario version and seed. Every opening now produces three ordered, causally linked Observations without leaking data from the other variants. Profile strength changes communication degradation, access delays, resource margins and information quality; the secondary modifier is deliberately weaker than the dominant profile. The documented seed `8F4C` resolves to `water-first`, `access-constrained` and `low-confidence-data`.
+
+After the third opening Observation, Scenario 01 evaluates the first cross-domain rule outside the UI. It creates an inspectable `A-01` Assessment only when the required evidence is present, preserves opening-specific emphasis, exposes supporting evidence and dependencies, and reduces confidence when information quality warrants it. Repeated evaluation is idempotent; later material changes create a new revision rather than silently rewriting the claim.
 
 ## Documentation
 
@@ -108,7 +111,7 @@ The public demonstrator is **not** intended to include weapon control, target en
 
 ## Next step
 
-Evaluate the accumulated three-observation opening evidence to create the first explainable Assessment, then derive the first Projection without hard-coding either into the UI.
+Derive the first time-dependent Projection from the explainable opening Assessment, then connect both derived claims to the operational view without hard-coding scenario reasoning into the UI.
 
 ---
 
