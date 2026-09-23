@@ -75,9 +75,10 @@ The active vertical slice currently includes:
 - Immutable scenario runtime state
 - Primary operational view driven by runtime selectors
 - Minimal simulation clock with explicit pause rules
+- Deterministic scenario-time event processing with append-only event history
 - Automated runtime tests, project type checking and production build verification
 
-The next runtime capability is deterministic event processing: advancing scenario time must activate each due scenario event once and preserve an explainable event history.
+The runtime now activates each due scenario-time event once in deterministic order and preserves an append-only event history. The next capability is applying event effects, beginning with time-driven Observations.
 
 ## Documentation
 
@@ -94,7 +95,7 @@ The next runtime capability is deterministic event processing: advancing scenari
 
 ## Current implementation questions
 
-- How should deterministic event processing turn scheduled scenario data into state changes?
+- How should processed event effects append Observations and update hidden scenario state?
 - How should Assessment and Projection rules expose causal reasoning?
 - How should the reusable Action Review work?
 - What exact second-by-second flow produces the strongest credible first run?
@@ -106,7 +107,7 @@ The public demonstrator is **not** intended to include weapon control, target en
 
 ## Next step
 
-Implement deterministic scenario event processing with automated tests, then use it to introduce the first time-driven observation in Scenario 01.
+Use the deterministic event processor to introduce the first time-driven Observation in Scenario 01, then begin Assessment and Projection rule evaluation.
 
 ---
 

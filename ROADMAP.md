@@ -135,7 +135,7 @@ Primary flow and runtime behaviour are specified in [Primary Operator Flow & Sce
 - [ ] Implement operator decisions
 - [ ] Add audit trail
 
-**Current implementation checkpoint:** The application shell, shared contracts and entity registry, Scenario 01 baseline data, deterministic seeded run configuration, runtime state, primary operational view and tested simulation clock are in place. The next implementation step is deterministic event processing.
+**Current implementation checkpoint:** The application shell, shared contracts and entity registry, Scenario 01 baseline data, deterministic seeded run configuration, runtime state, primary operational view, tested simulation clock and deterministic scenario-time event processing are in place. The next implementation step is applying event effects, beginning with append-only Observations.
 
 ### First implementation sequence
 
