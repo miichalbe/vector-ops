@@ -1,7 +1,7 @@
 # VECTOR OPS — Primary Operator Flow & Scenario Runtime Contract
 
-**Version:** 0.1  
-**Date:** 22 September 2026  
+**Version:** 0.2  
+**Date:** 23 September 2026  
 **Related issue:** #12 — Create primary operator flow  
 **Status:** Accepted implementation specification for vertical slice
 
@@ -48,7 +48,9 @@ The session remains a 5–7 minute synthetic simulation representing approximate
 
 ## 3. Run composition
 
-Every run is defined by four inputs:
+A run begins with stable scenario identity and a seed. The resolver deterministically selects one opening variant, one dominant condition profile and a different weaker modifier, then converts them into bounded runtime parameters.
+
+The resolved configuration stored in runtime state is:
 
 ```ts
 interface ScenarioRunConfig {
@@ -58,8 +60,38 @@ interface ScenarioRunConfig {
   openingVariant: OpeningVariantId;
   dominantProfile: ConditionProfileId;
   secondaryModifier: ConditionProfileId;
+  parameters: ScenarioRunParameters;
+}
+
+interface ScenarioRunParameters {
+  opening: {
+    secondObservationDelayMinutes: number;
+    thirdObservationDelayMinutes: number;
+  };
+  communications: {
+    degradationLeadMinutes: number;
+    linkDegradationMultiplier: number;
+    confirmationDelayMinutes: number;
+  };
+  access: {
+    restrictionLeadMinutes: number;
+    travelTimeMultiplier: number;
+    inspectionDelayMinutes: number;
+  };
+  resources: {
+    serviceMarginMultiplier: number;
+    contingencyCapacityMultiplier: number;
+    generatorPreparationDelayMinutes: number;
+  };
+  information: {
+    reportDelayMinutes: number;
+    confidencePenalty: 0 | 1 | 2;
+    staleThresholdReductionMinutes: number;
+  };
 }
 ```
+
+The parameters are resolved before runtime so replay never depends on hidden calls to randomness. Dominant profiles use the stronger bounded preset; secondary modifiers use the weaker preset. Parameters that do not apply to either selected profile remain neutral until consumed by later scenario events or rules.
 
 The two variation axes are intentionally different.
 
