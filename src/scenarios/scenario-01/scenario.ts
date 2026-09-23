@@ -1,4 +1,5 @@
 import { resolveScenarioRunConfig } from '../../core/run-config';
+import { createScenario01TimeEvents } from './timeline';
 import {
   createInitialRuntimeState,
   type ScenarioInitialData,
@@ -37,4 +38,6 @@ export const scenario01InitialState = createInitialRuntimeState(
   scenario01DefaultRunConfig,
 );
 
-export { scenario01TimeEvents } from './timeline';
+export const scenario01TimeEvents = createScenario01TimeEvents(
+  scenario01DefaultRunConfig,
+);

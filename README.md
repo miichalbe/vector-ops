@@ -72,13 +72,14 @@ The active vertical slice currently includes:
 - Shared TypeScript domain contracts
 - Scenario 01 entity, capability, dependency and baseline-observation registries
 - Deterministic seeded run resolution across three opening variants and four condition profiles
+- Bounded dominant/secondary profile parameters resolved before runtime
 - Immutable scenario runtime state
 - Primary operational view driven by runtime selectors
 - Minimal simulation clock with explicit pause rules
 - Deterministic scenario-time event processing with append-only event and Observation effects
 - Automated runtime tests, project type checking and production build verification
 
-The runtime now resolves the opening variant, dominant profile and different secondary modifier from the scenario version and seed. At 07:44 it activates exactly one matching opening event: a GPZ disturbance, R-4 link degradation or SUW controller restart. Each event creates one validated, causally linked Observation without leaking data from the other variants. The documented seed `8F4C` resolves to `water-first`, `access-constrained` and `low-confidence-data`.
+The runtime resolves the opening variant, dominant profile, different secondary modifier and bounded run parameters from the scenario version and seed. Every opening now produces three ordered, causally linked Observations without leaking data from the other variants. Profile strength changes communication degradation, access delays, resource margins and information quality; the secondary modifier is deliberately weaker than the dominant profile. The documented seed `8F4C` resolves to `water-first`, `access-constrained` and `low-confidence-data`.
 
 ## Documentation
 
@@ -107,7 +108,7 @@ The public demonstrator is **not** intended to include weapon control, target en
 
 ## Next step
 
-Apply dominant and secondary profile modifiers to bounded timing and evidence quality, then add the second and third opening Observations before Assessment and Projection rule evaluation.
+Evaluate the accumulated three-observation opening evidence to create the first explainable Assessment, then derive the first Projection without hard-coding either into the UI.
 
 ---
 
