@@ -4,6 +4,10 @@ import {
 } from './runtime-assessments';
 import { advanceScenarioTime } from './runtime-clock';
 import {
+  evaluateDecisionGates,
+  type DecisionGateDefinition,
+} from './runtime-decisions';
+import {
   processDueScenarioTimeEvents,
   type ScenarioTimeEventDefinition,
 } from './runtime-events';
@@ -17,6 +21,7 @@ export interface ScenarioRuntimeDefinition {
   timeEvents: readonly ScenarioTimeEventDefinition[];
   assessmentRules: readonly AssessmentRule[];
   projectionRules: readonly ProjectionRule[];
+  decisionGates: readonly DecisionGateDefinition[];
 }
 
 export function advanceScenarioRuntime(
@@ -38,9 +43,14 @@ export function advanceScenarioRuntime(
     observedState,
     definition.assessmentRules,
   );
-
-  return evaluateProjectionRules(
+  const projectedState = evaluateProjectionRules(
     assessedState,
     definition.projectionRules,
+  );
+
+  return evaluateDecisionGates(
+    projectedState,
+    definition.decisionGates,
+    recordedAt,
   );
 }

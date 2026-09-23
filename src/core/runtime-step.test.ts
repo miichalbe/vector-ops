@@ -5,12 +5,13 @@ import {
   scenario01InitialState,
   scenario01RuntimeDefinition,
 } from '../scenarios/scenario-01/scenario';
+import { scenario01DecisionIds } from '../scenarios/scenario-01/decisions';
 import { SCENARIO_01_FIRST_EVENT_TIME } from '../scenarios/scenario-01/timeline';
 
 const RECORDED_AT = '2026-09-23T12:30:00.000Z';
 
 describe('composed scenario runtime step', () => {
-  it('advances time without deriving claims before evidence is due', () => {
+  it('advances time without deriving claims or decisions before evidence is due', () => {
     const elapsedMinutes =
       SCENARIO_01_FIRST_EVENT_TIME -
       scenario01InitialState.now -
@@ -28,9 +29,12 @@ describe('composed scenario runtime step', () => {
     expect(state.events).toHaveLength(0);
     expect(state.assessments).toHaveLength(0);
     expect(state.projections).toHaveLength(0);
+    expect(state.actions).toHaveLength(0);
+    expect(state.decisions).toHaveLength(0);
+    expect(state.status).toBe('running');
   });
 
-  it('processes opening events before deriving Assessment and Projection', () => {
+  it('processes opening events, derives claims and opens Decision 1', () => {
     const finalOpeningTime =
       scenario01RuntimeDefinition.timeEvents.at(-1)?.trigger.at;
 
@@ -45,7 +49,7 @@ describe('composed scenario runtime step', () => {
       RECORDED_AT,
     );
 
-    expect(state.events).toHaveLength(3);
+    expect(state.events).toHaveLength(7);
     expect(state.observations).toHaveLength(
       scenario01InitialState.observations.length + 3,
     );
@@ -53,9 +57,28 @@ describe('composed scenario runtime step', () => {
     expect(state.projections).toHaveLength(1);
     expect(state.assessments[0]?.createdAt).toBe(finalOpeningTime);
     expect(state.projections[0]?.createdAt).toBe(finalOpeningTime);
+    expect(state.actions).toHaveLength(3);
+    expect(
+      state.actions.every((action) => action.lifecycle === 'available'),
+    ).toBe(true);
+    expect(state.decisions).toHaveLength(1);
+    expect(state.decisions[0]?.id).toBe(
+      scenario01DecisionIds.informationPosture,
+    );
+    expect(state.decisions[0]?.openedAt).toBe(finalOpeningTime);
+    expect(state.decisions[0]?.actionIds).toEqual(
+      state.actions.map((action) => action.id),
+    );
+    expect(state.status).toBe('awaitingDecision');
+    expect(state.events.slice(-4).map((event) => event.type)).toEqual([
+      'action.available',
+      'action.available',
+      'action.available',
+      'decision.opened',
+    ]);
   });
 
-  it('is idempotent when no time or material state changes', () => {
+  it('is idempotent after Decision 1 opens', () => {
     const finalOpeningTime =
       scenario01RuntimeDefinition.timeEvents.at(-1)?.trigger.at;
 

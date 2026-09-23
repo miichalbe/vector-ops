@@ -14,6 +14,7 @@ import {
   SCENARIO_01_START_TIME,
   scenario01BaselineObservations,
 } from './baseline-observations';
+import { scenario01DecisionGates } from './decisions';
 import { scenario01ProjectionRules } from './projections';
 import { createScenario01TimeEvents } from './timeline';
 
@@ -49,7 +50,9 @@ export const scenario01RuntimeDefinition = {
   timeEvents: scenario01TimeEvents,
   assessmentRules: scenario01AssessmentRules,
   projectionRules: scenario01ProjectionRules,
+  decisionGates: scenario01DecisionGates,
 } satisfies ScenarioRuntimeDefinition;
 
 export { scenario01AssessmentRules };
+export { scenario01DecisionGates };
 export { scenario01ProjectionRules };
