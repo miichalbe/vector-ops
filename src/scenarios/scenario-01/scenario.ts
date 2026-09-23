@@ -1,7 +1,7 @@
+import { resolveScenarioRunConfig } from '../../core/run-config';
 import {
   createInitialRuntimeState,
   type ScenarioInitialData,
-  type ScenarioRunConfig,
 } from '../../core/runtime-state';
 import {
   scenario01Capabilities,
@@ -24,14 +24,13 @@ export const scenario01InitialData = {
   observations: scenario01BaselineObservations,
 } satisfies ScenarioInitialData;
 
-export const scenario01DefaultRunConfig = {
+export const SCENARIO_01_DEFAULT_SEED = '8F4C';
+
+export const scenario01DefaultRunConfig = resolveScenarioRunConfig({
   scenarioId: scenario01InitialData.id,
   scenarioVersion: scenario01InitialData.version,
-  seed: '8F4C',
-  openingVariant: 'power-first',
-  dominantProfile: 'communications-fragile',
-  secondaryModifier: 'access-constrained',
-} satisfies ScenarioRunConfig;
+  seed: SCENARIO_01_DEFAULT_SEED,
+});
 
 export const scenario01InitialState = createInitialRuntimeState(
   scenario01InitialData,
