@@ -1,6 +1,6 @@
 # VECTOR OPS — UX Requirements
 
-**Version:** 0.3  
+**Version:** 0.4  
 **Date:** 23 September 2026  
 **Status:** Living implementation contract  
 **Related artifacts:** [Primary Operational View](primary-operational-view.md), [Primary Operator Flow](primary-operator-flow.md), [System Contract](../architecture/system-contract.md)
@@ -163,9 +163,11 @@ Avoid exposing several equally prominent action buttons on every tile. Prefer on
 
 The entity status badge is a read-only indicator of operational attention derived from active Assessment and Projection state. It is not an action and must not appear clickable.
 
-Hovering the badge or moving keyboard focus to the tile's existing `View details` control must reveal a concise tooltip explaining the current `Normal`, `Review` or `Action` state. The same explanation must be associated programmatically with the tile's primary details control for assistive technology.
+Hovering the badge must reveal a concise tooltip explaining the current `Normal`, `Review` or `Action` state.
 
-The badge must not introduce an additional tab stop. The tooltip relies on the tile's existing visible keyboard-focus treatment and must not change entity selection, scenario time or runtime state.
+The tooltip must appear only from direct pointer hover over the badge. Hovering or focusing the entity tile or its `View details` control must not reveal it.
+
+The badge must not introduce an additional tab stop. The tooltip must not intercept pointer input, delay or prevent first-click entity selection, or change scenario time or runtime state. Clicking the badge area remains part of the tile's entity-selection target.
 
 ---
 
@@ -350,7 +352,7 @@ The implemented baseline should satisfy all of the following:
 - [x] The `View details` label remains stable after selection.
 - [x] The full tile acts as the primary details-selection target.
 - [x] Selection has visible hover, selected and keyboard-focus treatment.
-- [x] Entity status badges expose a read-only explanation on pointer hover and existing tile-control focus without adding tab stops.
+- [x] Entity status badges expose a read-only explanation only on direct badge hover, without adding tab stops or disrupting first-click tile selection.
 - [x] Selected entity appears above Assessment and Projection.
 - [x] Selected entity aligns vertically with the entity grid.
 - [x] Selected entity has a stable provisional height.
@@ -374,6 +376,7 @@ The implemented baseline should satisfy all of the following:
 
 | Date | Version | Change |
 |---|---:|---|
+| 23 September 2026 | 0.4 | Restricted entity-status tooltips to direct badge hover and protected first-click tile selection from tooltip interference. |
 | 23 September 2026 | 0.3 | Added accessible hover and keyboard-focus explanations for read-only entity status badges. |
 | 23 September 2026 | 0.2 | Added live opening progression, pause behaviour, newest-first observation previews, runtime-derived status and inline evidence review for Assessment and Projection. |
 | 22 September 2026 | 0.1 | Created the living UX requirements contract from the first working operational view and accepted interaction refinements. |

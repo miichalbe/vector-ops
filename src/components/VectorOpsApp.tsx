@@ -374,6 +374,7 @@ export default function VectorOpsApp() {
                     </div>
                     <span
                       className={`status-badge status-badge--${entityStatus.toLowerCase()}`}
+                      onClick={() => setSelectedEntityId(entity.id)}
                     >
                       {entityStatus}
                       <span
@@ -409,7 +410,6 @@ export default function VectorOpsApp() {
                     type="button"
                     className="details-button"
                     aria-pressed={selected}
-                    aria-describedby={statusTooltipId}
                     onClick={() => setSelectedEntityId(entity.id)}
                   >
                     View details
@@ -746,10 +746,6 @@ export default function VectorOpsApp() {
           transform: translateY(-1px);
         }
 
-        .entity-card:focus-within {
-          z-index: 2;
-        }
-
         .entity-card--selected {
           border-color: #4d90d8;
           border-left-color: #62a9f2;
@@ -807,12 +803,10 @@ export default function VectorOpsApp() {
           pointer-events: none;
         }
 
-        .status-badge:hover .status-tooltip,
-        .entity-card:focus-within .status-tooltip {
+        .status-badge:hover .status-tooltip {
           opacity: 1;
           visibility: visible;
           transform: translateY(0);
-          pointer-events: auto;
         }
 
         .status-badge--review {
