@@ -22,6 +22,32 @@ describe('seeded scenario run configuration', () => {
       openingVariant: 'water-first',
       dominantProfile: 'access-constrained',
       secondaryModifier: 'low-confidence-data',
+      parameters: {
+        opening: {
+          secondObservationDelayMinutes: 3,
+          thirdObservationDelayMinutes: 2,
+        },
+        communications: {
+          degradationLeadMinutes: 0,
+          linkDegradationMultiplier: 1,
+          confirmationDelayMinutes: 0,
+        },
+        access: {
+          restrictionLeadMinutes: 6,
+          travelTimeMultiplier: 1.3,
+          inspectionDelayMinutes: 8,
+        },
+        resources: {
+          serviceMarginMultiplier: 1,
+          contingencyCapacityMultiplier: 1,
+          generatorPreparationDelayMinutes: 0,
+        },
+        information: {
+          reportDelayMinutes: 2,
+          confidencePenalty: 1,
+          staleThresholdReductionMinutes: 1,
+        },
+      },
     });
   });
 
@@ -75,6 +101,42 @@ describe('seeded scenario run configuration', () => {
 
     expect(reachedOpenings).toEqual(new Set(openingVariantIds));
     expect(reachedProfiles).toEqual(new Set(conditionProfileIds));
+  });
+
+  it('applies dominant profiles more strongly than secondary modifiers', () => {
+    const communicationsDominant = resolveScenarioRunConfig({
+      ...baseInput,
+      dominantProfile: 'communications-fragile',
+      secondaryModifier: 'access-constrained',
+    });
+    const resourceDominant = resolveScenarioRunConfig({
+      ...baseInput,
+      dominantProfile: 'resource-constrained',
+      secondaryModifier: 'low-confidence-data',
+    });
+
+    expect(
+      communicationsDominant.parameters.communications,
+    ).toEqual({
+      degradationLeadMinutes: 2,
+      linkDegradationMultiplier: 1.5,
+      confirmationDelayMinutes: 4,
+    });
+    expect(communicationsDominant.parameters.access).toEqual({
+      restrictionLeadMinutes: 3,
+      travelTimeMultiplier: 1.15,
+      inspectionDelayMinutes: 4,
+    });
+    expect(resourceDominant.parameters.resources).toEqual({
+      serviceMarginMultiplier: 0.84,
+      contingencyCapacityMultiplier: 0.8,
+      generatorPreparationDelayMinutes: 4,
+    });
+    expect(resourceDominant.parameters.information).toEqual({
+      reportDelayMinutes: 2,
+      confidencePenalty: 1,
+      staleThresholdReductionMinutes: 1,
+    });
   });
 
   it('supports explicit overrides for repeatable reference runs', () => {

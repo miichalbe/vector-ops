@@ -38,6 +38,33 @@ export type ConditionProfileId =
   | 'resource-constrained'
   | 'low-confidence-data';
 
+export interface ScenarioRunParameters {
+  opening: {
+    secondObservationDelayMinutes: number;
+    thirdObservationDelayMinutes: number;
+  };
+  communications: {
+    degradationLeadMinutes: number;
+    linkDegradationMultiplier: number;
+    confirmationDelayMinutes: number;
+  };
+  access: {
+    restrictionLeadMinutes: number;
+    travelTimeMultiplier: number;
+    inspectionDelayMinutes: number;
+  };
+  resources: {
+    serviceMarginMultiplier: number;
+    contingencyCapacityMultiplier: number;
+    generatorPreparationDelayMinutes: number;
+  };
+  information: {
+    reportDelayMinutes: number;
+    confidencePenalty: 0 | 1 | 2;
+    staleThresholdReductionMinutes: number;
+  };
+}
+
 export interface ScenarioRunConfig {
   scenarioId: string;
   scenarioVersion: string;
@@ -45,6 +72,7 @@ export interface ScenarioRunConfig {
   openingVariant: OpeningVariantId;
   dominantProfile: ConditionProfileId;
   secondaryModifier: ConditionProfileId;
+  parameters: ScenarioRunParameters;
 }
 
 export interface ScenarioInitialData {
@@ -195,7 +223,16 @@ export function createInitialRuntimeState(
       version: data.version,
       title: data.title,
     },
-    run: { ...run },
+    run: {
+      ...run,
+      parameters: {
+        opening: { ...run.parameters.opening },
+        communications: { ...run.parameters.communications },
+        access: { ...run.parameters.access },
+        resources: { ...run.parameters.resources },
+        information: { ...run.parameters.information },
+      },
+    },
     now: data.initialTime,
     status: 'running',
     phase: 'baseline',

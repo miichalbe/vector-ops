@@ -2,8 +2,12 @@ import {
   type ConditionProfileId,
   type OpeningVariantId,
   type ScenarioRunConfig,
+  type ScenarioRunParameters,
 } from './runtime-state';
-import { createSeededRandom } from './seeded-random';
+import {
+  createSeededRandom,
+  type SeededRandom,
+} from './seeded-random';
 
 export const openingVariantIds = [
   'power-first',
@@ -27,10 +31,84 @@ export interface ScenarioRunConfigSeedInput {
   secondaryModifier?: ConditionProfileId;
 }
 
+type ProfileStrength = 0 | 1 | 2;
+
 function assertNonEmpty(value: string, label: string) {
   if (!value.trim()) {
     throw new Error(`${label} must not be empty.`);
   }
+}
+
+function profileStrength(
+  profile: ConditionProfileId,
+  dominantProfile: ConditionProfileId,
+  secondaryModifier: ConditionProfileId,
+): ProfileStrength {
+  if (profile === dominantProfile) {
+    return 2;
+  }
+
+  if (profile === secondaryModifier) {
+    return 1;
+  }
+
+  return 0;
+}
+
+function resolveRunParameters(
+  random: SeededRandom,
+  dominantProfile: ConditionProfileId,
+  secondaryModifier: ConditionProfileId,
+): ScenarioRunParameters {
+  const communicationsStrength = profileStrength(
+    'communications-fragile',
+    dominantProfile,
+    secondaryModifier,
+  );
+  const accessStrength = profileStrength(
+    'access-constrained',
+    dominantProfile,
+    secondaryModifier,
+  );
+  const resourceStrength = profileStrength(
+    'resource-constrained',
+    dominantProfile,
+    secondaryModifier,
+  );
+  const informationStrength = profileStrength(
+    'low-confidence-data',
+    dominantProfile,
+    secondaryModifier,
+  );
+
+  return {
+    opening: {
+      secondObservationDelayMinutes: random.integer(2, 4),
+      thirdObservationDelayMinutes: random.integer(2, 4),
+    },
+    communications: {
+      degradationLeadMinutes: communicationsStrength,
+      linkDegradationMultiplier:
+        1 + 0.25 * communicationsStrength,
+      confirmationDelayMinutes: 2 * communicationsStrength,
+    },
+    access: {
+      restrictionLeadMinutes: 3 * accessStrength,
+      travelTimeMultiplier: 1 + 0.15 * accessStrength,
+      inspectionDelayMinutes: 4 * accessStrength,
+    },
+    resources: {
+      serviceMarginMultiplier: 1 - 0.08 * resourceStrength,
+      contingencyCapacityMultiplier:
+        1 - 0.1 * resourceStrength,
+      generatorPreparationDelayMinutes: 2 * resourceStrength,
+    },
+    information: {
+      reportDelayMinutes: 2 * informationStrength,
+      confidencePenalty: informationStrength,
+      staleThresholdReductionMinutes: informationStrength,
+    },
+  };
 }
 
 export function resolveScenarioRunConfig(
@@ -76,5 +154,10 @@ export function resolveScenarioRunConfig(
     openingVariant,
     dominantProfile,
     secondaryModifier,
+    parameters: resolveRunParameters(
+      random,
+      dominantProfile,
+      secondaryModifier,
+    ),
   };
 }
