@@ -160,12 +160,18 @@ describe('Scenario 01 time-driven opening', () => {
       SCENARIO_01_FIRST_EVENT_TIME + 3,
       SCENARIO_01_FIRST_EVENT_TIME + 5,
     ]);
+    const delayedObservation = observationEffects[1];
+
     expect(observationEffects[0]?.confidence.level).toBe('high');
-    expect(observationEffects[1]?.confidence.level).toBe('medium');
+    expect(delayedObservation).toBeDefined();
     expect(observationEffects[2]?.confidence.level).toBe('medium');
+
+    if (!delayedObservation) {
+      throw new Error('Expected the second opening observation');
+    }
+
     expect(
-      observationEffects[1]?.receivedAt -
-        (observationEffects[1]?.observedAt ?? 0),
+      delayedObservation.receivedAt - delayedObservation.observedAt,
     ).toBe(2);
   });
 
