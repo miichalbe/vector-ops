@@ -1,7 +1,7 @@
 # VECTOR OPS — UX Requirements
 
-**Version:** 0.1  
-**Date:** 22 September 2026  
+**Version:** 0.2  
+**Date:** 23 September 2026  
 **Status:** Living implementation contract  
 **Related artifacts:** [Primary Operational View](primary-operational-view.md), [Primary Operator Flow](primary-operator-flow.md), [System Contract](../architecture/system-contract.md)
 
@@ -102,6 +102,15 @@ A compact system bar above the workspace should communicate at minimum:
 
 Module software state must not be described as infrastructure state.
 
+### UX-L05 — Live scenario progression
+
+**Provisional alpha requirement:** the opening advances automatically at one scenario minute per four real-time seconds.
+
+- A visible native `Pause` / `Resume` control must remain keyboard accessible.
+- The current opening automatically pauses when the first Projection appears so the operator can inspect the complete initial reasoning chain.
+- Pausing affects progression only; it must not clear selection, evidence or derived claims.
+- Final pacing remains subject to scenario validation and may change without altering the domain timeline.
+
 ---
 
 ## 5. Entity grid and tiles
@@ -118,11 +127,11 @@ The grid should retain deliberate capacity for future entities rather than stret
 
 ### UX-E03 — Observation preview
 
-The current tile preview displays up to three key observations.
+The current tile and Selected entity previews display up to three observations, ordered by most recently received first with stable ID ordering as the final tie-breaker.
 
 This is a presentation limit, not a domain-data limit. The runtime must retain all observations.
 
-The final prioritisation rule for choosing which observations appear on the tile remains to be defined by implementation needs and scenario validation.
+This provisional alpha rule ensures that newly received scenario evidence becomes visible without increasing tile height. A later priority model may also consider operational relevance, severity or pinned observations.
 
 ### UX-E04 — Details control placement
 
@@ -229,6 +238,23 @@ These are presentation limits, not domain-model limits.
 
 Every material Assessment and Projection must expose a consistent evidence path. The final interaction may use a panel, drawer or another details surface, but provenance must not exist only in explanatory UI copy.
 
+### UX-I05 — Latest active revision
+
+The primary panels display the latest active revision of each Assessment or Projection family.
+
+Earlier revisions remain in runtime state for audit reconstruction and must not appear as simultaneous duplicate active claims.
+
+### UX-I06 — Inline evidence disclosure
+
+**Provisional alpha requirement:** active Assessment and Projection panels expose a native `Review evidence` disclosure containing:
+
+- supporting observations and received times;
+- registered dependencies;
+- assumptions and their status;
+- the generating rule identifier.
+
+The disclosure must support keyboard activation and visible focus. Expanding it may intentionally move content below the panel; this is a deliberate inspection action and is distinct from unwanted movement caused by routine entity selection.
+
 ---
 
 ## 8. Keyboard and accessibility
@@ -323,10 +349,13 @@ The implemented baseline should satisfy all of the following:
 - [x] Assessment and Projection do not move when selection changes.
 - [x] `Tab`, `Enter` and `Space` support the primary details interaction.
 - [x] Arrow-key navigation is explicitly deferred.
-- [ ] Operational severity is derived from runtime state rather than baseline UI copy.
-- [ ] Data freshness is derived rather than represented as a static baseline label.
+- [x] Scenario progression has a visible keyboard-accessible Pause / Resume control.
+- [x] The opening pauses when the first complete Assessment → Projection chain is available.
+- [x] Active derived claims expose keyboard-accessible evidence disclosure.
+- [x] Operational severity is derived from active Assessment and Projection state rather than baseline UI copy.
+- [x] Data condition is derived from Observation quality and delivery timing rather than represented as a static baseline label.
 - [ ] Dependencies are inspectable from the entity context.
-- [ ] Assessment and Projection are generated from deterministic rules.
+- [x] Assessment and Projection are generated from deterministic rules and expose their current runtime revisions.
 - [ ] Contextual actions use shared Action objects.
 - [ ] Complete observation history is available from a full details surface.
 
@@ -336,4 +365,5 @@ The implemented baseline should satisfy all of the following:
 
 | Date | Version | Change |
 |---|---:|---|
+| 23 September 2026 | 0.2 | Added live opening progression, pause behaviour, newest-first observation previews, runtime-derived status and inline evidence review for Assessment and Projection. |
 | 22 September 2026 | 0.1 | Created the living UX requirements contract from the first working operational view and accepted interaction refinements. |

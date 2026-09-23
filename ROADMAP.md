@@ -135,7 +135,7 @@ Primary flow and runtime behaviour are specified in [Primary Operator Flow & Sce
 - [ ] Implement operator decisions
 - [ ] Add audit trail
 
-**Current implementation checkpoint:** The application shell, shared contracts and entity registry, Scenario 01 baseline data, deterministic seed-based resolution across three opening variants and four condition profiles, bounded dominant/secondary profile parameters, runtime state, primary operational view, tested simulation clock, deterministic scenario-time event processing, complete three-observation opening sequences, the first explainable cross-domain Assessment and the first bounded communications-continuity Projection are in place. Assessment and Projection evaluation is deterministic, idempotent and preserves material revisions. The next implementation step is composing event and rule evaluation into one runtime step and exposing the derived claims through the operational view.
+**Current implementation checkpoint:** The application shell, shared contracts and entity registry, Scenario 01 baseline data, deterministic seed-based resolution across three opening variants and four condition profiles, bounded dominant/secondary profile parameters, runtime state, tested simulation clock, deterministic event processing, complete three-observation opening sequences and the first explainable Assessment and Projection are in place. A composed runtime step now drives the live operational view, including newest-first evidence, runtime-derived status, pause/resume behaviour and inspectable claim provenance. The next implementation step is Decision 1: a bounded information-posture choice recorded through shared Action and Decision objects.
 
 ### First implementation sequence
 

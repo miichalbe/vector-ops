@@ -1,20 +1,26 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type {
+  Assessment,
   EntityId,
   Observation,
   ObservationSource,
+  Projection,
 } from '../core/contracts';
+import { advanceScenarioRuntime } from '../core/runtime-step';
 import {
   getEntities,
   getEntity,
   getEntityObservations,
+  type ScenarioRuntimeState,
 } from '../core/runtime-state';
-import { scenario01InitialState } from '../scenarios/scenario-01/scenario';
+import {
+  scenario01InitialState,
+  scenario01RuntimeDefinition,
+} from '../scenarios/scenario-01/scenario';
 
 const MAX_SELECTED_OBSERVATIONS = 3;
-const runtimeState = scenario01InitialState;
-const entities = getEntities(runtimeState);
-const initialEntityId = runtimeState.entityOrder[0];
+const SIMULATION_TICK_MS = 4_000;
+const initialEntityId = scenario01InitialState.entityOrder[0];
 
 if (!initialEntityId) {
   throw new Error('Scenario 01 runtime state contains no entities.');
@@ -63,19 +69,218 @@ function formatSource(source: ObservationSource) {
   return source.organisation ?? source.id ?? source.type;
 }
 
+function latestRevisions<T extends { id: string; revision: number }>(
+  items: readonly T[],
+): T[] {
+  const latestById = new Map<string, T>();
+
+  for (const item of items) {
+    const current = latestById.get(item.id);
+
+    if (!current || item.revision > current.revision) {
+      latestById.set(item.id, item);
+    }
+  }
+
+  return [...latestById.values()];
+}
+
+function newestObservations(
+  observations: readonly Observation[],
+): Observation[] {
+  return [...observations].sort((left, right) => {
+    const timeDifference = right.receivedAt - left.receivedAt;
+
+    return timeDifference !== 0
+      ? timeDifference
+      : left.id.localeCompare(right.id);
+  });
+}
+
+function getDataCondition(observations: readonly Observation[]) {
+  const latest = newestObservations(observations)[0];
+
+  if (!latest) {
+    return {
+      label: 'No data',
+      modifier: 'unknown',
+    };
+  }
+
+  if (latest.quality === 'poor' || latest.quality === 'unknown') {
+    return {
+      label: 'Limited data',
+      modifier: 'limited',
+    };
+  }
+
+  if (
+    latest.quality === 'degraded' ||
+    latest.observedAt < latest.receivedAt
+  ) {
+    return {
+      label: 'Delayed data',
+      modifier: 'delayed',
+    };
+  }
+
+  return {
+    label: 'Current data',
+    modifier: 'current',
+  };
+}
+
+function getEntityStatus(
+  entityId: EntityId,
+  claims: readonly (Assessment | Projection)[],
+) {
+  const relatedClaims = claims.filter((claim) =>
+    claim.entityIds.includes(entityId),
+  );
+
+  if (
+    relatedClaims.some(
+      (claim) =>
+        claim.attention === 'act' || claim.severity === 'critical',
+    )
+  ) {
+    return 'Action';
+  }
+
+  return relatedClaims.length > 0 ? 'Review' : 'Normal';
+}
+
+function ClaimEvidence({
+  claim,
+  runtimeState,
+}: {
+  claim: Assessment | Projection;
+  runtimeState: ScenarioRuntimeState;
+}) {
+  const evidence = claim.evidenceIds
+    .map((evidenceId) =>
+      runtimeState.observations.find(
+        (observation) => observation.id === evidenceId,
+      ),
+    )
+    .filter(
+      (observation): observation is Observation =>
+        observation !== undefined,
+    );
+  const dependencies = runtimeState.dependencies.filter((dependency) =>
+    claim.dependencyIds.includes(dependency.id),
+  );
+
+  return (
+    <details className="claim-evidence">
+      <summary>Review evidence</summary>
+
+      <div className="claim-evidence__content">
+        <h3>Evidence</h3>
+        <ul>
+          {evidence.map((observation) => (
+            <li key={observation.id}>
+              <strong>
+                {metricLabels[observation.metric] ?? observation.metric}
+              </strong>
+              <span>{formatValue(observation)}</span>
+              <small>
+                {formatSource(observation.source)} · received{' '}
+                {formatScenarioTime(observation.receivedAt)}
+              </small>
+            </li>
+          ))}
+        </ul>
+
+        <h3>Dependencies</h3>
+        <ul>
+          {dependencies.map((dependency) => (
+            <li key={dependency.id}>
+              <span>{dependency.description ?? dependency.type}</span>
+            </li>
+          ))}
+        </ul>
+
+        <h3>Assumptions</h3>
+        <ul>
+          {claim.assumptions.map((assumption) => (
+            <li key={assumption.id}>
+              <span>{assumption.statement}</span>
+              <small>Status: {assumption.status}</small>
+            </li>
+          ))}
+        </ul>
+
+        <p className="rule-reference">Rule: {claim.ruleId}</p>
+      </div>
+    </details>
+  );
+}
+
 export default function VectorOpsApp() {
+  const [runtimeState, setRuntimeState] =
+    useState<ScenarioRuntimeState>(scenario01InitialState);
   const [selectedEntityId, setSelectedEntityId] =
     useState<EntityId>(initialEntityId);
+  const [isPaused, setIsPaused] = useState(false);
+  const [hasAutoPaused, setHasAutoPaused] = useState(false);
 
+  useEffect(() => {
+    if (isPaused) {
+      return undefined;
+    }
+
+    const intervalId = window.setInterval(() => {
+      setRuntimeState((currentState) =>
+        advanceScenarioRuntime(
+          currentState,
+          1,
+          scenario01RuntimeDefinition,
+          new Date().toISOString(),
+        ),
+      );
+    }, SIMULATION_TICK_MS);
+
+    return () => window.clearInterval(intervalId);
+  }, [isPaused]);
+
+  useEffect(() => {
+    if (runtimeState.projections.length > 0 && !hasAutoPaused) {
+      setIsPaused(true);
+      setHasAutoPaused(true);
+    }
+  }, [runtimeState.projections.length, hasAutoPaused]);
+
+  const entities = getEntities(runtimeState);
   const selectedEntity = getEntity(runtimeState, selectedEntityId);
-  const selectedObservations = getEntityObservations(
-    runtimeState,
-    selectedEntityId,
+  const selectedObservations = newestObservations(
+    getEntityObservations(runtimeState, selectedEntityId),
   );
   const visibleSelectedObservations = selectedObservations.slice(
     0,
     MAX_SELECTED_OBSERVATIONS,
   );
+  const activeAssessments = latestRevisions(
+    runtimeState.assessments,
+  ).filter((assessment) => assessment.status === 'active');
+  const activeProjections = latestRevisions(
+    runtimeState.projections,
+  ).filter(
+    (projection) =>
+      projection.status === 'projected' ||
+      projection.status === 'developing',
+  );
+  const primaryAssessment = activeAssessments[0];
+  const primaryProjection = activeProjections[0];
+  const activeClaims = [
+    ...activeAssessments,
+    ...activeProjections,
+  ];
+  const delayedObservationCount = runtimeState.observations.filter(
+    (observation) =>
+      observation.quality === 'degraded' ||
+      observation.observedAt < observation.receivedAt,
+  ).length;
 
   return (
     <main className="vector-ops">
@@ -88,20 +293,36 @@ export default function VectorOpsApp() {
           </p>
         </div>
 
-        <div className="scenario-clock" aria-label="Scenario time">
-          <span>Scenario time</span>
-          <strong>{formatScenarioTime(runtimeState.now)}</strong>
+        <div className="scenario-controls">
+          <div className="scenario-clock" aria-label="Scenario time">
+            <span>Scenario time</span>
+            <strong>{formatScenarioTime(runtimeState.now)}</strong>
+          </div>
+          <button
+            type="button"
+            className="runtime-control"
+            aria-pressed={isPaused}
+            onClick={() => setIsPaused((paused) => !paused)}
+          >
+            {isPaused ? 'Resume' : 'Pause'}
+          </button>
         </div>
       </header>
 
       <section className="system-bar" aria-label="System and data status">
         <span><strong>Modules:</strong> 4 active</span>
         <span>
-          <strong>Data:</strong> {runtimeState.observations.length} baseline
+          <strong>Data:</strong> {runtimeState.observations.length}{' '}
           observations
+          {delayedObservationCount > 0
+            ? ` · ${delayedObservationCount} delayed`
+            : ' · current'}
         </span>
         <span>
           <strong>Entities:</strong> {runtimeState.entityOrder.length} monitored
+        </span>
+        <span>
+          <strong>Run:</strong> {isPaused ? 'Paused' : 'Running'}
         </span>
       </section>
 
@@ -117,11 +338,15 @@ export default function VectorOpsApp() {
 
           <div className="entity-grid">
             {entities.map((entity) => {
-              const observations = getEntityObservations(
-                runtimeState,
-                entity.id,
+              const observations = newestObservations(
+                getEntityObservations(runtimeState, entity.id),
               );
               const selected = entity.id === selectedEntityId;
+              const dataCondition = getDataCondition(observations);
+              const entityStatus = getEntityStatus(
+                entity.id,
+                activeClaims,
+              );
 
               return (
                 <article
@@ -135,11 +360,18 @@ export default function VectorOpsApp() {
                       </p>
                       <h3>{entity.name}</h3>
                     </div>
-                    <span className="status-badge">Baseline</span>
+                    <span
+                      className={`status-badge status-badge--${entityStatus.toLowerCase()}`}
+                    >
+                      {entityStatus}
+                    </span>
                   </div>
 
-                  <p className="data-condition">
-                    <span aria-hidden="true">●</span> Current data
+                  <p
+                    className={`data-condition data-condition--${dataCondition.modifier}`}
+                  >
+                    <span aria-hidden="true">●</span>{' '}
+                    {dataCondition.label}
                   </p>
 
                   <dl>
@@ -211,26 +443,90 @@ export default function VectorOpsApp() {
             </ul>
           </section>
 
-          <section className="intelligence-panel">
+          <section
+            className={`intelligence-panel claim-panel${primaryAssessment ? ' claim-panel--active' : ''}`}
+            aria-live="polite"
+          >
             <p className="eyebrow">Assessment</p>
-            <h2>No material cross-domain issue detected</h2>
-            <p>
-              Baseline observations do not currently indicate a material
-              multi-service disruption.
-            </p>
-            <p className="panel-meta">
-              Confidence: high · Recalculated at{' '}
-              {formatScenarioTime(runtimeState.now)}
-            </p>
+            {primaryAssessment ? (
+              <>
+                <h2>{primaryAssessment.title}</h2>
+                <p className="claim-summary">
+                  {primaryAssessment.evidenceIds.length} observations ·{' '}
+                  {primaryAssessment.dependencyIds.length} dependencies ·{' '}
+                  {primaryAssessment.assumptions.length} assumptions
+                </p>
+                <p className="panel-meta">
+                  Confidence: {primaryAssessment.confidence.level} ·{' '}
+                  Recalculated at{' '}
+                  {formatScenarioTime(primaryAssessment.recalculatedAt)}
+                </p>
+                <ClaimEvidence
+                  claim={primaryAssessment}
+                  runtimeState={runtimeState}
+                />
+              </>
+            ) : (
+              <>
+                <h2>No material cross-domain issue detected</h2>
+                <p>
+                  Current observations do not indicate a material
+                  multi-service disruption.
+                </p>
+                <p className="panel-meta">
+                  Confidence: high · Recalculated at{' '}
+                  {formatScenarioTime(runtimeState.now)}
+                </p>
+              </>
+            )}
           </section>
 
-          <section className="intelligence-panel">
+          <section
+            className={`intelligence-panel claim-panel${primaryProjection ? ' claim-panel--active' : ''}`}
+            aria-live="polite"
+          >
             <p className="eyebrow">Projection</p>
-            <h2>No active projections</h2>
-            <p>
-              Time-dependent consequences will appear when observations and
-              dependencies meet a defined rule.
-            </p>
+            {primaryProjection ? (
+              <>
+                <h2>{primaryProjection.title}</h2>
+                <p className="projection-window">
+                  Projected window:{' '}
+                  <strong>
+                    {primaryProjection.horizon.earliest !== undefined
+                      ? formatScenarioTime(
+                          primaryProjection.horizon.earliest,
+                        )
+                      : 'Unknown'}
+                    {'–'}
+                    {primaryProjection.horizon.latest !== undefined
+                      ? formatScenarioTime(
+                          primaryProjection.horizon.latest,
+                        )
+                      : 'Unknown'}
+                  </strong>
+                </p>
+                <p>
+                  Main uncertainty: {primaryProjection.mainUncertainty}
+                </p>
+                <p className="panel-meta">
+                  Confidence: {primaryProjection.confidence.level} ·{' '}
+                  Recalculated at{' '}
+                  {formatScenarioTime(primaryProjection.recalculatedAt)}
+                </p>
+                <ClaimEvidence
+                  claim={primaryProjection}
+                  runtimeState={runtimeState}
+                />
+              </>
+            ) : (
+              <>
+                <h2>No active projections</h2>
+                <p>
+                  Time-dependent consequences will appear when
+                  observations and dependencies meet a defined rule.
+                </p>
+              </>
+            )}
           </section>
         </aside>
       </div>
@@ -309,6 +605,12 @@ export default function VectorOpsApp() {
           color: #9aabbd;
         }
 
+        .scenario-controls {
+          display: flex;
+          align-items: end;
+          gap: 14px;
+        }
+
         .scenario-clock {
           display: grid;
           gap: 4px;
@@ -323,6 +625,27 @@ export default function VectorOpsApp() {
         .scenario-clock strong {
           font-size: 1.7rem;
           font-variant-numeric: tabular-nums;
+        }
+
+        .runtime-control {
+          min-width: 84px;
+          padding: 8px 12px;
+          border: 1px solid #3b5068;
+          border-radius: 6px;
+          background: #172331;
+          color: #dce7f1;
+          cursor: pointer;
+        }
+
+        .runtime-control:hover,
+        .runtime-control:focus-visible {
+          border-color: #62a9f2;
+          outline: 2px solid transparent;
+        }
+
+        .runtime-control:focus-visible {
+          outline-color: #8bc4ff;
+          outline-offset: 2px;
         }
 
         .system-bar {
@@ -429,6 +752,18 @@ export default function VectorOpsApp() {
           text-transform: uppercase;
         }
 
+        .status-badge--review {
+          border-color: #9f783d;
+          background: rgba(159, 120, 61, 0.16);
+          color: #f0cf9c;
+        }
+
+        .status-badge--action {
+          border-color: #a84e52;
+          background: rgba(168, 78, 82, 0.16);
+          color: #f5b7ba;
+        }
+
         .data-condition {
           margin-bottom: 14px;
           font-size: 0.78rem;
@@ -436,6 +771,15 @@ export default function VectorOpsApp() {
 
         .data-condition span {
           color: #68bf8b;
+        }
+
+        .data-condition--delayed span,
+        .data-condition--limited span {
+          color: #e6ad5d;
+        }
+
+        .data-condition--unknown span {
+          color: #8da2b8;
         }
 
         dl {
@@ -525,6 +869,80 @@ export default function VectorOpsApp() {
           font-size: 0.74rem;
         }
 
+        .claim-panel--active {
+          border-left: 4px solid #d09a4d;
+          background:
+            linear-gradient(135deg, rgba(156, 111, 48, 0.12), transparent 58%),
+            rgba(17, 25, 35, 0.98);
+        }
+
+        .claim-summary,
+        .projection-window {
+          color: #d6e0e9 !important;
+        }
+
+        .claim-evidence {
+          margin-top: 14px;
+          border-top: 1px solid #2a394b;
+          padding-top: 12px;
+        }
+
+        .claim-evidence summary {
+          width: fit-content;
+          color: #9ccaff;
+          font-size: 0.8rem;
+          font-weight: 700;
+          cursor: pointer;
+        }
+
+        .claim-evidence summary:focus-visible {
+          border-radius: 3px;
+          outline: 2px solid #8bc4ff;
+          outline-offset: 3px;
+        }
+
+        .claim-evidence__content {
+          display: grid;
+          gap: 8px;
+          margin-top: 14px;
+        }
+
+        .claim-evidence h3 {
+          margin: 8px 0 0;
+          color: #8da2b8;
+          font-size: 0.72rem;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+        }
+
+        .claim-evidence ul {
+          display: grid;
+          gap: 8px;
+          margin: 0;
+          padding: 0;
+          list-style: none;
+        }
+
+        .claim-evidence li {
+          display: grid;
+          gap: 3px;
+          padding-left: 10px;
+          border-left: 2px solid #34475c;
+          color: #dce7f1;
+          font-size: 0.78rem;
+        }
+
+        .claim-evidence li small,
+        .rule-reference {
+          color: #7f91a3 !important;
+          font-size: 0.7rem !important;
+        }
+
+        .rule-reference {
+          margin: 6px 0 0;
+          overflow-wrap: anywhere;
+        }
+
         .entity-detail--selected {
           display: flex;
           height: 430px;
@@ -598,6 +1016,12 @@ export default function VectorOpsApp() {
           .section-heading {
             align-items: start;
             flex-direction: column;
+          }
+
+          .scenario-controls {
+            width: 100%;
+            align-items: center;
+            justify-content: space-between;
           }
 
           .scenario-clock {
