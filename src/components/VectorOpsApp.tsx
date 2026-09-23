@@ -374,8 +374,6 @@ export default function VectorOpsApp() {
                     </div>
                     <span
                       className={`status-badge status-badge--${entityStatus.toLowerCase()}`}
-                      tabIndex={0}
-                      aria-describedby={statusTooltipId}
                     >
                       {entityStatus}
                       <span
@@ -411,6 +409,7 @@ export default function VectorOpsApp() {
                     type="button"
                     className="details-button"
                     aria-pressed={selected}
+                    aria-describedby={statusTooltipId}
                     onClick={() => setSelectedEntityId(entity.id)}
                   >
                     View details
@@ -781,11 +780,6 @@ export default function VectorOpsApp() {
           cursor: help;
         }
 
-        .status-badge:focus-visible {
-          outline: 2px solid #8bc4ff;
-          outline-offset: 3px;
-        }
-
         .status-tooltip {
           position: absolute;
           top: calc(100% + 8px);
@@ -814,7 +808,7 @@ export default function VectorOpsApp() {
         }
 
         .status-badge:hover .status-tooltip,
-        .status-badge:focus .status-tooltip {
+        .entity-card:focus-within .status-tooltip {
           opacity: 1;
           visibility: visible;
           transform: translateY(0);

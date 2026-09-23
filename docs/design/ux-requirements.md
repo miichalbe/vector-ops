@@ -163,9 +163,9 @@ Avoid exposing several equally prominent action buttons on every tile. Prefer on
 
 The entity status badge is a read-only indicator of operational attention derived from active Assessment and Projection state. It is not an action and must not appear clickable.
 
-Hovering the badge or moving keyboard focus to it must reveal a concise tooltip explaining the current `Normal`, `Review` or `Action` state. The same explanation must be associated programmatically with the badge for assistive technology.
+Hovering the badge or moving keyboard focus to the tile's existing `View details` control must reveal a concise tooltip explaining the current `Normal`, `Review` or `Action` state. The same explanation must be associated programmatically with the tile's primary details control for assistive technology.
 
-The tooltip must have visible keyboard focus treatment and must not change entity selection, scenario time or runtime state.
+The badge must not introduce an additional tab stop. The tooltip relies on the tile's existing visible keyboard-focus treatment and must not change entity selection, scenario time or runtime state.
 
 ---
 
@@ -350,7 +350,7 @@ The implemented baseline should satisfy all of the following:
 - [x] The `View details` label remains stable after selection.
 - [x] The full tile acts as the primary details-selection target.
 - [x] Selection has visible hover, selected and keyboard-focus treatment.
-- [x] Entity status badges expose a read-only explanation on pointer hover and keyboard focus.
+- [x] Entity status badges expose a read-only explanation on pointer hover and existing tile-control focus without adding tab stops.
 - [x] Selected entity appears above Assessment and Projection.
 - [x] Selected entity aligns vertically with the entity grid.
 - [x] Selected entity has a stable provisional height.
