@@ -130,10 +130,21 @@ function getDataCondition(observations: readonly Observation[]) {
   };
 }
 
+type EntityStatus = 'Normal' | 'Review' | 'Action';
+
+const entityStatusDescriptions: Record<EntityStatus, string> = {
+  Normal:
+    'No active Assessment or Projection currently requires attention for this entity.',
+  Review:
+    'This entity is referenced by an active Assessment or Projection and requires operator review.',
+  Action:
+    'An active critical Assessment or Projection indicates that operator action may be required.',
+};
+
 function getEntityStatus(
   entityId: EntityId,
   claims: readonly (Assessment | Projection)[],
-) {
+): EntityStatus {
   const relatedClaims = claims.filter((claim) =>
     claim.entityIds.includes(entityId),
   );
@@ -347,6 +358,7 @@ export default function VectorOpsApp() {
                 entity.id,
                 activeClaims,
               );
+              const statusTooltipId = `status-tooltip-${entity.id.replaceAll('.', '-')}`;
 
               return (
                 <article
@@ -362,8 +374,17 @@ export default function VectorOpsApp() {
                     </div>
                     <span
                       className={`status-badge status-badge--${entityStatus.toLowerCase()}`}
+                      tabIndex={0}
+                      aria-describedby={statusTooltipId}
                     >
                       {entityStatus}
+                      <span
+                        className="status-tooltip"
+                        id={statusTooltipId}
+                        role="tooltip"
+                      >
+                        {entityStatusDescriptions[entityStatus]}
+                      </span>
                     </span>
                   </div>
 
@@ -719,10 +740,15 @@ export default function VectorOpsApp() {
         }
 
         .entity-card:hover {
+          z-index: 2;
           border-color: #47729e;
           border-left-color: #62a9f2;
           background: rgba(21, 34, 48, 0.98);
           transform: translateY(-1px);
+        }
+
+        .entity-card:focus-within {
+          z-index: 2;
         }
 
         .entity-card--selected {
@@ -744,12 +770,55 @@ export default function VectorOpsApp() {
         }
 
         .status-badge {
+          position: relative;
+          z-index: 2;
           padding: 4px 7px;
           border: 1px solid #3b4c61;
           border-radius: 999px;
           color: #b8c7d5;
           font-size: 0.7rem;
           text-transform: uppercase;
+          cursor: help;
+        }
+
+        .status-badge:focus-visible {
+          outline: 2px solid #8bc4ff;
+          outline-offset: 3px;
+        }
+
+        .status-tooltip {
+          position: absolute;
+          top: calc(100% + 8px);
+          right: 0;
+          width: 250px;
+          padding: 9px 11px;
+          border: 1px solid #40546b;
+          border-radius: 6px;
+          background: #080c11;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.42);
+          color: #dce7f1;
+          font-size: 0.75rem;
+          font-weight: 500;
+          letter-spacing: normal;
+          line-height: 1.45;
+          text-align: left;
+          text-transform: none;
+          opacity: 0;
+          visibility: hidden;
+          transform: translateY(-3px);
+          transition:
+            opacity 120ms ease,
+            transform 120ms ease,
+            visibility 120ms ease;
+          pointer-events: none;
+        }
+
+        .status-badge:hover .status-tooltip,
+        .status-badge:focus .status-tooltip {
+          opacity: 1;
+          visibility: visible;
+          transform: translateY(0);
+          pointer-events: auto;
         }
 
         .status-badge--review {

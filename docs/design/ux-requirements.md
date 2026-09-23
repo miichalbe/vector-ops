@@ -1,6 +1,6 @@
 # VECTOR OPS — UX Requirements
 
-**Version:** 0.2  
+**Version:** 0.3  
 **Date:** 23 September 2026  
 **Status:** Living implementation contract  
 **Related artifacts:** [Primary Operational View](primary-operational-view.md), [Primary Operator Flow](primary-operator-flow.md), [System Contract](../architecture/system-contract.md)
@@ -158,6 +158,14 @@ Future entity actions, such as requesting a status update, inspecting dependenci
 The full-tile details target must not swallow, duplicate or unexpectedly trigger those actions.
 
 Avoid exposing several equally prominent action buttons on every tile. Prefer one contextual primary action where necessary, an `Actions` menu and the persistent `View details` affordance.
+
+### UX-E08 — Entity-status explanation
+
+The entity status badge is a read-only indicator of operational attention derived from active Assessment and Projection state. It is not an action and must not appear clickable.
+
+Hovering the badge or moving keyboard focus to it must reveal a concise tooltip explaining the current `Normal`, `Review` or `Action` state. The same explanation must be associated programmatically with the badge for assistive technology.
+
+The tooltip must have visible keyboard focus treatment and must not change entity selection, scenario time or runtime state.
 
 ---
 
@@ -342,6 +350,7 @@ The implemented baseline should satisfy all of the following:
 - [x] The `View details` label remains stable after selection.
 - [x] The full tile acts as the primary details-selection target.
 - [x] Selection has visible hover, selected and keyboard-focus treatment.
+- [x] Entity status badges expose a read-only explanation on pointer hover and keyboard focus.
 - [x] Selected entity appears above Assessment and Projection.
 - [x] Selected entity aligns vertically with the entity grid.
 - [x] Selected entity has a stable provisional height.
@@ -365,5 +374,6 @@ The implemented baseline should satisfy all of the following:
 
 | Date | Version | Change |
 |---|---:|---|
+| 23 September 2026 | 0.3 | Added accessible hover and keyboard-focus explanations for read-only entity status badges. |
 | 23 September 2026 | 0.2 | Added live opening progression, pause behaviour, newest-first observation previews, runtime-derived status and inline evidence review for Assessment and Projection. |
 | 22 September 2026 | 0.1 | Created the living UX requirements contract from the first working operational view and accepted interaction refinements. |
