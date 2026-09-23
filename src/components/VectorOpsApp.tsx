@@ -267,10 +267,6 @@ export default function VectorOpsApp() {
   const selectedObservations = newestObservations(
     getEntityObservations(runtimeState, selectedEntityId),
   );
-  const visibleSelectedObservations = selectedObservations.slice(
-    0,
-    MAX_SELECTED_OBSERVATIONS,
-  );
   const activeAssessments = latestRevisions(
     runtimeState.assessments,
   ).filter((assessment) => assessment.status === 'active');
@@ -442,12 +438,21 @@ export default function VectorOpsApp() {
             </p>
             <p>
               {selectedObservations.length > MAX_SELECTED_OBSERVATIONS
-                ? `Showing ${MAX_SELECTED_OBSERVATIONS} of ${selectedObservations.length} current observations`
+                ? `${selectedObservations.length} current observations · scroll for earlier entries`
                 : `${selectedObservations.length} current observation${selectedObservations.length === 1 ? '' : 's'}`}
             </p>
 
-            <ul>
-              {visibleSelectedObservations.map((observation) => (
+            <ul
+              className="selected-observations"
+              key={selectedEntityId}
+              tabIndex={
+                selectedObservations.length > MAX_SELECTED_OBSERVATIONS
+                  ? 0
+                  : undefined
+              }
+              aria-label={`Observations for ${selectedEntity?.name ?? 'selected entity'}, newest first`}
+            >
+              {selectedObservations.map((observation) => (
                 <li key={observation.id}>
                   <strong>
                     {metricLabels[observation.metric] ?? observation.metric}
@@ -1033,12 +1038,26 @@ export default function VectorOpsApp() {
 
         .entity-detail ul {
           display: grid;
+          min-height: 0;
           flex: 1;
           align-content: start;
           gap: 11px;
           margin: 0;
           padding: 0;
           list-style: none;
+        }
+
+        .selected-observations {
+          overflow-y: auto;
+          overscroll-behavior: contain;
+          padding-right: 8px !important;
+          scrollbar-gutter: stable;
+        }
+
+        .selected-observations:focus-visible {
+          border-radius: 4px;
+          outline: 2px solid #8bc4ff;
+          outline-offset: 3px;
         }
 
         .entity-detail li {

@@ -1,6 +1,6 @@
 # VECTOR OPS — UX Requirements
 
-**Version:** 0.4  
+**Version:** 0.5  
 **Date:** 23 September 2026  
 **Status:** Living implementation contract  
 **Related artifacts:** [Primary Operational View](primary-operational-view.md), [Primary Operator Flow](primary-operator-flow.md), [System Contract](../architecture/system-contract.md)
@@ -193,14 +193,15 @@ This prevents Assessment and Projection from moving vertically when the operator
 
 The exact final height and long-content behaviour must be reassessed after the full entity-detail and action model is implemented.
 
-### UX-S03 — Observation limit
+### UX-S03 — Scrollable observation history
 
-The current Selected entity preview displays a maximum of three observations.
+The Selected entity panel keeps a stable outer height while making every current observation for the selected entity available in a newest-first internal scroll region.
 
+- The available viewport should show approximately three observations without moving Assessment or Projection.
 - With one or two observations, unused space remains at the bottom of the panel.
-- With more than three observations, the panel communicates `Showing 3 of N current observations`.
-- Additional observations remain available in runtime state and must not be discarded.
-- A future complete details surface must provide access to the full observation set.
+- With more observations than fit the viewport, the panel communicates that earlier entries are available by scrolling.
+- The observation region must support pointer-wheel and keyboard scrolling, expose visible focus when keyboard scrolling is available, and reset to the newest entry when entity selection changes.
+- Observations remain available in runtime state and must not be discarded.
 
 ### UX-S04 — Stable downstream panels
 
@@ -356,7 +357,7 @@ The implemented baseline should satisfy all of the following:
 - [x] Selected entity appears above Assessment and Projection.
 - [x] Selected entity aligns vertically with the entity grid.
 - [x] Selected entity has a stable provisional height.
-- [x] Selected entity previews no more than three observations.
+- [x] Selected entity keeps approximately three observations visible and exposes all earlier observations through an internal scroll region.
 - [x] Assessment and Projection do not move when selection changes.
 - [x] `Tab`, `Enter` and `Space` support the primary details interaction.
 - [x] Arrow-key navigation is explicitly deferred.
@@ -368,7 +369,7 @@ The implemented baseline should satisfy all of the following:
 - [ ] Dependencies are inspectable from the entity context.
 - [x] Assessment and Projection are generated from deterministic rules and expose their current runtime revisions.
 - [ ] Contextual actions use shared Action objects.
-- [ ] Complete observation history is available from a full details surface.
+- [x] Complete current observation history is accessible from the Selected entity scroll region.
 
 ---
 
@@ -376,6 +377,7 @@ The implemented baseline should satisfy all of the following:
 
 | Date | Version | Change |
 |---|---:|---|
+| 23 September 2026 | 0.5 | Replaced the three-observation truncation with a keyboard-accessible internal scroll region while preserving the Selected entity panel's stable height. |
 | 23 September 2026 | 0.4 | Restricted entity-status tooltips to direct badge hover and protected first-click tile selection from tooltip interference. |
 | 23 September 2026 | 0.3 | Added accessible hover and keyboard-focus explanations for read-only entity status badges. |
 | 23 September 2026 | 0.2 | Added live opening progression, pause behaviour, newest-first observation previews, runtime-derived status and inline evidence review for Assessment and Projection. |
