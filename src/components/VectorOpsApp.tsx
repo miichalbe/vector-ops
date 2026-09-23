@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
+import ActionReview from './ActionReview';
 import type {
+  ActionId,
   Assessment,
   EntityId,
   Observation,
   ObservationSource,
   Projection,
 } from '../core/contracts';
+import { recordDecisionSelection } from '../core/runtime-decision-selection';
 import { advanceScenarioRuntime } from '../core/runtime-step';
 import {
   getEntities,
@@ -233,11 +236,10 @@ export default function VectorOpsApp() {
     useState<ScenarioRuntimeState>(scenario01InitialState);
   const [selectedEntityId, setSelectedEntityId] =
     useState<EntityId>(initialEntityId);
-  const [isPaused, setIsPaused] = useState(false);
-  const [hasAutoPaused, setHasAutoPaused] = useState(false);
+  const [isManuallyPaused, setIsManuallyPaused] = useState(false);
 
   useEffect(() => {
-    if (isPaused) {
+    if (isManuallyPaused || runtimeState.status !== 'running') {
       return undefined;
     }
 
@@ -253,14 +255,7 @@ export default function VectorOpsApp() {
     }, SIMULATION_TICK_MS);
 
     return () => window.clearInterval(intervalId);
-  }, [isPaused]);
-
-  useEffect(() => {
-    if (runtimeState.projections.length > 0 && !hasAutoPaused) {
-      setIsPaused(true);
-      setHasAutoPaused(true);
-    }
-  }, [runtimeState.projections.length, hasAutoPaused]);
+  }, [isManuallyPaused, runtimeState.status]);
 
   const entities = getEntities(runtimeState);
   const selectedEntity = getEntity(runtimeState, selectedEntityId);
@@ -288,6 +283,50 @@ export default function VectorOpsApp() {
       observation.quality === 'degraded' ||
       observation.observedAt < observation.receivedAt,
   ).length;
+  const pendingDecision =
+    runtimeState.status === 'awaitingDecision'
+      ? runtimeState.decisions.find(
+          (decision) => decision.selectedActionId === undefined,
+        )
+      : undefined;
+  const pendingDecisionGate = pendingDecision
+    ? scenario01RuntimeDefinition.decisionGates.find(
+        (gate) => gate.id === pendingDecision.id,
+      )
+    : undefined;
+  const decisionRequired =
+    pendingDecision !== undefined && pendingDecisionGate !== undefined;
+  const runStatusLabel =
+    runtimeState.status === 'awaitingDecision'
+      ? 'Awaiting decision'
+      : isManuallyPaused
+        ? 'Paused'
+        : runtimeState.status === 'running'
+          ? 'Running'
+          : runtimeState.status;
+  const runtimeControlLabel =
+    runtimeState.status === 'awaitingDecision'
+      ? 'Decision required'
+      : isManuallyPaused
+        ? 'Resume'
+        : 'Pause';
+
+  function handleDecisionConfirm(actionId: ActionId) {
+    if (!pendingDecision) {
+      return;
+    }
+
+    const decisionId = pendingDecision.id;
+
+    setRuntimeState((currentState) =>
+      recordDecisionSelection(
+        currentState,
+        decisionId,
+        actionId,
+        new Date().toISOString(),
+      ),
+    );
+  }
 
   return (
     <main className="vector-ops">
@@ -308,10 +347,11 @@ export default function VectorOpsApp() {
           <button
             type="button"
             className="runtime-control"
-            aria-pressed={isPaused}
-            onClick={() => setIsPaused((paused) => !paused)}
+            aria-pressed={isManuallyPaused}
+            disabled={runtimeState.status !== 'running'}
+            onClick={() => setIsManuallyPaused((paused) => !paused)}
           >
-            {isPaused ? 'Resume' : 'Pause'}
+            {runtimeControlLabel}
           </button>
         </div>
       </header>
@@ -329,9 +369,19 @@ export default function VectorOpsApp() {
           <strong>Entities:</strong> {runtimeState.entityOrder.length} monitored
         </span>
         <span>
-          <strong>Run:</strong> {isPaused ? 'Paused' : 'Running'}
+          <strong>Run:</strong> {runStatusLabel}
         </span>
       </section>
+
+      {decisionRequired && pendingDecision && pendingDecisionGate ? (
+        <ActionReview
+          runtimeState={runtimeState}
+          decision={pendingDecision}
+          question={pendingDecisionGate.question}
+          ownerLabel="WCZK duty officer"
+          onConfirm={handleDecisionConfirm}
+        />
+      ) : null}
 
       <div className="workspace">
         <section className="entity-workspace" aria-labelledby="entities-title">
@@ -662,8 +712,8 @@ export default function VectorOpsApp() {
           cursor: pointer;
         }
 
-        .runtime-control:hover,
-        .runtime-control:focus-visible {
+        .runtime-control:hover:not(:disabled),
+        .runtime-control:focus-visible:not(:disabled) {
           border-color: #62a9f2;
           outline: 2px solid transparent;
         }
@@ -671,6 +721,13 @@ export default function VectorOpsApp() {
         .runtime-control:focus-visible {
           outline-color: #8bc4ff;
           outline-offset: 2px;
+        }
+
+        .runtime-control:disabled {
+          border-color: #34465a;
+          background: #141d27;
+          color: #75889b;
+          cursor: not-allowed;
         }
 
         .system-bar {
