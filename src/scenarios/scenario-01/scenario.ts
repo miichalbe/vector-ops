@@ -1,9 +1,10 @@
 import { resolveScenarioRunConfig } from '../../core/run-config';
-import { createScenario01TimeEvents } from './timeline';
+import type { ScenarioRuntimeDefinition } from '../../core/runtime-step';
 import {
   createInitialRuntimeState,
   type ScenarioInitialData,
 } from '../../core/runtime-state';
+import { scenario01AssessmentRules } from './assessments';
 import {
   scenario01Capabilities,
   scenario01Dependencies,
@@ -13,6 +14,8 @@ import {
   SCENARIO_01_START_TIME,
   scenario01BaselineObservations,
 } from './baseline-observations';
+import { scenario01ProjectionRules } from './projections';
+import { createScenario01TimeEvents } from './timeline';
 
 export const scenario01InitialData = {
   id: 'scenario-01',
@@ -42,5 +45,11 @@ export const scenario01TimeEvents = createScenario01TimeEvents(
   scenario01DefaultRunConfig,
 );
 
-export { scenario01AssessmentRules } from './assessments';
-export { scenario01ProjectionRules } from './projections';
+export const scenario01RuntimeDefinition = {
+  timeEvents: scenario01TimeEvents,
+  assessmentRules: scenario01AssessmentRules,
+  projectionRules: scenario01ProjectionRules,
+} satisfies ScenarioRuntimeDefinition;
+
+export { scenario01AssessmentRules };
+export { scenario01ProjectionRules };
