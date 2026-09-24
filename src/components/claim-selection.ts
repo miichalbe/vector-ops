@@ -95,5 +95,5 @@ export function selectedClaimFamily<T extends DerivedClaim>(
     }
   }
 
-  return activeFamilies[0];
+  return activeFamilies[0] ?? currentFamilies[0];
 }

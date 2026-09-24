@@ -122,4 +122,17 @@ describe('claim selection policy', () => {
       'projection.act',
     );
   });
+
+  it('keeps a current resolved or avoided family inspectable when no claims remain active', () => {
+    const current = currentProjectionFamilies([
+      projection('projection.avoided', 2, 50, 'monitor', 'avoided'),
+      projection('projection.observed', 3, 55, 'review', 'observed'),
+    ]);
+    const active = activeProjectionFamilies(current);
+
+    expect(active).toHaveLength(0);
+    expect(selectedClaimFamily(current, active, null)?.id).toBe(
+      'projection.observed',
+    );
+  });
 });
