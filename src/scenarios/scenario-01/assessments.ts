@@ -1,6 +1,6 @@
 import type {
-  Action,
   ConfidenceLevel,
+  DomainEvent,
   Observation,
 } from '../../core/contracts';
 import type {
@@ -9,8 +9,6 @@ import type {
 } from '../../core/runtime-assessments';
 import type { OpeningVariantId } from '../../core/runtime-state';
 import { scenario01EntityIds } from './baseline';
-import { scenario01ActionIds } from './decision-1-ids';
-import { getDecision1DownstreamModifiers } from './decision-1-outcomes';
 
 export const scenario01AssessmentIds = {
   crossDomainDisruption:
@@ -24,6 +22,8 @@ export const scenario01AssessmentRuleIds = {
 
 const F12_ISOLATED_OBSERVATION_ID =
   'observation.scenario-01.gpz.f12-isolated';
+const SYNCHRONISED_CONFIRMATION_EVENT_TYPE =
+  'information.cross-domain-confirmed';
 
 const openingEvidenceIds = {
   'power-first': [
@@ -86,29 +86,12 @@ function raiseConfidenceOneLevel(
   return 'high';
 }
 
-function selectedDecision1Action(
-  actions: readonly Action[],
-): Action | undefined {
-  const decision1ActionIds = new Set<string>(
-    Object.values(scenario01ActionIds),
+function hasSynchronisedConfirmation(
+  events: readonly DomainEvent[],
+): boolean {
+  return events.some(
+    (event) => event.type === SYNCHRONISED_CONFIRMATION_EVENT_TYPE,
   );
-
-  return actions.find(
-    (action) =>
-      action.lifecycle === 'selected' &&
-      decision1ActionIds.has(action.id),
-  );
-}
-
-function decision1ConfidenceSupport(
-  actions: readonly Action[],
-) {
-  const selectedAction = selectedDecision1Action(actions);
-
-  return selectedAction
-    ? getDecision1DownstreamModifiers(selectedAction.id)
-        .confidenceSupport
-    : 'none';
 }
 
 function crossDomainOpeningDraft(
@@ -197,15 +180,15 @@ function persistentFeederDraft(
   openingVariant: OpeningVariantId,
   openingObservations: readonly Observation[],
   feederObservation: Observation,
-  actions: readonly Action[],
+  events: readonly DomainEvent[],
 ): AssessmentDraft {
   const observations = [...openingObservations, feederObservation];
   const baseConfidence = lowestConfidence(observations);
-  const confidenceSupport = decision1ConfidenceSupport(actions);
-  const confidenceLevel =
-    confidenceSupport === 'moderate'
-      ? raiseConfidenceOneLevel(baseConfidence)
-      : baseConfidence;
+  const synchronisedConfirmationReceived =
+    hasSynchronisedConfirmation(events);
+  const confidenceLevel = synchronisedConfirmationReceived
+    ? raiseConfidenceOneLevel(baseConfidence)
+    : baseConfidence;
   const hasDegradedEvidence = openingObservations.some(
     (observation) => observation.quality !== 'good',
   );
@@ -237,7 +220,7 @@ function persistentFeederDraft(
           description:
             'Registered dependencies connect SUW Kępa and R-4 to the affected GPZ feeder.',
         },
-        ...(confidenceSupport === 'moderate'
+        ...(synchronisedConfirmationReceived
           ? [
               {
                 type: 'coordinated-confirmation',
@@ -314,7 +297,7 @@ export const scenario01AssessmentRules: readonly AssessmentRule[] = [
           context.run.openingVariant,
           observations,
           feederObservation,
-          context.actions,
+          context.events,
         );
       }
 

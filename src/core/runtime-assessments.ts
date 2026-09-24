@@ -26,6 +26,7 @@ export type AssessmentRuleContext = Readonly<
     | 'dependencies'
     | 'actions'
     | 'assessments'
+    | 'events'
   >
 >;
 
@@ -184,6 +185,7 @@ export function evaluateAssessmentRules(
     dependencies: state.dependencies,
     actions: state.actions,
     assessments: state.assessments,
+    events: state.events,
   };
 
   for (const rule of rules) {
