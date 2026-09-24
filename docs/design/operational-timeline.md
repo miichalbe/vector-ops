@@ -1,6 +1,6 @@
 # VECTOR OPS — Operational Timeline / Live Activity
 
-**Version:** 0.1  
+**Version:** 0.2  
 **Date:** 24 September 2026  
 **Status:** Accepted interaction contract for VS1 implementation  
 **Related artifacts:** [Primary Operational View](primary-operational-view.md), [UX Requirements](ux-requirements.md), [Primary Operator Flow](primary-operator-flow.md)
@@ -89,6 +89,13 @@ Examples:
 > **08:14 · Assessment · Revised**  
 > Persistent F-12 disruption confirms continuing risk to dependent services
 
+Recorded Decision entries should preserve enough context to remain useful after the transient confirmation toast disappears:
+
+- the selected Action title;
+- at most two concise expected effects.
+
+The Timeline should not repeat complete displaced risk/cost or all Action Review reasoning. Those details belong to the Decision context, future Operational History and the After-Action Report.
+
 Copy must remain restrained and must not convert uncertain state into confirmed causality.
 
 ---
@@ -102,7 +109,10 @@ For VS1:
 - selecting an entity-linked Timeline entry updates the Selected entity context;
 - the Timeline action must not alter scenario time or domain state;
 - keyboard activation and visible focus are required for interactive entries;
-- non-interactive system entries must not appear clickable.
+- non-interactive system entries must not appear clickable;
+- a newly inserted material entry receives a brief neutral visual highlight to attract attention to fresh information.
+
+The transient highlight communicates **newness only**. It must not imply Warning, Critical, success or failure state. It should fade after a short interval, should not pulse continuously, and should not change ordering or operator focus.
 
 Future versions may open historical Assessment/Projection snapshots or decision context directly from the Timeline/History relationship.
 
@@ -169,6 +179,9 @@ Validation sequence:
 - D1-A synchronised confirmation is visible;
 - D1-C regional acknowledgement is visible;
 - D1-B does not receive fabricated confirmation;
+- recorded Decision entries retain the selected Action and at most two concise expected effects;
+- newly inserted entries receive a short neutral new-information highlight;
+- the highlight does not encode severity or persist after the attention interval;
 - entity-linked entries can update Selected entity context;
 - interactive entries support keyboard activation and visible focus;
 - the panel has bounded height with internal scrolling;

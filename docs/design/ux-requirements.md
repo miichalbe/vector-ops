@@ -1,6 +1,6 @@
 # VECTOR OPS — UX Requirements
 
-**Version:** 0.7  
+**Version:** 0.8  
 **Date:** 24 September 2026  
 **Status:** Living implementation contract  
 **Related artifacts:** [Primary Operational View](primary-operational-view.md), [Operational Timeline / Live Activity](operational-timeline.md), [Primary Operator Flow](primary-operator-flow.md), [System Contract](../architecture/system-contract.md)
@@ -138,7 +138,10 @@ The VS1 implementation:
 - uses `receivedAt` as the primary time for Observation entries;
 - keeps the panel height bounded and exposes older entries through an internal scroll region;
 - allows an entity-linked entry to update Selected entity context without changing scenario time or domain state;
-- provides native keyboard interaction and visible focus for entity-linked entries.
+- provides native keyboard interaction and visible focus for entity-linked entries;
+- gives newly inserted material entries a brief non-blocking visual highlight so fresh information is easier to notice.
+
+The transient highlight means only **newly arrived information**. It must not be interpreted as operational severity, warning or critical state, and it must not pulse or remain persistent after the short attention interval.
 
 The Timeline is a live-awareness surface, not a raw DomainEvent log and not a substitute for the future complete Operational History.
 
@@ -147,6 +150,8 @@ Decision 1 feedback must be observable through the Timeline:
 - D1-A exposes synchronised confirmation when it arrives;
 - D1-B does not fabricate equivalent confirmation and instead relies on organically arriving observations;
 - D1-C exposes the regional-coordination acknowledgement when it arrives.
+
+Recorded Decision entries should retain the selected Action title and may expose at most two concise expected effects. Detailed displaced risk/cost and complete decision context remain available through Action Review, future Operational History and the After-Action Report rather than expanding Live activity into a verbose audit surface.
 
 Scenario pacing should be reassessed against the running Timeline before Act 2 offsets are shortened globally.
 
@@ -400,13 +405,22 @@ A blocking Decision must prevent accidental interaction with the suppressed work
 
 Keyboard interaction should remain within the Action Review while it is active. The current implementation uses native controls and a contained tab sequence. Final focus-return behaviour after confirmation remains subject to refinement against the running UI.
 
-### UX-D11 — Action-recorded receipt
+### UX-D11 — Action-recorded acknowledgement toast
 
-After confirmation, the interface must provide immediate acknowledgement that the Action was recorded before the operator fully returns to routine work.
+After confirmation, Decision Focus Mode ends and runtime returns to `running` immediately. The interface then provides a short informational acknowledgement that the Action was recorded.
 
-The acknowledgement must use factual language such as `Action recorded`, not `Success`, because recording an Action does not mean the operational outcome succeeded.
+The acknowledgement:
 
-The receipt may expose recorded expected effects and displaced risks through progressive disclosure.
+- uses factual language such as `Action recorded`, never `Success`;
+- uses neutral blue informational styling rather than green success styling;
+- appears directly below the application header and overlays routine content rather than pushing the workspace downward;
+- uses full or near-full workspace width with compact vertical height;
+- shows the selected Action and recorded scenario time;
+- remains dismissible by the operator;
+- auto-dismisses after approximately 10 seconds;
+- does not pause, resume or otherwise change runtime state when it appears or disappears.
+
+The toast is acknowledgement, not durable history. Full expected effects and displaced risks do not need to remain expanded inside the transient toast. Live activity retains a concise durable Decision entry containing the selected Action and at most two expected effects; complete decision context remains available to future Operational History and the After-Action Report.
 
 ### UX-D12 — Operational history entry point
 
@@ -496,7 +510,7 @@ The following remain intentionally unresolved:
 - user-controlled workspace resizing;
 - final typography and icon system;
 - high-fidelity visual styling;
-- animation and transition language;
+- animation and transition language beyond the accepted transient Live activity highlight;
 - detailed contextual onboarding;
 - degraded-state and unavailable-data interaction details.
 
@@ -532,13 +546,16 @@ The implemented baseline should satisfy all of the following:
 - [x] Decision 1 Actions use shared runtime Action objects and one runtime Decision record.
 - [x] Decision Focus Mode visually suppresses and blocks the routine workspace while a blocking Decision is open.
 - [x] Action Review uses progressive reasoning disclosure and full-card Action selection.
-- [x] Confirming a Decision produces an `Action recorded` receipt before routine work continues visually.
+- [x] Confirming a Decision produces a neutral `Action recorded` acknowledgement while runtime continues.
+- [x] The acknowledgement overlays content below the header, can be dismissed manually, and auto-dismisses without changing runtime state.
 - [x] Header reserves History and Notifications entry points without pretending the future features are already available.
 - [x] Complete current observation history is accessible from the Selected entity scroll region.
 - [x] Live activity combines cross-domain observations into one newest-first Timeline.
 - [x] Material D1 coordination feedback is exposed without fabricating equivalent feedback for D1-B.
 - [x] Entity-linked Timeline entries update Selected entity context and remain keyboard accessible.
 - [x] Timeline height is bounded and older activity remains available through internal scrolling.
+- [x] Newly inserted material Timeline entries receive a brief neutral highlight without changing severity semantics.
+- [x] Recorded Decision Timeline entries retain the Action title and no more than two concise expected effects.
 
 ---
 
@@ -546,6 +563,7 @@ The implemented baseline should satisfy all of the following:
 
 | Date | Version | Change |
 |---|---:|---|
+| 24 September 2026 | 0.8 | Replaced the persistent green Action receipt with a compact neutral-blue acknowledgement toast that overlays content, auto-dismisses after approximately 10 seconds and never controls runtime. Added brief neutral highlighting for newly inserted Live activity entries and retained up to two expected effects in recorded Decision Timeline entries. |
 | 24 September 2026 | 0.7 | Added Operational Timeline / Live activity as a full-width cross-domain chronology, defined material-entry filtering, entity-context interaction, D1 feedback visibility, and the distinction between live awareness and future complete Operational History. |
 | 23 September 2026 | 0.6 | Defined Decision Focus Mode, VS1 blocking-Decision behaviour, progressive Action Review hierarchy, full-card Action selection, factual post-confirmation receipt, and future History / Notifications entry points. Documented non-blocking and multiple simultaneous Decisions as post-VS1 work. |
 | 23 September 2026 | 0.5 | Replaced the three-observation truncation with a keyboard-accessible internal scroll region while preserving the Selected entity panel's stable height. |
