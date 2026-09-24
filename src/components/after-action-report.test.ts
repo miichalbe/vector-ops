@@ -170,9 +170,6 @@ describe('After-Action Report reconstruction', () => {
     );
 
     const serialized = JSON.stringify(report).toLowerCase();
-    expect(serialized).not.toContain('score');
-    expect(serialized).not.toContain('grade');
-    expect(serialized).not.toContain('success');
-    expect(serialized).not.toContain('failure');
+    expect(serialized).not.toMatch(/\b(?:score|grade|success|failure)\b/);
   });
 });
