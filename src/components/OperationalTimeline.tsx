@@ -88,7 +88,7 @@ export default function OperationalTimeline({
           <p className="eyebrow">Cross-domain chronology</p>
           <h2 id="live-activity-title">Live activity</h2>
         </div>
-        <span>{entries.length} material entries · newest first</span>
+        <span>{entries.length} entries · newest first</span>
       </div>
 
       <ol
