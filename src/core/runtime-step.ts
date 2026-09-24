@@ -19,6 +19,9 @@ import type { ScenarioRuntimeState } from './runtime-state';
 
 export interface ScenarioRuntimeDefinition {
   timeEvents: readonly ScenarioTimeEventDefinition[];
+  dynamicTimeEvents?: (
+    state: ScenarioRuntimeState,
+  ) => readonly ScenarioTimeEventDefinition[];
   assessmentRules: readonly AssessmentRule[];
   projectionRules: readonly ProjectionRule[];
   decisionGates: readonly DecisionGateDefinition[];
@@ -34,9 +37,11 @@ export function advanceScenarioRuntime(
     state,
     elapsedMinutes,
   );
+  const dynamicTimeEvents =
+    definition.dynamicTimeEvents?.(advancedState) ?? [];
   const observedState = processDueScenarioTimeEvents(
     advancedState,
-    definition.timeEvents,
+    [...definition.timeEvents, ...dynamicTimeEvents],
     recordedAt,
   );
   const assessedState = evaluateAssessmentRules(
