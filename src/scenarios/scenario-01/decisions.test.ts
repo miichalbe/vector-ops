@@ -89,10 +89,10 @@ describe('Scenario 01 Decision 2 gate', () => {
       );
 
       expect(state.status).toBe('awaitingDecision');
-      expect(decision).toMatchObject({
-        id: scenario01Decision2Ids.generatorRecommendation,
-        selectedActionId: undefined,
-      });
+      expect(decision?.id).toBe(
+        scenario01Decision2Ids.generatorRecommendation,
+      );
+      expect(decision?.selectedActionId).toBeUndefined();
       expect(decision?.actionIds).toEqual([
         scenario01Decision2ActionIds.recommendGeneratorForSuw,
         scenario01Decision2ActionIds.recommendGeneratorForR4,
