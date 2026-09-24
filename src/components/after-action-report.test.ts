@@ -143,6 +143,9 @@ describe('After-Action Report reconstruction', () => {
     const generatorResource = generator?.metrics.find(
       (metric) => metric.metric === 'logistics.resourceState',
     );
+    const generatorAssignment = generator?.metrics.find(
+      (metric) => metric.metric === 'logistics.assignment',
+    );
 
     expect(r4?.hasMaterialChange).toBe(true);
     expect(generator?.hasMaterialChange).toBe(true);
@@ -152,13 +155,12 @@ describe('After-Action Report reconstruction', () => {
       finalValue: 'operational',
       changed: true,
     });
-    expect(
-      r4?.metrics.some(
-        (metric) =>
-          !metric.observedAtBaseline &&
-          metric.initialValue === 'Not observed at baseline',
-      ),
-    ).toBe(true);
+    expect(generatorAssignment).toMatchObject({
+      observedAtBaseline: false,
+      initialValue: 'Not observed at baseline',
+      finalValue: 'R-4',
+      changed: true,
+    });
     expect(report.dependencies.length).toBeGreaterThan(0);
     expect(report.parameters).toEqual(
       expect.arrayContaining([
