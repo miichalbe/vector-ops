@@ -5,6 +5,7 @@ import type {
 import type {
   Assessment,
   Assumption,
+  Observation,
   Projection,
 } from '../../core/contracts';
 import { scenario01AssessmentIds } from './assessments';
@@ -13,12 +14,33 @@ import {
   scenario01ActionIds,
   scenario01DecisionIds,
 } from './decision-1-ids';
+import {
+  scenario01Decision2ActionIds,
+  scenario01Decision2Ids,
+} from './decision-2-ids';
 import { scenario01ProjectionIds } from './projections';
 
 export {
   scenario01ActionIds,
   scenario01DecisionIds,
 } from './decision-1-ids';
+export {
+  scenario01Decision2ActionIds,
+  scenario01Decision2Ids,
+} from './decision-2-ids';
+
+const DECISION_2_SETTLE_MINUTES = 4;
+
+const decision2EvidenceIds = {
+  r4Backup: 'observation.scenario-01.r4.backup-power',
+  r4LinkDegraded:
+    'observation.scenario-01.r4.link-quality-degraded',
+  suwReducedPumping:
+    'observation.scenario-01.suw.reduced-pumping',
+  routeRestricted: 'observation.scenario-01.z17.restricted',
+  routeTravelTime:
+    'observation.scenario-01.z17.travel-time-revised',
+} as const;
 
 function latestAssessment(
   assessments: readonly Assessment[],
@@ -59,17 +81,35 @@ function latestProjection(
     );
 }
 
+function latestObservation(
+  observations: readonly Observation[],
+  entityId: string,
+  metric: string,
+): Observation | undefined {
+  return observations
+    .filter(
+      (observation) =>
+        observation.entityId === entityId &&
+        observation.metric === metric,
+    )
+    .reduce<Observation | undefined>(
+      (latest, observation) =>
+        !latest || observation.receivedAt > latest.receivedAt
+          ? observation
+          : latest,
+      undefined,
+    );
+}
+
 function mergeAssumptions(
-  assessment: Assessment,
-  projection: Projection,
+  ...claims: Array<{ assumptions: readonly Assumption[] }>
 ): Assumption[] {
   const assumptionsById = new Map<string, Assumption>();
 
-  for (const assumption of [
-    ...assessment.assumptions,
-    ...projection.assumptions,
-  ]) {
-    assumptionsById.set(assumption.id, { ...assumption });
+  for (const claim of claims) {
+    for (const assumption of claim.assumptions) {
+      assumptionsById.set(assumption.id, { ...assumption });
+    }
   }
 
   return [...assumptionsById.values()];
@@ -182,6 +222,143 @@ const informationPostureActions: readonly ActionDraft[] = [
   },
 ];
 
+const generatorRecommendationScope = {
+  entityIds: [
+    scenario01EntityIds.mobileGenerator,
+    scenario01EntityIds.waterStation,
+    scenario01EntityIds.communicationsGateway,
+    scenario01EntityIds.accessRoute,
+  ],
+  assessmentIds: [scenario01AssessmentIds.crossDomainDisruption],
+  projectionIds: [
+    scenario01ProjectionIds.communicationsContinuity,
+    scenario01ProjectionIds.suwVisibility,
+  ],
+} as const;
+
+const generatorRecommendationActions: readonly ActionDraft[] = [
+  {
+    id: scenario01Decision2ActionIds.recommendGeneratorForSuw,
+    type: 'resource-recommendation',
+    title: 'Recommend AG-400 for SUW Kępa',
+    scope: {
+      entityIds: [...generatorRecommendationScope.entityIds],
+      assessmentIds: [...generatorRecommendationScope.assessmentIds],
+      projectionIds: [...generatorRecommendationScope.projectionIds],
+    },
+    authority: 'operator',
+    expectedEffects: [
+      {
+        type: 'resource.assignment',
+        entityIds: [
+          scenario01EntityIds.mobileGenerator,
+          scenario01EntityIds.waterStation,
+        ],
+        description:
+          'If accepted, AG-400 will be reserved and prepared for SUW Kępa.',
+      },
+      {
+        type: 'water.service-margin',
+        entityIds: [scenario01EntityIds.waterStation],
+        description:
+          'External deployment would protect pumping capacity and improve water-service margin.',
+      },
+    ],
+    displacedRisks: [
+      {
+        type: 'communications.continuity',
+        entityIds: [scenario01EntityIds.communicationsGateway],
+        description:
+          'R-4 remains dependent on finite backup power while communications degradation continues.',
+      },
+      {
+        type: 'operational.visibility',
+        entityIds: [
+          scenario01EntityIds.communicationsGateway,
+          scenario01EntityIds.waterStation,
+        ],
+        description:
+          'Remote SUW visibility may continue to deteriorate if R-4 loses usable service.',
+      },
+    ],
+    reversible: true,
+  },
+  {
+    id: scenario01Decision2ActionIds.recommendGeneratorForR4,
+    type: 'resource-recommendation',
+    title: 'Recommend AG-400 for R-4',
+    scope: {
+      entityIds: [...generatorRecommendationScope.entityIds],
+      assessmentIds: [...generatorRecommendationScope.assessmentIds],
+      projectionIds: [...generatorRecommendationScope.projectionIds],
+    },
+    authority: 'operator',
+    expectedEffects: [
+      {
+        type: 'resource.assignment',
+        entityIds: [
+          scenario01EntityIds.mobileGenerator,
+          scenario01EntityIds.communicationsGateway,
+        ],
+        description:
+          'If accepted, AG-400 will be reserved and prepared for R-4.',
+      },
+      {
+        type: 'communications.continuity',
+        entityIds: [scenario01EntityIds.communicationsGateway],
+        description:
+          'External deployment would protect communications continuity and preserve remote visibility for longer.',
+      },
+    ],
+    displacedRisks: [
+      {
+        type: 'water.service-margin',
+        entityIds: [scenario01EntityIds.waterStation],
+        description:
+          'SUW Kępa remains on reduced pumping and water-service margin continues to decrease.',
+      },
+    ],
+    reversible: true,
+  },
+  {
+    id: scenario01Decision2ActionIds.waitForGridRestoration,
+    type: 'resource-recommendation',
+    title: 'Wait briefly for firmer grid-restoration information',
+    scope: {
+      entityIds: [...generatorRecommendationScope.entityIds],
+      assessmentIds: [...generatorRecommendationScope.assessmentIds],
+      projectionIds: [...generatorRecommendationScope.projectionIds],
+    },
+    authority: 'operator',
+    expectedEffects: [
+      {
+        type: 'resource.flexibility',
+        entityIds: [scenario01EntityIds.mobileGenerator],
+        description:
+          'AG-400 remains uncommitted while firmer restoration information is sought.',
+      },
+    ],
+    displacedRisks: [
+      {
+        type: 'time-margin',
+        entityIds: [
+          scenario01EntityIds.waterStation,
+          scenario01EntityIds.communicationsGateway,
+        ],
+        description:
+          'Waiting consumes time margin for both reduced pumping and finite R-4 backup power.',
+      },
+      {
+        type: 'access.delay',
+        entityIds: [scenario01EntityIds.accessRoute],
+        description:
+          'Restricted Z-17 access may increase the cost of a later deployment.',
+      },
+    ],
+    reversible: true,
+  },
+];
+
 export const scenario01DecisionGates: readonly DecisionGateDefinition[] = [
   {
     id: scenario01DecisionIds.informationPosture,
@@ -202,10 +379,7 @@ export const scenario01DecisionGates: readonly DecisionGateDefinition[] = [
         return null;
       }
 
-      const assumptions = mergeAssumptions(
-        assessment,
-        projection,
-      );
+      const assumptions = mergeAssumptions(assessment, projection);
       const evidenceIds = [
         ...new Set([
           ...assessment.evidenceIds,
@@ -221,6 +395,113 @@ export const scenario01DecisionGates: readonly DecisionGateDefinition[] = [
         !unknowns.includes(projection.mainUncertainty)
       ) {
         unknowns.push(projection.mainUncertainty);
+      }
+
+      return {
+        evidenceIds,
+        unknowns,
+        assumptions,
+      };
+    },
+  },
+  {
+    id: scenario01Decision2Ids.generatorRecommendation,
+    question:
+      'One compatible mobile generator is available. Which deployment should be recommended?',
+    actions: generatorRecommendationActions,
+    evaluate(context) {
+      const decision1 = context.decisions.find(
+        (decision) =>
+          decision.id === scenario01DecisionIds.informationPosture,
+      );
+
+      if (
+        !decision1?.selectedActionId ||
+        decision1.decidedAt === undefined
+      ) {
+        return null;
+      }
+
+      const assessment = latestAssessment(
+        context.assessments,
+        scenario01AssessmentIds.crossDomainDisruption,
+      );
+      const communicationsProjection = latestProjection(
+        context.projections,
+        scenario01ProjectionIds.communicationsContinuity,
+      );
+      const visibilityProjection = latestProjection(
+        context.projections,
+        scenario01ProjectionIds.suwVisibility,
+      );
+      const generatorState = latestObservation(
+        context.observations,
+        scenario01EntityIds.mobileGenerator,
+        'logistics.resourceState',
+      );
+      const requiredObservations = Object.values(decision2EvidenceIds)
+        .map((observationId) =>
+          context.observations.find(
+            (observation) => observation.id === observationId,
+          ),
+        )
+        .filter(
+          (observation): observation is Observation =>
+            observation !== undefined,
+        );
+
+      if (
+        !assessment ||
+        !communicationsProjection ||
+        !visibilityProjection ||
+        !generatorState ||
+        generatorState.value !== 'available' ||
+        requiredObservations.length !==
+          Object.keys(decision2EvidenceIds).length
+      ) {
+        return null;
+      }
+
+      const maturityAt =
+        Math.max(
+          ...requiredObservations.map(
+            (observation) => observation.receivedAt,
+          ),
+        ) + DECISION_2_SETTLE_MINUTES;
+
+      if (context.now < maturityAt) {
+        return null;
+      }
+
+      const assumptions = mergeAssumptions(
+        assessment,
+        communicationsProjection,
+        visibilityProjection,
+      );
+      const evidenceIds = [
+        ...new Set([
+          generatorState.id,
+          ...requiredObservations.map(
+            (observation) => observation.id,
+          ),
+          ...assessment.evidenceIds,
+          ...communicationsProjection.evidenceIds,
+          ...visibilityProjection.evidenceIds,
+        ]),
+      ];
+      const unknowns = [
+        'Grid-restoration timing for F-12 remains unconfirmed.',
+        'Exact remaining R-4 backup endurance remains uncertain.',
+        'Water-service margin under sustained reduced pumping has not yet been directly confirmed.',
+      ];
+
+      for (const uncertainty of [
+        communicationsProjection.mainUncertainty,
+        visibilityProjection.mainUncertainty,
+      ]) {
+        if (uncertainty && !unknowns.includes(uncertainty)) {
+          unknowns.push(uncertainty);
+        }
       }
 
       return {
