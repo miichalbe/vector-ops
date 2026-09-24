@@ -4,6 +4,7 @@ import type { ActionId, DecisionId } from '../core/contracts';
 import { recordDecisionSelection } from '../core/runtime-decision-selection';
 import { advanceScenarioRuntime } from '../core/runtime-step';
 import type { ScenarioRuntimeState } from '../core/runtime-state';
+import { scenario01EntityIds } from '../scenarios/scenario-01/baseline';
 import {
   scenario01ActionIds,
   scenario01DecisionIds,
@@ -131,19 +132,33 @@ describe('After-Action Report reconstruction', () => {
     expect(report.handover?.hospitalEssentialServices).toBe('maintained');
   });
 
-  it('exposes entity state changes and reasoning mechanics without scoring the operator', () => {
+  it('exposes baseline-to-final entity changes and reasoning mechanics without scoring the operator', () => {
     const report = buildAfterActionReport(completedRepresentativeRun());
-    const r4 = report.entityStates.find((entity) => entity.entityName === 'R-4');
-    const generator = report.entityStates.find((entity) =>
-      entity.metrics.some(
-        (metric) =>
-          metric.metric === 'logistics.resourceState' &&
-          metric.finalValue === 'operational',
-      ),
+    const r4 = report.entityStates.find(
+      (entity) => entity.entityId === scenario01EntityIds.communicationsGateway,
+    );
+    const generator = report.entityStates.find(
+      (entity) => entity.entityId === scenario01EntityIds.mobileGenerator,
+    );
+    const generatorResource = generator?.metrics.find(
+      (metric) => metric.metric === 'logistics.resourceState',
     );
 
     expect(r4?.hasMaterialChange).toBe(true);
     expect(generator?.hasMaterialChange).toBe(true);
+    expect(generatorResource).toMatchObject({
+      observedAtBaseline: true,
+      initialValue: 'available',
+      finalValue: 'operational',
+      changed: true,
+    });
+    expect(
+      r4?.metrics.some(
+        (metric) =>
+          !metric.observedAtBaseline &&
+          metric.initialValue === 'Not observed at baseline',
+      ),
+    ).toBe(true);
     expect(report.dependencies.length).toBeGreaterThan(0);
     expect(report.parameters).toEqual(
       expect.arrayContaining([
