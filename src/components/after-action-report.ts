@@ -40,6 +40,7 @@ export interface AfterActionReportEntityMetric {
   initialAt: ScenarioTime;
   finalAt: ScenarioTime;
   changed: boolean;
+  observedAtBaseline: boolean;
 }
 
 export interface AfterActionReportEntityState {
@@ -197,6 +198,7 @@ function reportDecisions(
 
 function reportEntityStates(
   state: ScenarioRuntimeState,
+  startedAt: ScenarioTime,
 ): AfterActionReportEntityState[] {
   return state.entityOrder.map((entityId) => {
     const entity = state.entitiesById[entityId];
@@ -215,21 +217,28 @@ function reportEntityStates(
     const metrics = [...byMetric.entries()]
       .map(([metric, observations]) => {
         const ordered = [...observations].sort(compareObservations);
-        const initial = ordered[0];
+        const baselineObservations = ordered.filter(
+          (observation) => observation.receivedAt <= startedAt,
+        );
+        const initial = baselineObservations.at(-1);
         const final = ordered.at(-1);
 
-        if (!initial || !final) {
+        if (!final) {
           return undefined;
         }
 
         return {
           metric,
           label: metricLabels[metric] ?? metric,
-          initialValue: formatValue(initial.value, initial.unit),
+          initialValue: initial
+            ? formatValue(initial.value, initial.unit)
+            : 'Not observed at baseline',
           finalValue: formatValue(final.value, final.unit),
-          initialAt: initial.receivedAt,
+          initialAt: initial?.receivedAt ?? startedAt,
           finalAt: final.receivedAt,
-          changed: stableValue(initial.value) !== stableValue(final.value),
+          changed:
+            !initial || stableValue(initial.value) !== stableValue(final.value),
+          observedAtBaseline: initial !== undefined,
         } satisfies AfterActionReportEntityMetric;
       })
       .filter(
@@ -384,7 +393,7 @@ export function buildAfterActionReport(
     durationMinutes: state.now - startedAt,
     chronology,
     decisions: reportDecisions(state),
-    entityStates: reportEntityStates(state),
+    entityStates: reportEntityStates(state, startedAt),
     dependencies: reportDependencies(state),
     parameters: reportParameters(state),
     handover: reportHandover(state),
