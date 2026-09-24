@@ -1,9 +1,9 @@
 # VECTOR OPS — Roadmap
 
-**Current phase:** Working Prototype / Interaction Refinement  
+**Current phase:** Working Prototype / Public-demo preparation  
 **Current milestone:** M4 — Working Prototype, with M3 interaction refinement continuing against working UI  
 **Project status:** Active  
-**Last updated:** 23 September 2026
+**Last updated:** 24 September 2026
 
 This roadmap tracks the evolution of VECTOR OPS from early discovery to a public working demonstrator and portfolio case study.
 
@@ -11,10 +11,10 @@ The roadmap is intentionally outcome-based. Each milestone should leave behind a
 
 ## Near-term delivery target
 
-**Testable vertical slice:** 24 September 2026  
-**Public alpha:** 25 September 2026
+**Testable vertical slice:** achieved for D1 → Act 2 → D2 flow on 24 September 2026  
+**Public prototype / alpha:** next focused delivery target; final scope depends on whether first release stops after D2 or completes the full D3 + After-Action contract
 
-The alpha is a narrow end-to-end demonstration: one primary operator, one synthetic cascading-infrastructure scenario, one operational area and three meaningful decision moments. It must remain structurally open to additional modules and scenarios after launch.
+The alpha remains a narrow end-to-end demonstration: one primary operator, one synthetic cascading-infrastructure scenario, one operational area, three bounded opening variants and ultimately three meaningful decision moments. It must remain structurally open to additional modules and scenarios after launch.
 
 The time box changes delivery breadth, not the architectural principles. Shared entities, state, events, module registration, scenario data and consequence rules must not be hard-coded into individual UI components.
 
@@ -96,14 +96,16 @@ M3 no longer blocks implementation. Remaining interaction work is intentionally 
 - [x] Map end-to-end operator flow
 - [x] Define information hierarchy
 - [x] Design Common Operational Picture structure
-- [ ] Design alert / attention queue
-- [ ] Design asset detail interaction
-- [ ] Design decision-review flow
+- [x] Establish cross-domain Live Activity timeline pattern
+- [ ] Finalize alert / attention queue relationship
+- [ ] Finalize asset detail interaction
+- [x] Implement and refine reusable decision-review flow for D1/D2
 - [ ] Design degraded-state interactions
-- [ ] Create low-fidelity wireframes
-- [ ] Validate against primary scenario
+- [ ] Resolve final Live Activity vs workspace placement / view model
+- [ ] Create remaining low-fidelity wireframes only where running UI still leaves structural uncertainty
+- [ ] Validate final primary scenario against public-demo pacing
 
-Primary flow and runtime behaviour are specified in [Primary Operator Flow & Scenario Runtime Contract](docs/design/primary-operator-flow.md). The reusable Action Review pattern remains tracked separately and should be refined while implementing the actual component.
+Primary flow and runtime behaviour are specified in [Primary Operator Flow & Scenario Runtime Contract](docs/design/primary-operator-flow.md). Running UI remains the primary validation surface for unresolved interaction details.
 
 ---
 
@@ -116,8 +118,8 @@ Primary flow and runtime behaviour are specified in [Primary Operator Flow & Sce
 - Shared state / entity registry
 - Module registry
 - Simulation clock
-- Event bus
-- Initial operational modules
+- Event processing
+- Initial operational modules / capability inputs
 - Working scenario simulation
 - Cross-module consequence generation
 
@@ -125,17 +127,36 @@ Primary flow and runtime behaviour are specified in [Primary Operator Flow & Sce
 - [x] Set up Astro / application shell
 - [x] Define repository app structure
 - [x] Implement shared entity registry
-- [ ] Implement module registry
+- [ ] Implement explicit module registry
 - [x] Implement simulation clock
-- [ ] Implement event bus
-- [ ] Implement map / operational picture
-- [ ] Implement first 3–4 MVP modules
-- [ ] Implement synthetic scenario engine
-- [ ] Implement operational consequence logic
-- [ ] Implement operator decisions
-- [ ] Add audit trail
+- [x] Implement deterministic scenario event processing
+- [x] Implement primary operational picture
+- [x] Implement synthetic scenario engine for opening through Act 2
+- [x] Implement operational consequence logic for current vertical slice
+- [x] Implement operator Decisions 1 and 2 through shared Action / Decision runtime
+- [x] Add Live Activity chronology from runtime state
+- [ ] Complete Decision 3 and final scenario progression
+- [ ] Add complete Operational History / audit interaction
+- [ ] Add After-Action Report
 
-**Current implementation checkpoint:** The application shell, shared contracts and entity registry, Scenario 01 baseline data, deterministic seed-based resolution across three opening variants and four condition profiles, bounded dominant/secondary profile parameters, runtime state, tested simulation clock, deterministic event processing, complete three-observation opening sequences and the first explainable Assessment and Projection are in place. A composed runtime step now drives the live operational view, including newest-first evidence, runtime-derived status, pause/resume behaviour and inspectable claim provenance. The next implementation step is Decision 1: a bounded information-posture choice recorded through shared Action and Decision objects.
+**Current implementation checkpoint:** The browser prototype now supports the stable baseline, seeded opening variation, live Observation progression, inspectable Assessment / Projection reasoning, blocking Decision Focus Mode, recorded Actions, D1-dependent information / coordination outcomes, shared Act 2 physical progression, material Assessment / Projection revisions, D2 resource conflict, cross-domain Live Activity, neutral decision acknowledgement and transient attention treatment for newly arrived timeline entries.
+
+The current tested path is:
+
+```text
+baseline
+→ bounded opening variation
+→ observations
+→ Assessment
+→ Projection
+→ Decision 1
+→ D1-dependent information / coordination feedback
+→ shared Act 2 physical cascade
+→ revised Assessment / Projection
+→ Decision 2
+```
+
+The runtime already contains three opening variants — `power-first`, `communications-first`, `water-first` — and four condition profiles. Run resolution is deterministic from seed, but the application currently boots the fixed documented seed `8F4C`. Public-demo preparation should replace that fixed bootstrap with a fresh-seed run factory / reset flow rather than introduce duplicated scenario branches.
 
 ### First implementation sequence
 
@@ -149,9 +170,13 @@ application shell
 → Assessment/Projection rules
 → primary operational view
 → Decision / Action Review
-→ audit timeline
-→ After-Action Report
-→ profile/seed validation and polish
+→ D1 downstream consequences
+→ Act 2 + D2
+→ Live Activity / attention refinement
+→ public-run bootstrap + replay
+→ Decision 3 / final progression as release scope requires
+→ Operational History / After-Action Report
+→ deployment and polish
 ```
 
 ---
@@ -161,24 +186,29 @@ application shell
 **Goal:** Turn the prototype into a coherent, credible public demonstration.
 
 ### Outcomes
-- Complete demo scenario
-- Polished visual system
+- Repeatable seeded public run
+- Complete release-scope demo scenario
+- Polished-enough visual and interaction system
 - Stable deployment
 - Documentation links
-- Public project page
-- Downloadable discovery PDF
+- Public project page / portfolio integration
 
 ### Planned work
-- [ ] Refine visual language
-- [ ] Polish interaction states
-- [ ] Add scenario reset / replay
-- [ ] Add onboarding / demo guidance
-- [ ] Optimize performance
+- [ ] Replace fixed seed bootstrap with fresh deterministic run seed
+- [ ] Validate `power-first`, `communications-first` and `water-first` against the current full implemented path
+- [ ] Add scenario reset / replay / New run
+- [ ] Decide first public-release completion boundary: D2 demonstrator vs full D3 + After-Action flow
+- [ ] Complete D3 / final progression if required by release definition
+- [ ] Add minimal public-demo onboarding and synthetic-data / non-live disclosure
+- [ ] Reassess scenario pacing with Live Activity visible
+- [ ] Resolve only the high-impact layout questions needed before public release
+- [ ] Optimize performance and production build
 - [ ] Confirm OVH deployment path
-- [ ] Deploy live demo
+- [ ] Configure `vector.michalbiernacki.com`
+- [ ] Deploy static production build
+- [ ] Smoke-test several fresh seeds in production
 - [ ] Integrate with michalbiernacki.com
-- [ ] Publish Discovery Brief PDF
-- [ ] Add GitHub / website cross-links
+- [ ] Publish supporting project documentation / Discovery Brief PDF when ready
 
 ---
 
