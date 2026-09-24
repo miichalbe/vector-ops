@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import ActionReceipt from './ActionReceipt';
 import ActionReview from './ActionReview';
 import HeaderUtilities from './HeaderUtilities';
+import OperationalTimeline from './OperationalTimeline';
+import { buildOperationalTimeline } from './operational-timeline';
 import type {
   ActionId,
   Assessment,
@@ -293,6 +295,7 @@ export default function VectorOpsApp() {
       observation.quality === 'degraded' ||
       observation.observedAt < observation.receivedAt,
   ).length;
+  const timelineEntries = buildOperationalTimeline(runtimeState);
   const pendingDecision =
     runtimeState.status === 'awaitingDecision'
       ? runtimeState.decisions.find(
@@ -394,6 +397,11 @@ export default function VectorOpsApp() {
           <strong>Run:</strong> {runStatusLabel}
         </span>
       </section>
+
+      <OperationalTimeline
+        entries={timelineEntries}
+        onSelectEntity={setSelectedEntityId}
+      />
 
       {receiptDecision && receiptAction ? (
         <ActionReceipt

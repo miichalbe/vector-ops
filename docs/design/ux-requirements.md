@@ -1,9 +1,9 @@
 # VECTOR OPS — UX Requirements
 
-**Version:** 0.6  
-**Date:** 23 September 2026  
+**Version:** 0.7  
+**Date:** 24 September 2026  
 **Status:** Living implementation contract  
-**Related artifacts:** [Primary Operational View](primary-operational-view.md), [Primary Operator Flow](primary-operator-flow.md), [System Contract](../architecture/system-contract.md)
+**Related artifacts:** [Primary Operational View](primary-operational-view.md), [Operational Timeline / Live Activity](operational-timeline.md), [Primary Operator Flow](primary-operator-flow.md), [System Contract](../architecture/system-contract.md)
 
 ---
 
@@ -116,6 +116,39 @@ Module software state must not be described as infrastructure state.
 - A blocking Decision changes runtime status to `awaitingDecision`; runtime time progression stops because of runtime state rather than presentation-local auto-pause logic.
 - Pausing affects progression only; it must not clear selection, evidence or derived claims.
 - Final pacing remains subject to scenario validation and may change without altering the domain timeline.
+
+### UX-L06 — Operational Timeline / Live activity
+
+A full-width `Live activity` panel sits between the compact system/data-health bar and the main 70/30 workspace.
+
+The panel answers:
+
+> What just changed?
+
+It provides one cross-domain newest-first chronology so the operator does not need to inspect every entity tile and mentally reconstruct recent activity.
+
+The VS1 implementation:
+
+- derives Timeline entries from runtime state rather than presentation-local scenario logic;
+- includes Observations from all monitored entities;
+- includes selected material coordination/information events that do not create their own Observation;
+- includes material Assessment and Projection revisions;
+- includes recorded operator Decision activity where useful for continuity;
+- hides internal lifecycle noise that does not change operator understanding;
+- uses `receivedAt` as the primary time for Observation entries;
+- keeps the panel height bounded and exposes older entries through an internal scroll region;
+- allows an entity-linked entry to update Selected entity context without changing scenario time or domain state;
+- provides native keyboard interaction and visible focus for entity-linked entries.
+
+The Timeline is a live-awareness surface, not a raw DomainEvent log and not a substitute for the future complete Operational History.
+
+Decision 1 feedback must be observable through the Timeline:
+
+- D1-A exposes synchronised confirmation when it arrives;
+- D1-B does not fabricate equivalent confirmation and instead relies on organically arriving observations;
+- D1-C exposes the regional-coordination acknowledgement when it arrives.
+
+Scenario pacing should be reassessed against the running Timeline before Act 2 offsets are shortened globally.
 
 ---
 
@@ -502,6 +535,10 @@ The implemented baseline should satisfy all of the following:
 - [x] Confirming a Decision produces an `Action recorded` receipt before routine work continues visually.
 - [x] Header reserves History and Notifications entry points without pretending the future features are already available.
 - [x] Complete current observation history is accessible from the Selected entity scroll region.
+- [x] Live activity combines cross-domain observations into one newest-first Timeline.
+- [x] Material D1 coordination feedback is exposed without fabricating equivalent feedback for D1-B.
+- [x] Entity-linked Timeline entries update Selected entity context and remain keyboard accessible.
+- [x] Timeline height is bounded and older activity remains available through internal scrolling.
 
 ---
 
@@ -509,6 +546,7 @@ The implemented baseline should satisfy all of the following:
 
 | Date | Version | Change |
 |---|---:|---|
+| 24 September 2026 | 0.7 | Added Operational Timeline / Live activity as a full-width cross-domain chronology, defined material-entry filtering, entity-context interaction, D1 feedback visibility, and the distinction between live awareness and future complete Operational History. |
 | 23 September 2026 | 0.6 | Defined Decision Focus Mode, VS1 blocking-Decision behaviour, progressive Action Review hierarchy, full-card Action selection, factual post-confirmation receipt, and future History / Notifications entry points. Documented non-blocking and multiple simultaneous Decisions as post-VS1 work. |
 | 23 September 2026 | 0.5 | Replaced the three-observation truncation with a keyboard-accessible internal scroll region while preserving the Selected entity panel's stable height. |
 | 23 September 2026 | 0.4 | Restricted entity-status tooltips to direct badge hover and protected first-click tile selection from tooltip interference. |
