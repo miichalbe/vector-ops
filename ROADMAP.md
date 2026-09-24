@@ -12,9 +12,11 @@ The roadmap is intentionally outcome-based. Each milestone should leave behind a
 ## Near-term delivery target
 
 **Testable vertical slice:** achieved for D1 → Act 2 → D2 flow on 24 September 2026  
-**Public prototype / alpha:** next focused delivery target; final scope depends on whether first release stops after D2 or completes the full D3 + After-Action contract
+**Public prototype / alpha:** complete the full documented Scenario 01 contract before deployment: D1 → D2 → D3 → final progression / handover → simple factual After-Action Report → full regression and manual validation → production deployment
 
-The alpha remains a narrow end-to-end demonstration: one primary operator, one synthetic cascading-infrastructure scenario, one operational area, three bounded opening variants and ultimately three meaningful decision moments. It must remain structurally open to additional modules and scenarios after launch.
+The alpha remains a narrow end-to-end demonstration: one primary operator, one synthetic cascading-infrastructure scenario, one operational area, three bounded opening variants and three meaningful decision moments. It must remain structurally open to additional modules and scenarios after launch.
+
+There is no separate D2-only preview release in the current plan. Public deployment follows completion and validation of the full alpha contract.
 
 The time box changes delivery breadth, not the architectural principles. Shared entities, state, events, module registration, scenario data and consequence rules must not be hard-coded into individual UI components.
 
@@ -135,9 +137,10 @@ Primary flow and runtime behaviour are specified in [Primary Operator Flow & Sce
 - [x] Implement operational consequence logic for current vertical slice
 - [x] Implement operator Decisions 1 and 2 through shared Action / Decision runtime
 - [x] Add Live Activity chronology from runtime state
-- [ ] Complete Decision 3 and final scenario progression
-- [ ] Add complete Operational History / audit interaction
-- [ ] Add After-Action Report
+- [ ] Implement Decision 2 downstream external response and deployment progress
+- [ ] Complete Decision 3 and final scenario progression / handover
+- [ ] Add simple factual After-Action Report
+- [ ] Complete Operational History / audit interaction beyond the minimum alpha AAR where needed
 
 **Current implementation checkpoint:** The browser prototype now supports the stable baseline, seeded opening variation, live Observation progression, inspectable Assessment / Projection reasoning, blocking Decision Focus Mode, recorded Actions, D1-dependent information / coordination outcomes, shared Act 2 physical progression, material Assessment / Projection revisions, D2 resource conflict, cross-domain Live Activity, neutral decision acknowledgement and transient attention treatment for newly arrived timeline entries.
 
@@ -173,39 +176,51 @@ application shell
 → D1 downstream consequences
 → Act 2 + D2
 → Live Activity / attention refinement
-→ public-run bootstrap + replay
-→ Decision 3 / final progression as release scope requires
-→ Operational History / After-Action Report
-→ deployment and polish
+→ D2 downstream response / deployment
+→ hospital / critical-service consequence
+→ Decision 3
+→ final stabilisation or controlled deterioration
+→ operational handover
+→ simple factual After-Action Report
+→ fresh-seed run bootstrap + replay
+→ pacing / high-impact interaction polish
+→ full regression + manual scenario validation
+→ deployment and production smoke test
 ```
 
 ---
 
 ## M5 — Public Demo
 
-**Goal:** Turn the prototype into a coherent, credible public demonstration.
+**Goal:** Turn the completed vertical slice into a coherent, credible public demonstration.
 
 ### Outcomes
-- Repeatable seeded public run
-- Complete release-scope demo scenario
+- Complete three-Decision Scenario 01 run
+- Simple factual After-Action Report
+- Repeatable seeded public run across three bounded opening variants
+- Full automated regression and manual end-to-end validation completed before deployment
 - Polished-enough visual and interaction system
 - Stable deployment
 - Documentation links
 - Public project page / portfolio integration
 
 ### Planned work
+- [ ] Complete D2 downstream external response, deployment progress and resulting consequence revisions
+- [ ] Add hospital / critical-service consequence and Decision 3
+- [ ] Complete final stabilisation or controlled-deterioration sequence and operational handover
+- [ ] Add simple factual After-Action Report with run configuration, key chronology, D1/D2/D3 selections, expected versus observed effects and unresolved items
 - [ ] Replace fixed seed bootstrap with fresh deterministic run seed
-- [ ] Validate `power-first`, `communications-first` and `water-first` against the current full implemented path
-- [ ] Add scenario reset / replay / New run
-- [ ] Decide first public-release completion boundary: D2 demonstrator vs full D3 + After-Action flow
-- [ ] Complete D3 / final progression if required by release definition
-- [ ] Add minimal public-demo onboarding and synthetic-data / non-live disclosure
+- [ ] Add scenario reset / replay / New run with same-seed reproducibility
+- [ ] Validate `power-first`, `communications-first` and `water-first` through the complete Scenario 01 path
+- [ ] Run full automated regression, type checking and production build verification
+- [ ] Run manual end-to-end tests across representative D1/D2/D3 paths, including keyboard/focus, Timeline, acknowledgements, AAR and replay
 - [ ] Reassess scenario pacing with Live Activity visible
-- [ ] Resolve only the high-impact layout questions needed before public release
+- [ ] Resolve only the high-impact layout questions exposed by full-run validation
+- [ ] Add minimal public-demo onboarding and synthetic-data / non-live disclosure
 - [ ] Optimize performance and production build
 - [ ] Confirm OVH deployment path
 - [ ] Configure `vector.michalbiernacki.com`
-- [ ] Deploy static production build
+- [ ] Deploy static production build only after the full alpha acceptance path is green
 - [ ] Smoke-test several fresh seeds in production
 - [ ] Integrate with michalbiernacki.com
 - [ ] Publish supporting project documentation / Discovery Brief PDF when ready

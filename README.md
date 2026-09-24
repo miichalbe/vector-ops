@@ -66,6 +66,8 @@ The public alpha remains intentionally narrow: one operator, one operational are
 
 A new public run should generate a fresh seed, resolve one of the existing opening variants — `power-first`, `communications-first` or `water-first` — and retain enough run metadata for deterministic replay and later After-Action reconstruction.
 
+The public alpha is considered complete only when the documented end-to-end Scenario 01 contract is implemented: three operator Decisions, final scenario progression and handover, a simple factual After-Action Report, and completed automated regression plus manual scenario validation. Deployment is the final step after those checks, not an earlier preview milestone.
+
 ## Current implementation
 
 The active vertical slice currently includes:
@@ -99,15 +101,17 @@ The Live Activity timeline provides one newest-first cross-domain chronology so 
 
 ## Public-prototype readiness
 
-The next public-demo work is no longer basic scenario mechanics. The remaining work is to turn the current vertical slice into a coherent repeatable public experience:
+The next work is to complete the documented public-alpha contract before any deployment or public preview:
 
-1. create a run bootstrap / reset flow that generates a fresh seed instead of always using `8F4C`;
-2. validate all three opening variants against the current D1 → Act 2 → D2 flow;
-3. complete the third decision and final scenario progression if the release is to match the full public-alpha contract;
-4. add completion / replay and After-Action handling appropriate to the selected release scope;
-5. add minimal public-demo framing / synthetic-data disclosure;
-6. confirm static OVH deployment and publish the build at `vector.michalbiernacki.com`;
-7. run production smoke tests across multiple seeds before sharing the link.
+1. implement Decision 2 downstream external response, deployment progress and resulting consequence updates;
+2. add the hospital / critical-service consequence and Decision 3 coordination posture;
+3. complete the final stabilisation or controlled-deterioration sequence and operational handover;
+4. implement a simple factual After-Action Report covering run configuration, key chronology, D1/D2/D3 selections, expected versus observed effects and unresolved items;
+5. replace the fixed `8F4C` bootstrap with a fresh deterministic run seed and add `New run` / replay while preserving same-seed reproducibility;
+6. validate `power-first`, `communications-first` and `water-first` through the complete scenario, then perform full automated regression, type checking, production build verification and manual end-to-end testing across representative decision paths;
+7. reassess pacing and only the high-impact interaction / layout questions exposed by those runs;
+8. add minimal public-demo framing and synthetic-data / non-live disclosure;
+9. only after the above is complete, configure OVH, deploy to `vector.michalbiernacki.com` and run production smoke tests across multiple seeds before sharing the link.
 
 ## Documentation
 
@@ -129,7 +133,7 @@ The next public-demo work is no longer basic scenario mechanics. The remaining w
 
 - What is the strongest final placement / view relationship between Live Activity and the entity / Assessment / Projection workspace?
 - Which current scenario intervals still feel unnecessarily quiet after Live Activity is visible?
-- What minimum completion experience is required for the first public deployment: D2-bounded demonstrator or full D3 + After-Action flow?
+- How should Decision 2 downstream response and Decision 3 expose expected versus observed operational effects without turning the scenario into a branching game narrative?
 - How should a public `New run` / replay flow expose the seed without revealing hidden opening/profile configuration during the live run?
 - Which onboarding elements remain necessary once the public demo is reachable without project context?
 
@@ -139,7 +143,7 @@ The public demonstrator is **not** intended to include weapon control, target en
 
 ## Next step
 
-Prepare the public-run bootstrap around fresh deterministic seeds, validate all three opening variants against the current vertical slice and then complete only the additional scenario / deployment scope required by the chosen public-release definition.
+Continue the fixed Scenario 01 spine after Decision 2: model external response and deployment progress, carry the resulting consequences into the hospital / critical-service beat, and open Decision 3 through the same reusable runtime and Action Review pattern.
 
 ---
 
