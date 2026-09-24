@@ -1,4 +1,5 @@
 import type {
+  ActionLifecycle,
   DomainEvent,
   EntityId,
   Observation,
@@ -15,7 +16,15 @@ export interface AppendObservationEffect {
   observation: Observation;
 }
 
-export type ScenarioEventEffect = AppendObservationEffect;
+export interface UpdateActionLifecycleEffect {
+  type: 'updateActionLifecycle';
+  actionId: string;
+  lifecycle: ActionLifecycle;
+}
+
+export type ScenarioEventEffect =
+  | AppendObservationEffect
+  | UpdateActionLifecycleEffect;
 
 export interface ScenarioTimeEventDefinition<T = unknown> {
   id: string;
@@ -78,6 +87,16 @@ function assertValidDefinitions(
     }
 
     for (const effect of definition.effects ?? []) {
+      if (effect.type === 'updateActionLifecycle') {
+        if (!state.actions.some((action) => action.id === effect.actionId)) {
+          throw new Error(
+            `Scenario event ${definition.id} references unknown action: ${effect.actionId}`,
+          );
+        }
+
+        continue;
+      }
+
       const { observation } = effect;
 
       if (observationIds.has(observation.id)) {
@@ -173,6 +192,65 @@ function compareDefinitions(
   return left.id < right.id ? -1 : 1;
 }
 
+function canTransitionActionLifecycle(
+  from: ActionLifecycle,
+  to: ActionLifecycle,
+): boolean {
+  if (from === to) {
+    return true;
+  }
+
+  const allowedTransitions: Partial<
+    Record<ActionLifecycle, readonly ActionLifecycle[]>
+  > = {
+    selected: ['requested', 'completed', 'cancelled'],
+    requested: ['accepted', 'rejected', 'cancelled'],
+    accepted: ['completed', 'cancelled'],
+  };
+
+  return allowedTransitions[from]?.includes(to) ?? false;
+}
+
+function applyActionLifecycleEffects(
+  state: ScenarioRuntimeState,
+  definitions: readonly ScenarioTimeEventDefinition[],
+): ScenarioRuntimeState['actions'] {
+  let actions = [...state.actions];
+
+  for (const definition of definitions) {
+    for (const effect of definition.effects ?? []) {
+      if (effect.type !== 'updateActionLifecycle') {
+        continue;
+      }
+
+      const actionIndex = actions.findIndex(
+        (action) => action.id === effect.actionId,
+      );
+      const action = actions[actionIndex];
+
+      if (!action) {
+        throw new Error(
+          `Scenario event ${definition.id} references unknown action: ${effect.actionId}`,
+        );
+      }
+
+      if (!canTransitionActionLifecycle(action.lifecycle, effect.lifecycle)) {
+        throw new Error(
+          `Invalid action lifecycle transition for ${action.id}: ${action.lifecycle} -> ${effect.lifecycle}`,
+        );
+      }
+
+      actions = actions.map((candidate, index) =>
+        index === actionIndex
+          ? { ...candidate, lifecycle: effect.lifecycle }
+          : candidate,
+      );
+    }
+  }
+
+  return actions;
+}
+
 export function processDueScenarioTimeEvents(
   state: ScenarioRuntimeState,
   definitions: readonly ScenarioTimeEventDefinition[],
@@ -210,10 +288,14 @@ export function processDueScenarioTimeEvents(
   }
 
   const newObservations = dueDefinitions.flatMap((definition) =>
-    (definition.effects ?? []).map((effect) =>
-      materializeObservation(effect.observation),
-    ),
+    (definition.effects ?? [])
+      .filter(
+        (effect): effect is AppendObservationEffect =>
+          effect.type === 'appendObservation',
+      )
+      .map((effect) => materializeObservation(effect.observation)),
   );
+  const actions = applyActionLifecycleEffects(state, dueDefinitions);
 
   return {
     ...state,
@@ -227,5 +309,6 @@ export function processDueScenarioTimeEvents(
       ...state.observations,
       ...newObservations,
     ],
+    actions,
   };
 }
