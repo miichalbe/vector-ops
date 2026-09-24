@@ -149,8 +149,10 @@ describe('Scenario 01 time-driven opening', () => {
 
   it('applies the default low-confidence modifier to later evidence', () => {
     const definitions = scenario01TimeEvents;
-    const observationEffects = definitions.map(
-      (definition) => definition.effects?.[0]?.observation,
+    const observationEffects = definitions.map((definition) =>
+      definition.effects?.find(
+        (effect) => effect.type === 'appendObservation',
+      )?.observation,
     );
 
     expect(
@@ -190,8 +192,9 @@ describe('Scenario 01 time-driven opening', () => {
         definition.id ===
         'event.scenario-01.r4.link-degradation',
     );
-    const packetLossObservation =
-      communicationsEvent?.effects?.[0]?.observation;
+    const packetLossObservation = communicationsEvent?.effects?.find(
+      (effect) => effect.type === 'appendObservation',
+    )?.observation;
 
     expect(definitions.map((definition) => definition.id)).toEqual(
       openingExpectations[0]?.eventIds,

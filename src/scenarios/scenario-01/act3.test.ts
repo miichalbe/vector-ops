@@ -84,7 +84,7 @@ function restrictedRouteObservation(): Observation {
 
 function stateAfterDecision2(
   d2ActionId: string,
-  d1ActionId = scenario01ActionIds.continueSeparateMonitoring,
+  d1ActionId: string = scenario01ActionIds.continueSeparateMonitoring,
 ) {
   return {
     ...scenario01InitialState,
