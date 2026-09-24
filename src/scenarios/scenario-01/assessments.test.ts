@@ -1,21 +1,31 @@
 import { describe, expect, it } from 'vitest';
 
+import type { ActionId } from '../../core/contracts';
 import { resolveScenarioRunConfig } from '../../core/run-config';
 import { evaluateAssessmentRules } from '../../core/runtime-assessments';
 import { advanceScenarioTime } from '../../core/runtime-clock';
+import { recordDecisionSelection } from '../../core/runtime-decision-selection';
 import { processDueScenarioTimeEvents } from '../../core/runtime-events';
+import { advanceScenarioRuntime } from '../../core/runtime-step';
 import {
   createInitialRuntimeState,
   type ConditionProfileId,
   type OpeningVariantId,
 } from '../../core/runtime-state';
+import { scenario01Act2Offsets } from './act2';
 import {
   scenario01AssessmentIds,
   scenario01AssessmentRules,
 } from './assessments';
 import {
+  scenario01ActionIds,
+  scenario01DecisionIds,
+} from './decisions';
+import {
   scenario01DefaultRunConfig,
   scenario01InitialData,
+  scenario01InitialState,
+  scenario01RuntimeDefinition,
 } from './scenario';
 import { createScenario01TimeEvents } from './timeline';
 
@@ -63,6 +73,35 @@ function stateWithOpeningEvidence({
   return processDueScenarioTimeEvents(
     stateAtEvidenceTime,
     definitions,
+    RECORDED_AT,
+  );
+}
+
+function stateAfterDecision1FeederIsolation(actionId: ActionId) {
+  const finalOpeningTime =
+    scenario01RuntimeDefinition.timeEvents.at(-1)?.trigger.at;
+
+  if (finalOpeningTime === undefined) {
+    throw new Error('Expected Scenario 01 opening events.');
+  }
+
+  const awaitingDecision = advanceScenarioRuntime(
+    scenario01InitialState,
+    finalOpeningTime - scenario01InitialState.now,
+    scenario01RuntimeDefinition,
+    RECORDED_AT,
+  );
+  const decidedState = recordDecisionSelection(
+    awaitingDecision,
+    scenario01DecisionIds.informationPosture,
+    actionId,
+    RECORDED_AT,
+  );
+
+  return advanceScenarioRuntime(
+    decidedState,
+    scenario01Act2Offsets.feederIsolation,
+    scenario01RuntimeDefinition,
     RECORDED_AT,
   );
 }
@@ -226,5 +265,68 @@ describe('Scenario 01 opening Assessment', () => {
     );
 
     expect(assessedState.assessments[0]?.confidence.level).toBe('high');
+  });
+});
+
+describe('Scenario 01 Act 2 Assessment revision', () => {
+  for (const [actionId, expectedConfidence] of [
+    [scenario01ActionIds.openCrossDomainIncident, 'high'],
+    [scenario01ActionIds.continueSeparateMonitoring, 'medium'],
+    [scenario01ActionIds.recommendRegionalEscalation, 'medium'],
+  ] as const) {
+    it(`revises A-01 after persistent F-12 for ${actionId}`, () => {
+      const state = stateAfterDecision1FeederIsolation(actionId);
+      const revisions = state.assessments.filter(
+        (assessment) =>
+          assessment.id === scenario01AssessmentIds.crossDomainDisruption,
+      );
+      const opening = revisions[0];
+      const revised = revisions[1];
+
+      expect(revisions).toHaveLength(2);
+      expect(revised).toMatchObject({
+        revision: 2,
+        title:
+          'Persistent F-12 disruption confirms continuing risk to dependent services',
+        confidence: { level: expectedConfidence },
+        status: 'active',
+        createdAt: opening?.createdAt,
+        recalculatedAt: state.now,
+      });
+      expect(revised?.evidenceIds).toContain(
+        'observation.scenario-01.gpz.f12-isolated',
+      );
+      expect(
+        revised?.assumptions.find(
+          (assumption) =>
+            assumption.id === 'assumption.scenario-01.a01.persistence',
+        )?.status,
+      ).toBe('confirmed');
+    });
+  }
+
+  it('adds coordinated-confirmation support only for D1-A', () => {
+    const synchronised = stateAfterDecision1FeederIsolation(
+      scenario01ActionIds.openCrossDomainIncident,
+    );
+    const separate = stateAfterDecision1FeederIsolation(
+      scenario01ActionIds.continueSeparateMonitoring,
+    );
+    const synchronisedRevision = synchronised.assessments.at(-1);
+    const separateRevision = separate.assessments.at(-1);
+
+    expect(synchronisedRevision?.confidence.reasons).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: 'coordinated-confirmation',
+          effect: 'increase',
+        }),
+      ]),
+    );
+    expect(
+      separateRevision?.confidence.reasons?.some(
+        (reason) => reason.type === 'coordinated-confirmation',
+      ),
+    ).toBe(false);
   });
 });

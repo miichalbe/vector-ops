@@ -1,4 +1,5 @@
 import type {
+  Action,
   ConfidenceLevel,
   Observation,
 } from '../../core/contracts';
@@ -8,6 +9,8 @@ import type {
 } from '../../core/runtime-assessments';
 import type { OpeningVariantId } from '../../core/runtime-state';
 import { scenario01EntityIds } from './baseline';
+import { scenario01ActionIds } from './decisions';
+import { getDecision1DownstreamModifiers } from './decision-1-outcomes';
 
 export const scenario01AssessmentIds = {
   crossDomainDisruption:
@@ -18,6 +21,9 @@ export const scenario01AssessmentRuleIds = {
   crossDomainOpening:
     'rule.scenario-01.assessment.cross-domain-opening',
 } as const;
+
+const F12_ISOLATED_OBSERVATION_ID =
+  'observation.scenario-01.gpz.f12-isolated';
 
 const openingEvidenceIds = {
   'power-first': [
@@ -68,6 +74,41 @@ function lowestConfidence(
         : lowest,
     'high',
   );
+}
+
+function raiseConfidenceOneLevel(
+  confidence: ConfidenceLevel,
+): ConfidenceLevel {
+  if (confidence === 'low') {
+    return 'medium';
+  }
+
+  return 'high';
+}
+
+function selectedDecision1Action(
+  actions: readonly Action[],
+): Action | undefined {
+  const decision1ActionIds = new Set<string>(
+    Object.values(scenario01ActionIds),
+  );
+
+  return actions.find(
+    (action) =>
+      action.lifecycle === 'selected' &&
+      decision1ActionIds.has(action.id),
+  );
+}
+
+function decision1ConfidenceSupport(
+  actions: readonly Action[],
+) {
+  const selectedAction = selectedDecision1Action(actions);
+
+  return selectedAction
+    ? getDecision1DownstreamModifiers(selectedAction.id)
+        .confidenceSupport
+    : 'none';
 }
 
 function crossDomainOpeningDraft(
@@ -152,6 +193,97 @@ function crossDomainOpeningDraft(
   };
 }
 
+function persistentFeederDraft(
+  openingVariant: OpeningVariantId,
+  openingObservations: readonly Observation[],
+  feederObservation: Observation,
+  actions: readonly Action[],
+): AssessmentDraft {
+  const observations = [...openingObservations, feederObservation];
+  const baseConfidence = lowestConfidence(observations);
+  const confidenceSupport = decision1ConfidenceSupport(actions);
+  const confidenceLevel =
+    confidenceSupport === 'moderate'
+      ? raiseConfidenceOneLevel(baseConfidence)
+      : baseConfidence;
+  const hasDegradedEvidence = openingObservations.some(
+    (observation) => observation.quality !== 'good',
+  );
+  const dependencyIds =
+    openingVariant === 'communications-first'
+      ? [
+          ...sharedPowerDependencyIds,
+          'dependency.suw.monitored-via.r4',
+        ]
+      : [...sharedPowerDependencyIds];
+
+  return {
+    title:
+      'Persistent F-12 disruption confirms continuing risk to dependent services',
+    severity: 'warning',
+    attention: 'review',
+    confidence: {
+      level: confidenceLevel,
+      reasons: [
+        {
+          type: 'persistence',
+          effect: 'increase',
+          description:
+            'F-12 is now confirmed isolated, resolving the earlier uncertainty about persistence.',
+        },
+        {
+          type: 'dependency',
+          effect: 'increase',
+          description:
+            'Registered dependencies connect SUW Kępa and R-4 to the affected GPZ feeder.',
+        },
+        ...(confidenceSupport === 'moderate'
+          ? [
+              {
+                type: 'coordinated-confirmation',
+                effect: 'increase' as const,
+                description:
+                  'Earlier synchronised confirmation provides additional support for the cross-domain interpretation.',
+              },
+            ]
+          : []),
+        ...(hasDegradedEvidence
+          ? [
+              {
+                type: 'evidence-quality',
+                effect: 'decrease' as const,
+                description:
+                  'Some opening evidence remains delayed or degraded even though feeder persistence is now confirmed.',
+              },
+            ]
+          : []),
+      ],
+    },
+    entityIds: [
+      scenario01EntityIds.gridSubstation,
+      scenario01EntityIds.waterStation,
+      scenario01EntityIds.communicationsGateway,
+    ],
+    evidenceIds: observations.map((observation) => observation.id),
+    dependencyIds,
+    assumptions: [
+      {
+        id: 'assumption.scenario-01.a01.shared-cause',
+        statement:
+          'The opening anomalies have a shared cause rather than coincidental local causes.',
+        status: 'supported',
+      },
+      {
+        id: 'assumption.scenario-01.a01.persistence',
+        statement:
+          'The automatically cleared GPZ disturbance may have continuing downstream effects.',
+        status: 'confirmed',
+      },
+    ],
+    status: 'active',
+  };
+}
+
 export const scenario01AssessmentRules: readonly AssessmentRule[] = [
   {
     id: scenario01AssessmentRuleIds.crossDomainOpening,
@@ -171,6 +303,19 @@ export const scenario01AssessmentRules: readonly AssessmentRule[] = [
 
       if (observations.length !== evidenceIds.length) {
         return null;
+      }
+
+      const feederObservation = context.observations.find(
+        (observation) => observation.id === F12_ISOLATED_OBSERVATION_ID,
+      );
+
+      if (feederObservation) {
+        return persistentFeederDraft(
+          context.run.openingVariant,
+          observations,
+          feederObservation,
+          context.actions,
+        );
       }
 
       return crossDomainOpeningDraft(
