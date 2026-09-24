@@ -16,6 +16,7 @@ import {
 } from './baseline-observations';
 import { scenario01DecisionGates } from './decisions';
 import { createScenario01Act2TimeEvents } from './act2';
+import { createScenario01Act3TimeEvents } from './act3';
 import { scenario01ProjectionRules } from './projections';
 import { createScenario01TimeEvents } from './timeline';
 
@@ -49,7 +50,12 @@ export const scenario01TimeEvents = createScenario01TimeEvents(
 
 export const scenario01RuntimeDefinition = {
   timeEvents: scenario01TimeEvents,
-  dynamicTimeEvents: createScenario01Act2TimeEvents,
+  dynamicTimeEvents(state) {
+    return [
+      ...createScenario01Act2TimeEvents(state),
+      ...createScenario01Act3TimeEvents(state),
+    ];
+  },
   assessmentRules: scenario01AssessmentRules,
   projectionRules: scenario01ProjectionRules,
   decisionGates: scenario01DecisionGates,
