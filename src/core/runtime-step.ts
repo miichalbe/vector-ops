@@ -15,6 +15,7 @@ import {
   processDueScenarioTimeEvents,
   type ScenarioTimeEventDefinition,
 } from './runtime-events';
+import { publishRuntimeSnapshot } from './runtime-observer';
 import {
   evaluateProjectionRules,
   type ProjectionRule,
@@ -62,10 +63,13 @@ export function advanceScenarioRuntime(
     definition.decisionGates,
     recordedAt,
   );
-
-  return evaluateCompletionRules(
+  const completedState = evaluateCompletionRules(
     decisionState,
     definition.completionRules ?? [],
     recordedAt,
   );
+
+  publishRuntimeSnapshot(completedState);
+
+  return completedState;
 }
