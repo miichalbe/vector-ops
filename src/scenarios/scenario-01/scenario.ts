@@ -20,6 +20,8 @@ import {
 import { scenario01Decision3Gate } from './decision-3';
 import { createScenario01Act2TimeEvents } from './act2';
 import { createScenario01Act3TimeEvents } from './act3';
+import { createScenario01Act4TimeEvents } from './act4';
+import { scenario01CompletionRule } from './completion';
 import {
   scenario01ProjectionRules as scenario01BaseProjectionRules,
 } from './projections';
@@ -70,11 +72,13 @@ export const scenario01RuntimeDefinition = {
     return [
       ...createScenario01Act2TimeEvents(state),
       ...createScenario01Act3TimeEvents(state),
+      ...createScenario01Act4TimeEvents(state),
     ];
   },
   assessmentRules: scenario01AssessmentRules,
   projectionRules: scenario01ProjectionRules,
   decisionGates: scenario01DecisionGates,
+  completionRules: [scenario01CompletionRule],
 } satisfies ScenarioRuntimeDefinition;
 
 export { scenario01AssessmentRules };

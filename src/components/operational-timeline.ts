@@ -30,17 +30,25 @@ const metricLabels: Record<string, string> = {
   'power.feederState': 'Feeder F-12',
   'power.loadPercentage': 'Load',
   'power.qualityEvent': 'Power quality',
+  'power.restorationEstimate': 'Restoration estimate',
+  'power.restorationStatus': 'Restoration status',
   'water.outputPressure': 'Output pressure',
   'water.reservoirLevel': 'Reservoir',
   'water.pumpState': 'Pumps',
   'water.controllerState': 'Controller',
   'water.telemetryFreshness': 'Telemetry freshness',
+  'water.powerSupport': 'Power support',
+  'water.serviceMarginTrend': 'Service margin',
   'communications.powerMode': 'Power mode',
   'communications.linkQuality': 'Link quality',
   'communications.packetLoss': 'Packet loss',
   'health.essentialServicesPosture': 'Essential services',
   'health.waterMargin': 'Water margin',
+  'health.continuityRequest': 'Continuity request',
+  'health.contingencyPreparation': 'Contingency preparation',
   'logistics.resourceState': 'Resource state',
+  'logistics.assignment': 'Assignment',
+  'logistics.estimatedArrival': 'Estimated arrival',
   'logistics.routeState': 'Route state',
   'logistics.estimatedTravelTime': 'Travel time',
 };
@@ -148,6 +156,54 @@ function materialEventEntry(
         summary:
           'Regional escalation recommendation acknowledged; operational confirmation remains pending.',
         meta: 'Regional coordination chain',
+      };
+
+    case 'coordination.targeted-posture.active':
+      return {
+        id: `timeline.${event.id}`,
+        scenarioTime: event.scenarioTime,
+        kind: 'coordination',
+        label: 'Coordination',
+        title: 'Targeted contingency posture',
+        summary:
+          'Affected organisations acknowledged targeted notifications; local contingency preparation is active.',
+        meta: 'WCZK operator coordination',
+      };
+
+    case 'coordination.voivodeship-package.active':
+      return {
+        id: `timeline.${event.id}`,
+        scenarioTime: event.scenarioTime,
+        kind: 'coordination',
+        label: 'Coordination',
+        title: 'Voivodeship-level coordination',
+        summary:
+          'Broader coordination package activated after recommendation acceptance.',
+        meta: 'Responsible regional authority',
+      };
+
+    case 'information.additional-confirmation.received':
+      return {
+        id: `timeline.${event.id}`,
+        scenarioTime: event.scenarioTime,
+        kind: 'coordination',
+        label: 'Confirmation',
+        title: 'Additional operator confirmation',
+        summary:
+          'F-12 remains isolated; field restoration work continues and the current restoration picture is better supported.',
+        meta: 'Distribution System Operator',
+      };
+
+    case 'operational.handover.prepared':
+      return {
+        id: `timeline.${event.id}`,
+        scenarioTime: event.scenarioTime,
+        kind: 'coordination',
+        label: 'Handover',
+        title: 'Operational phase complete',
+        summary:
+          'Current mitigations and unresolved dependencies are prepared for handover.',
+        meta: 'WCZK duty officer',
       };
 
     case 'decision.recorded': {
