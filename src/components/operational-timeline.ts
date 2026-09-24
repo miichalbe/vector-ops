@@ -14,6 +14,11 @@ export type OperationalTimelineEntryKind =
   | 'projection'
   | 'decision';
 
+export type OperationalTimelineClaimKind = Extract<
+  OperationalTimelineEntryKind,
+  'assessment' | 'projection'
+>;
+
 export interface OperationalTimelineEntry {
   id: string;
   scenarioTime: ScenarioTime;
@@ -23,6 +28,7 @@ export interface OperationalTimelineEntry {
   summary: string;
   meta?: string;
   entityId?: EntityId;
+  claimId?: string;
 }
 
 const metricLabels: Record<string, string> = {
@@ -269,6 +275,7 @@ export function buildOperationalTimeline(
       title: 'Cross-domain Assessment',
       summary: assessment.title,
       meta: `${assessment.confidence.level} confidence · ${assessment.evidenceIds.length} supporting observations`,
+      claimId: assessment.id,
     }),
   );
   const projectionEntries: OperationalTimelineEntry[] = state.projections.map(
@@ -280,6 +287,7 @@ export function buildOperationalTimeline(
       title: 'Projected consequence',
       summary: projection.title,
       meta: `${projection.confidence.level} confidence · ${projection.status}`,
+      claimId: projection.id,
     }),
   );
 

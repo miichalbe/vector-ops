@@ -1,9 +1,19 @@
 import { useEffect, useState } from 'react';
 import ActionReceipt from './ActionReceipt';
 import ActionReview from './ActionReview';
+import {
+  activeAssessmentFamilies,
+  activeProjectionFamilies,
+  currentAssessmentFamilies,
+  currentProjectionFamilies,
+  selectedClaimFamily,
+} from './claim-selection';
 import HeaderUtilities from './HeaderUtilities';
 import OperationalTimeline from './OperationalTimeline';
-import { buildOperationalTimeline } from './operational-timeline';
+import {
+  buildOperationalTimeline,
+  type OperationalTimelineClaimKind,
+} from './operational-timeline';
 import type {
   ActionId,
   Assessment,
@@ -75,22 +85,6 @@ function formatValue(observation: Observation) {
 
 function formatSource(source: ObservationSource) {
   return source.organisation ?? source.id ?? source.type;
-}
-
-function latestRevisions<T extends { id: string; revision: number }>(
-  items: readonly T[],
-): T[] {
-  const latestById = new Map<string, T>();
-
-  for (const item of items) {
-    const current = latestById.get(item.id);
-
-    if (!current || item.revision > current.revision) {
-      latestById.set(item.id, item);
-    }
-  }
-
-  return [...latestById.values()];
 }
 
 function newestObservations(
@@ -236,6 +230,53 @@ function ClaimEvidence({
   );
 }
 
+function ClaimSwitcher({
+  kind,
+  claims,
+  selectedId,
+  activeCount,
+  onSelect,
+}: {
+  kind: 'Assessment' | 'Projection';
+  claims: readonly (Assessment | Projection)[];
+  selectedId: string | undefined;
+  activeCount: number;
+  onSelect: (claimId: string) => void;
+}) {
+  if (claims.length <= 1) {
+    return (
+      <div className="claim-panel__heading-row">
+        <p className="eyebrow">{kind}</p>
+        <span>{activeCount} active</span>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <div className="claim-panel__heading-row">
+        <p className="eyebrow">{kind}</p>
+        <span>
+          {activeCount} active · {claims.length} tracked
+        </span>
+      </div>
+      <label className="claim-switcher">
+        <span>View {kind.toLowerCase()}</span>
+        <select
+          value={selectedId ?? ''}
+          onChange={(event) => onSelect(event.target.value)}
+        >
+          {claims.map((claim) => (
+            <option key={claim.id} value={claim.id}>
+              {claim.title} ({claim.status})
+            </option>
+          ))}
+        </select>
+      </label>
+    </>
+  );
+}
+
 interface ReceiptReference {
   decisionId: DecisionId;
   actionId: ActionId;
@@ -246,6 +287,10 @@ export default function VectorOpsApp() {
     useState<ScenarioRuntimeState>(scenario01InitialState);
   const [selectedEntityId, setSelectedEntityId] =
     useState<EntityId>(initialEntityId);
+  const [selectedAssessmentId, setSelectedAssessmentId] =
+    useState<string | null>(null);
+  const [selectedProjectionId, setSelectedProjectionId] =
+    useState<string | null>(null);
   const [isManuallyPaused, setIsManuallyPaused] = useState(false);
   const [receiptReference, setReceiptReference] =
     useState<ReceiptReference | null>(null);
@@ -274,18 +319,20 @@ export default function VectorOpsApp() {
   const selectedObservations = newestObservations(
     getEntityObservations(runtimeState, selectedEntityId),
   );
-  const activeAssessments = latestRevisions(
-    runtimeState.assessments,
-  ).filter((assessment) => assessment.status === 'active');
-  const activeProjections = latestRevisions(
-    runtimeState.projections,
-  ).filter(
-    (projection) =>
-      projection.status === 'projected' ||
-      projection.status === 'developing',
+  const currentAssessments = currentAssessmentFamilies(runtimeState.assessments);
+  const currentProjections = currentProjectionFamilies(runtimeState.projections);
+  const activeAssessments = activeAssessmentFamilies(runtimeState.assessments);
+  const activeProjections = activeProjectionFamilies(runtimeState.projections);
+  const primaryAssessment = selectedClaimFamily(
+    currentAssessments,
+    activeAssessments,
+    selectedAssessmentId,
   );
-  const primaryAssessment = activeAssessments[0];
-  const primaryProjection = activeProjections[0];
+  const primaryProjection = selectedClaimFamily(
+    currentProjections,
+    activeProjections,
+    selectedProjectionId,
+  );
   const activeClaims = [
     ...activeAssessments,
     ...activeProjections,
@@ -352,6 +399,23 @@ export default function VectorOpsApp() {
     setReceiptReference({ decisionId, actionId });
   }
 
+  function handleTimelineClaimSelect(
+    kind: OperationalTimelineClaimKind,
+    claimId: string,
+  ) {
+    if (kind === 'assessment') {
+      setSelectedAssessmentId(claimId);
+    } else {
+      setSelectedProjectionId(claimId);
+    }
+
+    window.requestAnimationFrame(() => {
+      document
+        .getElementById(`${kind}-panel`)
+        ?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+  }
+
   return (
     <main className="vector-ops">
       <header className="app-header">
@@ -401,6 +465,7 @@ export default function VectorOpsApp() {
       <OperationalTimeline
         entries={timelineEntries}
         onSelectEntity={setSelectedEntityId}
+        onSelectClaim={handleTimelineClaimSelect}
       />
 
       {receiptDecision && receiptAction ? (
@@ -557,10 +622,17 @@ export default function VectorOpsApp() {
           </section>
 
           <section
+            id="assessment-panel"
             className={`intelligence-panel claim-panel${primaryAssessment ? ' claim-panel--active' : ''}`}
             aria-live="polite"
           >
-            <p className="eyebrow">Assessment</p>
+            <ClaimSwitcher
+              kind="Assessment"
+              claims={currentAssessments}
+              selectedId={primaryAssessment?.id}
+              activeCount={activeAssessments.length}
+              onSelect={setSelectedAssessmentId}
+            />
             {primaryAssessment ? (
               <>
                 <h2>{primaryAssessment.title}</h2>
@@ -570,8 +642,8 @@ export default function VectorOpsApp() {
                   {primaryAssessment.assumptions.length} assumptions
                 </p>
                 <p className="panel-meta">
-                  Confidence: {primaryAssessment.confidence.level} ·{' '}
-                  Recalculated at{' '}
+                  Status: {primaryAssessment.status} · Confidence:{' '}
+                  {primaryAssessment.confidence.level} · Recalculated at{' '}
                   {formatScenarioTime(primaryAssessment.recalculatedAt)}
                 </p>
                 <ClaimEvidence
@@ -595,10 +667,17 @@ export default function VectorOpsApp() {
           </section>
 
           <section
+            id="projection-panel"
             className={`intelligence-panel claim-panel${primaryProjection ? ' claim-panel--active' : ''}`}
             aria-live="polite"
           >
-            <p className="eyebrow">Projection</p>
+            <ClaimSwitcher
+              kind="Projection"
+              claims={currentProjections}
+              selectedId={primaryProjection?.id}
+              activeCount={activeProjections.length}
+              onSelect={setSelectedProjectionId}
+            />
             {primaryProjection ? (
               <>
                 <h2>{primaryProjection.title}</h2>
@@ -622,8 +701,8 @@ export default function VectorOpsApp() {
                   Main uncertainty: {primaryProjection.mainUncertainty}
                 </p>
                 <p className="panel-meta">
-                  Confidence: {primaryProjection.confidence.level} ·{' '}
-                  Recalculated at{' '}
+                  Status: {primaryProjection.status} · Confidence:{' '}
+                  {primaryProjection.confidence.level} · Recalculated at{' '}
                   {formatScenarioTime(primaryProjection.recalculatedAt)}
                 </p>
                 <ClaimEvidence
@@ -658,7 +737,8 @@ export default function VectorOpsApp() {
             "Segoe UI", sans-serif;
         }
 
-        button {
+        button,
+        select {
           font: inherit;
         }
 
@@ -1031,6 +1111,47 @@ export default function VectorOpsApp() {
           background:
             linear-gradient(135deg, rgba(156, 111, 48, 0.12), transparent 58%),
             rgba(17, 25, 35, 0.98);
+        }
+
+        .claim-panel__heading-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+          margin-bottom: 7px;
+        }
+
+        .claim-panel__heading-row .eyebrow {
+          margin-bottom: 0;
+        }
+
+        .claim-panel__heading-row > span {
+          color: #8496a8;
+          font-size: 0.7rem;
+          white-space: nowrap;
+        }
+
+        .claim-switcher {
+          display: grid;
+          gap: 5px;
+          margin-bottom: 13px;
+          color: #8295a8;
+          font-size: 0.7rem;
+        }
+
+        .claim-switcher select {
+          width: 100%;
+          padding: 7px 9px;
+          border: 1px solid #3b5068;
+          border-radius: 6px;
+          background: #111923;
+          color: #dce7f1;
+        }
+
+        .claim-switcher select:focus-visible {
+          border-color: #62a9f2;
+          outline: 2px solid #8bc4ff;
+          outline-offset: 2px;
         }
 
         .claim-summary,

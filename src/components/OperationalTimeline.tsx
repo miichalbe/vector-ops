@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import type { EntityId } from '../core/contracts';
-import type { OperationalTimelineEntry } from './operational-timeline';
+import type {
+  OperationalTimelineClaimKind,
+  OperationalTimelineEntry,
+} from './operational-timeline';
 
 function formatScenarioTime(time: number) {
   const hours = Math.floor(time / 60);
@@ -29,12 +32,25 @@ function TimelineEntryContent({ entry }: { entry: OperationalTimelineEntry }) {
   );
 }
 
+function claimKind(
+  entry: OperationalTimelineEntry,
+): OperationalTimelineClaimKind | undefined {
+  return entry.kind === 'assessment' || entry.kind === 'projection'
+    ? entry.kind
+    : undefined;
+}
+
 export default function OperationalTimeline({
   entries,
   onSelectEntity,
+  onSelectClaim,
 }: {
   entries: readonly OperationalTimelineEntry[];
   onSelectEntity: (entityId: EntityId) => void;
+  onSelectClaim: (
+    kind: OperationalTimelineClaimKind,
+    claimId: string,
+  ) => void;
 }) {
   const seenEntryIds = useRef(new Set(entries.map((entry) => entry.id)));
   const [freshEntryIds, setFreshEntryIds] = useState<Set<string>>(
@@ -80,34 +96,55 @@ export default function OperationalTimeline({
         tabIndex={entries.length > 5 ? 0 : undefined}
         aria-label="Operational activity, newest first"
       >
-        {entries.map((entry) => (
-          <li
-            key={entry.id}
-            className={
-              freshEntryIds.has(entry.id)
-                ? 'timeline-entry-row timeline-entry-row--fresh'
-                : 'timeline-entry-row'
-            }
-          >
-            {entry.entityId ? (
-              <button
-                type="button"
-                className="timeline-entry timeline-entry--interactive"
-                onClick={() => onSelectEntity(entry.entityId as EntityId)}
-                aria-label={`${formatScenarioTime(entry.scenarioTime)} ${entry.title}: ${entry.summary}. View entity details.`}
-              >
-                <TimelineEntryContent entry={entry} />
-                <span className="timeline-entry__action" aria-hidden="true">
-                  View entity →
-                </span>
-              </button>
-            ) : (
-              <div className="timeline-entry">
-                <TimelineEntryContent entry={entry} />
-              </div>
-            )}
-          </li>
-        ))}
+        {entries.map((entry) => {
+          const entryClaimKind = claimKind(entry);
+          const hasClaimTarget =
+            entry.claimId !== undefined && entryClaimKind !== undefined;
+          const interactive = entry.entityId !== undefined || hasClaimTarget;
+          const actionLabel = entry.entityId
+            ? 'View entity →'
+            : entryClaimKind === 'assessment'
+              ? 'View Assessment →'
+              : 'View Projection →';
+
+          return (
+            <li
+              key={entry.id}
+              className={
+                freshEntryIds.has(entry.id)
+                  ? 'timeline-entry-row timeline-entry-row--fresh'
+                  : 'timeline-entry-row'
+              }
+            >
+              {interactive ? (
+                <button
+                  type="button"
+                  className="timeline-entry timeline-entry--interactive"
+                  onClick={() => {
+                    if (entry.entityId) {
+                      onSelectEntity(entry.entityId);
+                      return;
+                    }
+
+                    if (entry.claimId && entryClaimKind) {
+                      onSelectClaim(entryClaimKind, entry.claimId);
+                    }
+                  }}
+                  aria-label={`${formatScenarioTime(entry.scenarioTime)} ${entry.title}: ${entry.summary}. ${entry.entityId ? 'View entity details.' : `View current ${entryClaimKind}.`}`}
+                >
+                  <TimelineEntryContent entry={entry} />
+                  <span className="timeline-entry__action" aria-hidden="true">
+                    {actionLabel}
+                  </span>
+                </button>
+              ) : (
+                <div className="timeline-entry">
+                  <TimelineEntryContent entry={entry} />
+                </div>
+              )}
+            </li>
+          );
+        })}
       </ol>
 
       <style>{`
@@ -318,23 +355,11 @@ export default function OperationalTimeline({
           }
 
           .timeline-entry {
-            grid-template-columns: 56px minmax(0, 1fr);
+            grid-template-columns: 58px minmax(0, 1fr);
           }
 
           .timeline-entry__action {
             display: none;
-          }
-
-          .timeline-entry__title-row {
-            align-items: start;
-            flex-direction: column;
-            gap: 4px;
-          }
-
-          .timeline-entry__summary,
-          .timeline-entry__body small,
-          .timeline-entry__title-row strong {
-            white-space: normal;
           }
         }
       `}</style>
