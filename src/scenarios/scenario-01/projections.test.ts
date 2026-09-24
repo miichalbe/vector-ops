@@ -1,17 +1,25 @@
 import { describe, expect, it } from 'vitest';
 
+import type { ActionId } from '../../core/contracts';
 import { resolveScenarioRunConfig } from '../../core/run-config';
 import { evaluateAssessmentRules } from '../../core/runtime-assessments';
 import { advanceScenarioTime } from '../../core/runtime-clock';
+import { recordDecisionSelection } from '../../core/runtime-decision-selection';
 import { processDueScenarioTimeEvents } from '../../core/runtime-events';
 import { evaluateProjectionRules } from '../../core/runtime-projections';
+import { advanceScenarioRuntime } from '../../core/runtime-step';
 import {
   createInitialRuntimeState,
   type ConditionProfileId,
   type OpeningVariantId,
   type ScenarioRuntimeState,
 } from '../../core/runtime-state';
+import { scenario01Act2Offsets } from './act2';
 import { scenario01AssessmentRules } from './assessments';
+import {
+  scenario01ActionIds,
+  scenario01DecisionIds,
+} from './decisions';
 import {
   scenario01ProjectionIds,
   scenario01ProjectionRules,
@@ -19,6 +27,8 @@ import {
 import {
   scenario01DefaultRunConfig,
   scenario01InitialData,
+  scenario01InitialState,
+  scenario01RuntimeDefinition,
 } from './scenario';
 import { createScenario01TimeEvents } from './timeline';
 
@@ -90,6 +100,51 @@ function packetLossReceivedAt(state: ScenarioRuntimeState): number {
   }
 
   return observation.receivedAt;
+}
+
+function stateAfterDecision1Offset(
+  actionId: ActionId,
+  offsetMinutes: number,
+): ScenarioRuntimeState {
+  const finalOpeningTime =
+    scenario01RuntimeDefinition.timeEvents.at(-1)?.trigger.at;
+
+  if (finalOpeningTime === undefined) {
+    throw new Error('Expected Scenario 01 opening events.');
+  }
+
+  const awaitingDecision = advanceScenarioRuntime(
+    scenario01InitialState,
+    finalOpeningTime - scenario01InitialState.now,
+    scenario01RuntimeDefinition,
+    RECORDED_AT,
+  );
+  let state = recordDecisionSelection(
+    awaitingDecision,
+    scenario01DecisionIds.informationPosture,
+    actionId,
+    RECORDED_AT,
+  );
+
+  for (let minute = 0; minute < offsetMinutes; minute += 1) {
+    state = advanceScenarioRuntime(
+      state,
+      1,
+      scenario01RuntimeDefinition,
+      RECORDED_AT,
+    );
+  }
+
+  return state;
+}
+
+function latestProjection(
+  state: ScenarioRuntimeState,
+  projectionId: string,
+) {
+  return state.projections
+    .filter((projection) => projection.id === projectionId)
+    .at(-1);
 }
 
 describe('Scenario 01 opening Projection', () => {
@@ -240,5 +295,109 @@ describe('Scenario 01 opening Projection', () => {
     ).toBe(
       'Whether R-4 degradation persists or stabilises before the projected window.',
     );
+  });
+});
+
+describe('Scenario 01 Act 2 Projections', () => {
+  it('revises P-01 when R-4 moves onto finite backup power', () => {
+    const state = stateAfterDecision1Offset(
+      scenario01ActionIds.openCrossDomainIncident,
+      scenario01Act2Offsets.r4BackupPower,
+    );
+    const revisions = state.projections.filter(
+      (projection) =>
+        projection.id === scenario01ProjectionIds.communicationsContinuity,
+    );
+    const projection = revisions.at(-1);
+
+    expect(revisions.length).toBeGreaterThan(1);
+    expect(projection).toMatchObject({
+      title:
+        'R-4 communications continuity now depends on finite backup power',
+      status: 'developing',
+      attention: 'review',
+    });
+    expect(projection?.evidenceIds).toContain(
+      'observation.scenario-01.r4.backup-power',
+    );
+    expect(projection?.mainUncertainty).toBe(
+      'Whether R-4 link degradation stabilises before finite backup power becomes limiting.',
+    );
+  });
+
+  it('revises P-01 again when degraded service continues on backup', () => {
+    const state = stateAfterDecision1Offset(
+      scenario01ActionIds.continueSeparateMonitoring,
+      scenario01Act2Offsets.visibilityDegradation,
+    );
+    const projection = latestProjection(
+      state,
+      scenario01ProjectionIds.communicationsContinuity,
+    );
+
+    expect(projection).toMatchObject({
+      title:
+        'R-4 communications may be lost as degraded service continues on finite backup power',
+      status: 'developing',
+      attention: 'act',
+    });
+    expect(projection?.evidenceIds).toContain(
+      'observation.scenario-01.r4.link-quality-degraded',
+    );
+    expect(
+      projection?.assumptions.find(
+        (assumption) =>
+          assumption.id ===
+          'assumption.scenario-01.p01.degradation-continues',
+      )?.status,
+    ).toBe('confirmed');
+  });
+
+  it('creates P-02 from degraded R-4 visibility and stale SUW telemetry', () => {
+    const state = stateAfterDecision1Offset(
+      scenario01ActionIds.recommendRegionalEscalation,
+      scenario01Act2Offsets.visibilityDegradation,
+    );
+    const projection = latestProjection(
+      state,
+      scenario01ProjectionIds.suwVisibility,
+    );
+
+    expect(projection).toMatchObject({
+      revision: 1,
+      title:
+        'Remote SUW monitoring visibility may become unavailable before local pumping stops',
+      severity: 'warning',
+      attention: 'review',
+      status: 'developing',
+      confidence: { level: 'medium' },
+    });
+    expect(projection?.evidenceIds).toEqual([
+      'observation.scenario-01.r4.backup-power',
+      'observation.scenario-01.r4.link-quality-degraded',
+      'observation.scenario-01.suw.telemetry-stale',
+    ]);
+    expect(projection?.dependencyIds).toEqual([
+      'dependency.suw.monitored-via.r4',
+    ]);
+    expect(projection?.confidence.reasons).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: 'state-separation',
+          effect: 'neutral',
+        }),
+      ]),
+    );
+  });
+
+  it('does not create P-02 before the visibility degradation event', () => {
+    const state = stateAfterDecision1Offset(
+      scenario01ActionIds.continueSeparateMonitoring,
+      scenario01Act2Offsets.reducedPumping,
+    );
+
+    expect(
+      latestProjection(state, scenario01ProjectionIds.suwVisibility),
+    ).toBeUndefined();
   });
 });
