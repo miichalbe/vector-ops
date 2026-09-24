@@ -17,8 +17,11 @@ import {
 import { scenario01DecisionGates } from './decisions';
 import { createScenario01Act2TimeEvents } from './act2';
 import { createScenario01Act3TimeEvents } from './act3';
-import { scenario01ProjectionRules } from './projections';
+import {
+  scenario01ProjectionRules as scenario01BaseProjectionRules,
+} from './projections';
 import { createScenario01TimeEvents } from './timeline';
+import { scenario01WaterServiceProjectionRule } from './water-service-projection';
 
 export const scenario01InitialData = {
   id: 'scenario-01',
@@ -48,6 +51,11 @@ export const scenario01TimeEvents = createScenario01TimeEvents(
   scenario01DefaultRunConfig,
 );
 
+export const scenario01ProjectionRules = [
+  ...scenario01BaseProjectionRules,
+  scenario01WaterServiceProjectionRule,
+] as const;
+
 export const scenario01RuntimeDefinition = {
   timeEvents: scenario01TimeEvents,
   dynamicTimeEvents(state) {
@@ -63,4 +71,3 @@ export const scenario01RuntimeDefinition = {
 
 export { scenario01AssessmentRules };
 export { scenario01DecisionGates };
-export { scenario01ProjectionRules };
