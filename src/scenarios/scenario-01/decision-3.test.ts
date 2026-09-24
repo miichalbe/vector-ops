@@ -157,7 +157,7 @@ describe('Scenario 01 Decision 3 gate', () => {
         'observation.scenario-01.hospital.continuity-request',
       );
       expect(decision?.evidenceIds).toEqual(
-        expect.arrayContaining(branchEvidence[actionId]),
+        expect.arrayContaining([...branchEvidence[actionId]]),
       );
       expect(actions).toHaveLength(3);
       expect(
