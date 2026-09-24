@@ -10,6 +10,13 @@ const attentionRank: Record<DerivedClaim['attention'], number> = {
   act: 3,
 };
 
+const severityRank: Record<DerivedClaim['severity'], number> = {
+  unknown: 1,
+  normal: 1,
+  warning: 2,
+  critical: 3,
+};
+
 export function latestClaimFamilies<T extends DerivedClaim>(
   claims: readonly T[],
 ): T[] {
@@ -26,29 +33,63 @@ export function latestClaimFamilies<T extends DerivedClaim>(
   return [...latestById.values()];
 }
 
+function compareAttentionAndSeverity(
+  left: DerivedClaim,
+  right: DerivedClaim,
+): number {
+  const attentionDifference =
+    attentionRank[right.attention] - attentionRank[left.attention];
+
+  if (attentionDifference !== 0) {
+    return attentionDifference;
+  }
+
+  return severityRank[right.severity] - severityRank[left.severity];
+}
+
+function compareRecencyAndId(
+  left: DerivedClaim,
+  right: DerivedClaim,
+): number {
+  const recalculationDifference =
+    right.recalculatedAt - left.recalculatedAt;
+
+  if (recalculationDifference !== 0) {
+    return recalculationDifference;
+  }
+
+  return left.id.localeCompare(right.id);
+}
+
 export function prioritiseClaims<T extends DerivedClaim>(
   claims: readonly T[],
 ): T[] {
   return [...claims].sort((left, right) => {
-    const attentionDifference =
-      attentionRank[right.attention] - attentionRank[left.attention];
+    const operationalDifference = compareAttentionAndSeverity(left, right);
 
-    if (attentionDifference !== 0) {
-      return attentionDifference;
+    return operationalDifference !== 0
+      ? operationalDifference
+      : compareRecencyAndId(left, right);
+  });
+}
+
+export function prioritiseProjections(
+  projections: readonly Projection[],
+): Projection[] {
+  return [...projections].sort((left, right) => {
+    const operationalDifference = compareAttentionAndSeverity(left, right);
+
+    if (operationalDifference !== 0) {
+      return operationalDifference;
     }
 
-    const recalculationDifference =
-      right.recalculatedAt - left.recalculatedAt;
+    const leftImpact = left.horizon.earliest ?? Number.POSITIVE_INFINITY;
+    const rightImpact = right.horizon.earliest ?? Number.POSITIVE_INFINITY;
+    const impactDifference = leftImpact - rightImpact;
 
-    if (recalculationDifference !== 0) {
-      return recalculationDifference;
-    }
-
-    if (left.id === right.id) {
-      return right.revision - left.revision;
-    }
-
-    return left.id.localeCompare(right.id);
+    return impactDifference !== 0
+      ? impactDifference
+      : compareRecencyAndId(left, right);
   });
 }
 
@@ -61,7 +102,7 @@ export function currentAssessmentFamilies(
 export function currentProjectionFamilies(
   projections: readonly Projection[],
 ): Projection[] {
-  return prioritiseClaims(latestClaimFamilies(projections));
+  return prioritiseProjections(latestClaimFamilies(projections));
 }
 
 export function activeAssessmentFamilies(
