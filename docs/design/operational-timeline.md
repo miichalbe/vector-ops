@@ -1,6 +1,6 @@
 # VECTOR OPS — Operational Timeline / Live Activity
 
-**Version:** 0.2  
+**Version:** 0.3  
 **Date:** 24 September 2026  
 **Status:** Accepted interaction contract for VS1 implementation  
 **Related artifacts:** [Primary Operational View](primary-operational-view.md), [UX Requirements](ux-requirements.md), [Primary Operator Flow](primary-operator-flow.md)
@@ -104,9 +104,16 @@ Copy must remain restrained and must not convert uncertain state into confirmed 
 
 An entry associated with a monitored entity should allow the operator to move inspection context to that entity.
 
+An Assessment or Projection entry should allow the operator to move inspection context to the corresponding claim family.
+
 For VS1:
 
 - selecting an entity-linked Timeline entry updates the Selected entity context;
+- selecting an Assessment or Projection Timeline entry selects that claim family in the corresponding inspection panel;
+- selecting an older claim revision does **not** rewind runtime state or show a historical snapshot; the panel shows the latest current revision of that claim family;
+- the Timeline therefore remains a `what changed?` surface while the claim panel remains a `what is the current interpreted/projected state?` surface;
+- when several active Assessments or Projections exist, the corresponding panel exposes the active count and allows switching between current claim families;
+- absent an explicit operator selection, the default visible claim is prioritised by attention state and then by most recent recalculation;
 - the Timeline action must not alter scenario time or domain state;
 - keyboard activation and visible focus are required for interactive entries;
 - non-interactive system entries must not appear clickable;
@@ -114,7 +121,7 @@ For VS1:
 
 The transient highlight communicates **newness only**. It must not imply Warning, Critical, success or failure state. It should fade after a short interval, should not pulse continuously, and should not change ordering or operator focus.
 
-Future versions may open historical Assessment/Projection snapshots or decision context directly from the Timeline/History relationship.
+Historical snapshots remain a future Operational History responsibility rather than Live Activity behaviour.
 
 ---
 
@@ -169,6 +176,8 @@ Validation sequence:
 3. assess time-to-first-visible-feedback and overall rhythm;
 4. shorten only the silent intervals that remain operationally or demonstratively too long.
 
+Manual full-run validation on 24 September 2026 found the current `4 s = 1 scenario minute` pacing acceptable overall, with intentionally faster and quieter periods. Keep that rate for the current alpha; future pacing changes should be made through an explicit simulation-rate parameter rather than scattered timing edits.
+
 ---
 
 ## 10. Acceptance criteria
@@ -183,6 +192,9 @@ Validation sequence:
 - newly inserted entries receive a short neutral new-information highlight;
 - the highlight does not encode severity or persist after the attention interval;
 - entity-linked entries can update Selected entity context;
+- Assessment/Projection entries can select the corresponding current claim family;
+- multiple active Assessments/Projections remain discoverable and switchable in their inspection panels;
+- default claim selection prioritises operator attention and then recency rather than array insertion order;
 - interactive entries support keyboard activation and visible focus;
 - the panel has bounded height with internal scrolling;
 - the Timeline is derived from runtime state rather than presentation-local scenario logic;
