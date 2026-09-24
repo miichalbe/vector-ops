@@ -113,7 +113,8 @@ For VS1:
 - selecting an older claim revision does **not** rewind runtime state or show a historical snapshot; the panel shows the latest current revision of that claim family;
 - the Timeline therefore remains a `what changed?` surface while the claim panel remains a `what is the current interpreted/projected state?` surface;
 - when several active Assessments or Projections exist, the corresponding panel exposes the active count and allows switching between current claim families;
-- absent an explicit operator selection, the default visible claim is prioritised by attention state and then by most recent recalculation;
+- absent an explicit operator selection, the default visible claim follows the canonical prioritisation contract: attention (`act` → `review` → `monitor`), then severity, then for Projections shorter time-to-impact, then most recent material recalculation and stable ID as final tie-breaker;
+- an explicit operator selection remains selected until the operator chooses another family or the referenced family no longer exists;
 - the Timeline action must not alter scenario time or domain state;
 - keyboard activation and visible focus are required for interactive entries;
 - non-interactive system entries must not appear clickable;
@@ -194,7 +195,7 @@ Manual full-run validation on 24 September 2026 found the current `4 s = 1 scena
 - entity-linked entries can update Selected entity context;
 - Assessment/Projection entries can select the corresponding current claim family;
 - multiple active Assessments/Projections remain discoverable and switchable in their inspection panels;
-- default claim selection prioritises operator attention and then recency rather than array insertion order;
+- default claim selection follows the canonical attention → severity → Projection time-to-impact → recency → stable-ID ordering rather than array insertion order;
 - interactive entries support keyboard activation and visible focus;
 - the panel has bounded height with internal scrolling;
 - the Timeline is derived from runtime state rather than presentation-local scenario logic;
