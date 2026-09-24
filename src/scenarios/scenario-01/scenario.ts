@@ -14,7 +14,10 @@ import {
   SCENARIO_01_START_TIME,
   scenario01BaselineObservations,
 } from './baseline-observations';
-import { scenario01DecisionGates } from './decisions';
+import {
+  scenario01DecisionGates as scenario01BaseDecisionGates,
+} from './decisions';
+import { scenario01Decision3Gate } from './decision-3';
 import { createScenario01Act2TimeEvents } from './act2';
 import { createScenario01Act3TimeEvents } from './act3';
 import {
@@ -56,6 +59,11 @@ export const scenario01ProjectionRules = [
   scenario01WaterServiceProjectionRule,
 ] as const;
 
+export const scenario01DecisionGates = [
+  ...scenario01BaseDecisionGates,
+  scenario01Decision3Gate,
+] as const;
+
 export const scenario01RuntimeDefinition = {
   timeEvents: scenario01TimeEvents,
   dynamicTimeEvents(state) {
@@ -70,4 +78,3 @@ export const scenario01RuntimeDefinition = {
 } satisfies ScenarioRuntimeDefinition;
 
 export { scenario01AssessmentRules };
-export { scenario01DecisionGates };
