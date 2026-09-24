@@ -9,7 +9,7 @@ import type {
 } from '../../core/runtime-assessments';
 import type { OpeningVariantId } from '../../core/runtime-state';
 import { scenario01EntityIds } from './baseline';
-import { scenario01ActionIds } from './decisions';
+import { scenario01ActionIds } from './decision-1-ids';
 import { getDecision1DownstreamModifiers } from './decision-1-outcomes';
 
 export const scenario01AssessmentIds = {

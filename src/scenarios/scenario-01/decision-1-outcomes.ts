@@ -1,5 +1,5 @@
 import type { ActionId } from '../../core/contracts';
-import { scenario01ActionIds } from './decisions';
+import { scenario01ActionIds } from './decision-1-ids';
 
 export type Decision1ConfirmationBehaviour =
   | 'synchronised'
