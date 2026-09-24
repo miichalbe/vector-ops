@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import type { EntityId } from '../core/contracts';
 import type { OperationalTimelineEntry } from './operational-timeline';
 
@@ -35,6 +36,35 @@ export default function OperationalTimeline({
   entries: readonly OperationalTimelineEntry[];
   onSelectEntity: (entityId: EntityId) => void;
 }) {
+  const seenEntryIds = useRef(new Set(entries.map((entry) => entry.id)));
+  const [freshEntryIds, setFreshEntryIds] = useState<Set<string>>(
+    () => new Set(),
+  );
+
+  useEffect(() => {
+    const newlyArrived = entries
+      .map((entry) => entry.id)
+      .filter((id) => !seenEntryIds.current.has(id));
+
+    if (newlyArrived.length === 0) {
+      return;
+    }
+
+    for (const id of newlyArrived) {
+      seenEntryIds.current.add(id);
+    }
+
+    setFreshEntryIds((current) => {
+      const next = new Set(current);
+
+      for (const id of newlyArrived) {
+        next.add(id);
+      }
+
+      return next;
+    });
+  }, [entries]);
+
   return (
     <section className="operational-timeline" aria-labelledby="live-activity-title">
       <div className="operational-timeline__heading">
@@ -51,7 +81,14 @@ export default function OperationalTimeline({
         aria-label="Operational activity, newest first"
       >
         {entries.map((entry) => (
-          <li key={entry.id}>
+          <li
+            key={entry.id}
+            className={
+              freshEntryIds.has(entry.id)
+                ? 'timeline-entry-row timeline-entry-row--fresh'
+                : 'timeline-entry-row'
+            }
+          >
             {entry.entityId ? (
               <button
                 type="button"
@@ -134,8 +171,31 @@ export default function OperationalTimeline({
           outline-offset: -2px;
         }
 
-        .operational-timeline__list li + li {
+        .timeline-entry-row {
+          background: transparent;
+        }
+
+        .operational-timeline__list .timeline-entry-row + .timeline-entry-row {
           border-top: 1px solid #223043;
+        }
+
+        .timeline-entry-row--fresh {
+          animation: timeline-entry-fresh 2.6s ease-out;
+        }
+
+        @keyframes timeline-entry-fresh {
+          0% {
+            background: rgba(98, 169, 242, 0.28);
+            box-shadow: inset 4px 0 0 #62a9f2;
+          }
+          38% {
+            background: rgba(98, 169, 242, 0.16);
+            box-shadow: inset 4px 0 0 rgba(98, 169, 242, 0.74);
+          }
+          100% {
+            background: transparent;
+            box-shadow: inset 4px 0 0 transparent;
+          }
         }
 
         .timeline-entry {
@@ -243,6 +303,12 @@ export default function OperationalTimeline({
           font-size: 0.72rem;
           font-weight: 650;
           white-space: nowrap;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .timeline-entry-row--fresh {
+            animation-duration: 0.01ms;
+          }
         }
 
         @media (max-width: 680px) {

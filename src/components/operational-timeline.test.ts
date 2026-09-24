@@ -128,6 +128,25 @@ describe('Operational Timeline view model', () => {
     );
   });
 
+  it('keeps the selected Action and up to two expected effects in a Decision entry', () => {
+    const state = stateAfterDecision1(
+      scenario01ActionIds.openCrossDomainIncident,
+      0,
+    );
+    const decisionEntry = buildOperationalTimeline(state).find(
+      (entry) => entry.kind === 'decision',
+    );
+
+    expect(decisionEntry).toMatchObject({
+      title: 'Action recorded',
+      summary:
+        'Open cross-domain incident and request synchronised confirmation',
+    });
+    expect(decisionEntry?.meta).toBe(
+      'Expected: Coordinated confirmation is requested from the relevant organisations. · Earlier confirmation may improve confidence in later Assessments.',
+    );
+  });
+
   it('surfaces the persistent feeder observation and revised Assessment', () => {
     const state = stateAfterDecision1(
       scenario01ActionIds.continueSeparateMonitoring,

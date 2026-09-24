@@ -109,6 +109,18 @@ function payloadRecord(event: DomainEvent): Record<string, unknown> | undefined 
     : undefined;
 }
 
+function decisionMeta(
+  action: ScenarioRuntimeState['actions'][number] | undefined,
+): string {
+  const expectedEffects = action?.expectedEffects
+    .slice(0, 2)
+    .map((effect) => effect.description);
+
+  return expectedEffects && expectedEffects.length > 0
+    ? `Expected: ${expectedEffects.join(' · ')}`
+    : 'WCZK duty officer';
+}
+
 function materialEventEntry(
   state: ScenarioRuntimeState,
   event: DomainEvent,
@@ -153,7 +165,7 @@ function materialEventEntry(
         label: 'Decision',
         title: 'Action recorded',
         summary: action?.title ?? 'Operator decision recorded',
-        meta: 'WCZK duty officer',
+        meta: decisionMeta(action),
       };
     }
 

@@ -1,4 +1,7 @@
+import { useEffect, useRef, useState } from 'react';
 import type { Action, Decision } from '../core/contracts';
+
+const AUTO_DISMISS_MS = 10_000;
 
 interface ActionReceiptProps {
   action: Action;
@@ -18,190 +21,171 @@ export default function ActionReceipt({
   decision,
   onDismiss,
 }: ActionReceiptProps) {
+  const onDismissRef = useRef(onDismiss);
+  const [top, setTop] = useState(8);
+
+  useEffect(() => {
+    onDismissRef.current = onDismiss;
+  }, [onDismiss]);
+
+  useEffect(() => {
+    const updateTop = () => {
+      const header = document.querySelector<HTMLElement>('.app-header');
+      const headerBottom = header?.getBoundingClientRect().bottom ?? 0;
+
+      setTop(Math.max(8, Math.round(headerBottom + 8)));
+    };
+
+    updateTop();
+    window.addEventListener('resize', updateTop);
+    window.addEventListener('scroll', updateTop, { passive: true });
+
+    return () => {
+      window.removeEventListener('resize', updateTop);
+      window.removeEventListener('scroll', updateTop);
+    };
+  }, []);
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      onDismissRef.current();
+    }, AUTO_DISMISS_MS);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [action.id, decision.id]);
+
   return (
-    <section className="action-receipt" aria-live="polite">
+    <section
+      className="action-receipt"
+      role="status"
+      aria-live="polite"
+      style={{ top }}
+    >
       <div className="action-receipt__icon" aria-hidden="true">
-        ✓
+        i
       </div>
 
       <div className="action-receipt__content">
-        <p className="action-receipt__eyebrow">Action recorded</p>
-        <h2>{action.title}</h2>
-        <p>
-          Recorded at{' '}
-          <strong>
+        <div className="action-receipt__heading">
+          <strong>Action recorded</strong>
+          <span>
             {formatScenarioTime(decision.decidedAt ?? decision.openedAt)}
-          </strong>
-          . The decision context remains available for the operational history and After-Action Report.
-        </p>
-
-        <details>
-          <summary>Review recorded effects</summary>
-          <div className="action-receipt__details">
-            <section>
-              <h3>Expected effects</h3>
-              <ul>
-                {action.expectedEffects.map((effect, index) => (
-                  <li key={`${action.id}-receipt-effect-${index}`}>
-                    {effect.description}
-                  </li>
-                ))}
-              </ul>
-            </section>
-
-            <section>
-              <h3>Displaced risk / cost</h3>
-              <ul>
-                {action.displacedRisks.map((effect, index) => (
-                  <li key={`${action.id}-receipt-risk-${index}`}>
-                    {effect.description}
-                  </li>
-                ))}
-              </ul>
-            </section>
-          </div>
-        </details>
+          </span>
+        </div>
+        <p>{action.title}</p>
       </div>
 
-      <button type="button" onClick={onDismiss}>
-        Continue
+      <button
+        type="button"
+        onClick={onDismiss}
+        aria-label="Dismiss action recorded notification"
+        title="Dismiss"
+      >
+        ×
       </button>
 
       <style>{`
         .action-receipt {
+          position: fixed;
+          left: 50%;
+          z-index: 80;
           display: grid;
+          width: min(1500px, calc(100vw - 56px));
           grid-template-columns: auto minmax(0, 1fr) auto;
-          gap: 16px;
-          width: min(1500px, 100%);
-          margin: 0 auto 20px;
-          padding: 16px 18px;
-          border: 1px solid #2f6f58;
-          border-left: 4px solid #5fb98c;
+          gap: 12px;
+          align-items: center;
+          padding: 11px 14px;
+          border: 1px solid #416f9f;
+          border-left: 4px solid #62a9f2;
           border-radius: 8px;
           background:
-            linear-gradient(135deg, rgba(47, 111, 88, 0.16), transparent 54%),
-            #101b1a;
-          box-shadow: 0 0 0 1px rgba(95, 185, 140, 0.06);
+            linear-gradient(135deg, rgba(50, 105, 162, 0.18), transparent 58%),
+            #101a26;
+          box-shadow: 0 14px 36px rgba(0, 0, 0, 0.38);
+          transform: translateX(-50%);
         }
 
         .action-receipt__icon {
           display: grid;
-          width: 34px;
-          height: 34px;
+          width: 28px;
+          height: 28px;
           place-items: center;
-          border: 1px solid #5fb98c;
+          border: 1px solid #5b91c8;
           border-radius: 50%;
-          background: rgba(95, 185, 140, 0.12);
-          color: #a7e2c4;
+          background: rgba(98, 169, 242, 0.12);
+          color: #b9dcff;
+          font-size: 0.78rem;
           font-weight: 900;
+          text-transform: lowercase;
         }
 
         .action-receipt__content {
           min-width: 0;
         }
 
-        .action-receipt__eyebrow {
-          margin: 0 0 4px;
-          color: #8dd2ad;
-          font-size: 0.68rem;
-          font-weight: 800;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
+        .action-receipt__heading {
+          display: flex;
+          gap: 10px;
+          align-items: baseline;
+          margin-bottom: 2px;
         }
 
-        .action-receipt h2 {
-          margin: 0 0 6px;
-          color: #edf7f2;
-          font-size: 0.98rem;
-          line-height: 1.4;
+        .action-receipt__heading strong {
+          color: #dcecff;
+          font-size: 0.78rem;
+          letter-spacing: 0.02em;
+        }
+
+        .action-receipt__heading span {
+          color: #8fa8c1;
+          font-size: 0.7rem;
+          font-variant-numeric: tabular-nums;
         }
 
         .action-receipt p {
           margin: 0;
-          color: #a8bbb2;
-          font-size: 0.78rem;
-          line-height: 1.5;
-        }
-
-        .action-receipt details {
-          margin-top: 10px;
-        }
-
-        .action-receipt summary {
-          width: fit-content;
-          color: #9dd8bb;
-          font-size: 0.76rem;
-          font-weight: 750;
-          cursor: pointer;
-        }
-
-        .action-receipt summary:focus-visible {
-          border-radius: 3px;
-          outline: 2px solid #9dd8bb;
-          outline-offset: 3px;
-        }
-
-        .action-receipt__details {
-          display: grid;
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-          gap: 16px;
-          margin-top: 10px;
-          padding-top: 10px;
-          border-top: 1px solid #28443a;
-        }
-
-        .action-receipt__details h3 {
-          margin: 0 0 6px;
-          color: #7fa895;
-          font-size: 0.68rem;
-          letter-spacing: 0.07em;
-          text-transform: uppercase;
-        }
-
-        .action-receipt__details ul {
-          display: grid;
-          gap: 5px;
-          margin: 0;
-          padding-left: 16px;
-          color: #b9cbc2;
-          font-size: 0.74rem;
-          line-height: 1.45;
+          overflow: hidden;
+          color: #c4d1df;
+          font-size: 0.8rem;
+          line-height: 1.35;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
 
         .action-receipt > button {
-          align-self: center;
-          padding: 8px 13px;
-          border: 1px solid #477c67;
+          display: grid;
+          width: 30px;
+          height: 30px;
+          place-items: center;
+          border: 1px solid transparent;
           border-radius: 5px;
-          background: #173b2e;
-          color: #dff4e9;
-          font-weight: 750;
+          background: transparent;
+          color: #9eb5ca;
+          font-size: 1.05rem;
+          line-height: 1;
           cursor: pointer;
         }
 
-        .action-receipt > button:hover,
-        .action-receipt > button:focus-visible {
-          border-color: #7bc7a1;
-          background: #1f4b3b;
+        .action-receipt > button:hover {
+          border-color: #416f9f;
+          background: rgba(98, 169, 242, 0.1);
+          color: #dcecff;
         }
 
         .action-receipt > button:focus-visible {
-          outline: 2px solid #9dd8bb;
-          outline-offset: 3px;
+          outline: 2px solid #8bc4ff;
+          outline-offset: 2px;
         }
 
-        @media (max-width: 720px) {
+        @media (max-width: 680px) {
           .action-receipt {
-            grid-template-columns: auto 1fr;
+            width: calc(100vw - 36px);
+            gap: 9px;
+            padding: 10px 11px;
           }
 
-          .action-receipt > button {
-            grid-column: 1 / -1;
-            width: 100%;
-          }
-
-          .action-receipt__details {
-            grid-template-columns: 1fr;
+          .action-receipt p {
+            white-space: normal;
           }
         }
       `}</style>
