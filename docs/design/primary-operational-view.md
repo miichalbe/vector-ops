@@ -1,7 +1,7 @@
 # VECTOR OPS — Primary Operational View
 
-**Version:** 0.2  
-**Date:** 22 September 2026  
+**Version:** 0.3  
+**Date:** 24 September 2026  
 **Related issue:** #13  
 **Status:** Information hierarchy and structural direction accepted for implementation
 
@@ -14,6 +14,7 @@ This document defines the low-fidelity information architecture for the primary 
 The view must communicate:
 
 - current entity state,
+- recent cross-domain operational changes,
 - cross-domain interpretation,
 - time-dependent consequences,
 - source evidence and uncertainty,
@@ -24,6 +25,8 @@ All application UI copy is English.
 
 The end-to-end run behaviour, opening variation, decision timing and scenario runtime are defined in [Primary Operator Flow & Scenario Runtime Contract](primary-operator-flow.md).
 
+The cross-domain live activity surface is defined in [Operational Timeline / Live Activity](operational-timeline.md).
+
 Accepted implementation-level interaction requirements are maintained in the living [UX Requirements](ux-requirements.md) document.
 
 ---
@@ -32,22 +35,48 @@ Accepted implementation-level interaction requirements are maintained in the liv
 
 The alpha is desktop-first.
 
+A full-width **Operational Timeline / Live Activity** panel sits below the compact module/data-health bar and above the main workspace.
+
+The main workspace retains the accepted split:
+
 | Left workspace — approximately 70% | Right intelligence column — approximately 30% |
 |---|---|
-| Entity tile dashboard | Assessment panel |
-| Six initial entity tiles | Projection panel |
-| Deliberate space for future entities | Contextual actions and evidence access |
+| Entity tile dashboard | Selected entity context |
+| Six initial entity tiles | Assessment panel |
+| Deliberate space for future entities | Projection panel |
 
 The right-column order is:
 
-1. **Assessment** — what VECTOR OPS believes is happening now;
-2. **Projection** — what may happen if the current state continues.
+1. **Selected entity** — detail context for the highlighted entity;
+2. **Assessment** — what VECTOR OPS believes is happening now;
+3. **Projection** — what may happen if the current state continues.
 
 This preserves the reasoning sequence:
 
-> current interpretation → future consequence → available action
+> current entity context → current interpretation → future consequence → available action
 
 Use a fixed 70/30 split for the first implementation. A visible structural divider may anticipate resizing, but manual resizing is optional for alpha and must not displace core work.
+
+### 2.1 Operational Timeline / Live Activity
+
+The Timeline answers:
+
+> **What just changed?**
+
+It provides one cross-domain newest-first stream of material runtime activity so the operator does not need to click every entity tile and reconstruct chronology mentally.
+
+The first implementation is a bounded-height full-width panel with internal scrolling. It may surface:
+
+- newly received Observations from any monitored entity;
+- material coordination or information events that have no separate Observation;
+- material Assessment / Projection revisions;
+- recorded operator Decision / Action activity where useful for continuity.
+
+The Timeline is curated operational activity, not a raw DomainEvent log.
+
+Entity-linked entries may update the Selected entity context. This interaction must not alter scenario time or domain state.
+
+The Timeline is a present-tense awareness surface and does not replace future Operational History or the After-Action Report. Detailed behaviour is defined in [Operational Timeline / Live Activity](operational-timeline.md).
 
 ---
 
@@ -237,7 +266,7 @@ The vertical slice may begin with the mandatory decision gates defined in the Pr
 
 ## 9. Module and data-health bar
 
-A compact system bar above the workspace communicates modularity without confusing module health with infrastructure health.
+A compact system bar above the Timeline and workspace communicates modularity without confusing module health with infrastructure health.
 
 Example:
 
@@ -319,6 +348,11 @@ Selecting an entity tile:
 - highlights its dependencies,
 - highlights related Assessments and Projections.
 
+Selecting an entity-linked Timeline entry:
+
+- updates the Selected entity context to that entity,
+- does not alter scenario time or domain state.
+
 Selecting an Assessment:
 
 - highlights affected tiles,
@@ -345,7 +379,8 @@ Not resolved by this document:
 - responsive mobile behaviour,
 - detailed onboarding callouts,
 - final Action Review layout,
-- animation and transition design.
+- animation and transition design,
+- final complete Operational History list/detail behaviour.
 
 Contextual onboarding is designed after the primary interface exists.
 
@@ -362,5 +397,8 @@ Contextual onboarding is designed after the primary interface exists.
 - every derived claim exposes evidence, rules and uncertainty,
 - actions share one domain object regardless of entry point,
 - module software state is distinct from infrastructure and data state,
-- layout works with a fixed 70/30 split,
+- a cross-domain newest-first Timeline exposes recent material activity without requiring entity selection,
+- entity-linked Timeline entries can move the inspection context to the relevant entity,
+- the Timeline remains distinct from future complete Operational History,
+- layout works with a fixed 70/30 main-workspace split below the Timeline,
 - no scenario rule exists only inside a visual component.
