@@ -42,6 +42,37 @@ function materializeActionSelectedEvent(
   };
 }
 
+function materializeActionExpiredEvent(
+  action: Action,
+  decision: Decision,
+  selectedAction: Action,
+  scenarioTime: number,
+  recordedAt: string,
+): DomainEvent {
+  return {
+    id: `event.${action.id}.expired`,
+    type: 'action.expired',
+    version: 1,
+    scenarioTime,
+    recordedAt,
+    producer: {
+      type: 'core',
+      id: 'decision-runtime',
+    },
+    ...(action.scope.entityIds
+      ? { entityIds: [...action.scope.entityIds] }
+      : {}),
+    correlationId: decision.id,
+    causationId: `event.${selectedAction.id}.selected`,
+    payload: {
+      actionId: action.id,
+      decisionId: decision.id,
+      selectedActionId: selectedAction.id,
+      reason: 'alternative-not-selected',
+    },
+  };
+}
+
 function materializeDecisionRecordedEvent(
   action: Action,
   decision: Decision,
@@ -134,11 +165,26 @@ export function recordDecisionSelection(
     decidedAt: state.now,
     expectedEffects: action.expectedEffects.map(cloneEffect),
   };
+  const alternativeActions = state.actions.filter(
+    (candidate) =>
+      candidate.id !== selectedAction.id &&
+      decision.actionIds.includes(candidate.id) &&
+      candidate.lifecycle === 'available',
+  );
   const actionSelectedEvent = materializeActionSelectedEvent(
     selectedAction,
     recordedDecision,
     state.now,
     recordedAt,
+  );
+  const actionExpiredEvents = alternativeActions.map((alternative) =>
+    materializeActionExpiredEvent(
+      alternative,
+      recordedDecision,
+      selectedAction,
+      state.now,
+      recordedAt,
+    ),
   );
   const decisionRecordedEvent = materializeDecisionRecordedEvent(
     selectedAction,
@@ -146,29 +192,43 @@ export function recordDecisionSelection(
     state.now,
     recordedAt,
   );
+  const newEvents = [
+    actionSelectedEvent,
+    ...actionExpiredEvents,
+    decisionRecordedEvent,
+  ];
   const existingEventIds = new Set(
     state.events.map((event) => event.id),
   );
 
-  for (const event of [actionSelectedEvent, decisionRecordedEvent]) {
+  for (const event of newEvents) {
     if (existingEventIds.has(event.id)) {
       throw new Error(`Domain event already exists: ${event.id}`);
     }
   }
 
+  const expiredActionIds = new Set(
+    alternativeActions.map((alternative) => alternative.id),
+  );
+
   return {
     ...state,
     status: 'running',
-    actions: state.actions.map((candidate) =>
-      candidate.id === selectedAction.id ? selectedAction : candidate,
-    ),
+    actions: state.actions.map((candidate) => {
+      if (candidate.id === selectedAction.id) {
+        return selectedAction;
+      }
+
+      return expiredActionIds.has(candidate.id)
+        ? { ...candidate, lifecycle: 'expired' as const }
+        : candidate;
+    }),
     decisions: state.decisions.map((candidate) =>
       candidate.id === recordedDecision.id ? recordedDecision : candidate,
     ),
     events: [
       ...state.events,
-      actionSelectedEvent,
-      decisionRecordedEvent,
+      ...newEvents,
     ],
   };
 }

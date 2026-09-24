@@ -30,7 +30,7 @@ function openDecision1() {
 }
 
 describe('runtime decision selection', () => {
-  it('records the selected Action and resumes the runtime', () => {
+  it('records the selected Action, expires alternatives and resumes the runtime', () => {
     const openedState = openDecision1();
     const actionId = scenario01ActionIds.openCrossDomainIncident;
     const originalAction = openedState.actions.find(
@@ -51,22 +51,42 @@ describe('runtime decision selection', () => {
       (candidate) =>
         candidate.id === scenario01DecisionIds.informationPosture,
     );
-    const selectedAction = state.actions.find(
+    const decisionActions = state.actions.filter((action) =>
+      decision?.actionIds.includes(action.id),
+    );
+    const selectedAction = decisionActions.find(
       (action) => action.id === actionId,
+    );
+    const alternatives = decisionActions.filter(
+      (action) => action.id !== actionId,
     );
 
     expect(state.status).toBe('running');
     expect(selectedAction?.lifecycle).toBe('selected');
+    expect(alternatives.map((action) => action.lifecycle)).toEqual([
+      'expired',
+      'expired',
+    ]);
     expect(decision?.selectedActionId).toBe(actionId);
     expect(decision?.decidedAt).toBe(openedState.now);
     expect(decision?.expectedEffects).toEqual(
       originalAction.expectedEffects,
     );
     expect(decision?.observedEffects).toEqual([]);
-    expect(state.events.slice(-2).map((event) => event.type)).toEqual([
+    expect(state.events.slice(-4).map((event) => event.type)).toEqual([
       'action.selected',
+      'action.expired',
+      'action.expired',
       'decision.recorded',
     ]);
+    expect(
+      state.events
+        .slice(-3, -1)
+        .every(
+          (event) =>
+            event.correlationId === scenario01DecisionIds.informationPosture,
+        ),
+    ).toBe(true);
     expect(openedState.status).toBe('awaitingDecision');
     expect(originalAction.lifecycle).toBe('available');
     expect(
