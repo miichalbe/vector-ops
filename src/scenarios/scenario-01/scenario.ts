@@ -23,6 +23,10 @@ import { createScenario01Act3TimeEvents } from './act3';
 import { createScenario01Act4TimeEvents } from './act4';
 import { scenario01CompletionRule } from './completion';
 import {
+  decorateScenario01DynamicEvents,
+  decorateScenario01OpeningEvents,
+} from './runtime-accounting';
+import {
   scenario01ProjectionRules as scenario01BaseProjectionRules,
 } from './projections';
 import { createScenario01TimeEvents } from './timeline';
@@ -52,8 +56,8 @@ export const scenario01InitialState = createInitialRuntimeState(
   scenario01DefaultRunConfig,
 );
 
-export const scenario01TimeEvents = createScenario01TimeEvents(
-  scenario01DefaultRunConfig,
+export const scenario01TimeEvents = decorateScenario01OpeningEvents(
+  createScenario01TimeEvents(scenario01DefaultRunConfig),
 );
 
 export const scenario01ProjectionRules = [
@@ -69,11 +73,11 @@ export const scenario01DecisionGates = [
 export const scenario01RuntimeDefinition = {
   timeEvents: scenario01TimeEvents,
   dynamicTimeEvents(state) {
-    return [
+    return decorateScenario01DynamicEvents(state, [
       ...createScenario01Act2TimeEvents(state),
       ...createScenario01Act3TimeEvents(state),
       ...createScenario01Act4TimeEvents(state),
-    ];
+    ]);
   },
   assessmentRules: scenario01AssessmentRules,
   projectionRules: scenario01ProjectionRules,

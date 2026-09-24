@@ -1,6 +1,8 @@
 import type {
   ActionLifecycle,
+  DecisionId,
   DomainEvent,
+  Effect,
   EntityId,
   Observation,
   ScenarioTime,
@@ -8,6 +10,7 @@ import type {
 import { canAdvanceScenarioTime } from './runtime-clock';
 import type {
   OpeningVariantId,
+  ScenarioPhase,
   ScenarioRuntimeState,
 } from './runtime-state';
 
@@ -22,9 +25,22 @@ export interface UpdateActionLifecycleEffect {
   lifecycle: ActionLifecycle;
 }
 
+export interface AppendDecisionObservedEffect {
+  type: 'appendDecisionObservedEffect';
+  decisionId: DecisionId;
+  effect: Effect;
+}
+
+export interface UpdateScenarioPhaseEffect {
+  type: 'updateScenarioPhase';
+  phase: ScenarioPhase;
+}
+
 export type ScenarioEventEffect =
   | AppendObservationEffect
-  | UpdateActionLifecycleEffect;
+  | UpdateActionLifecycleEffect
+  | AppendDecisionObservedEffect
+  | UpdateScenarioPhaseEffect;
 
 export interface ScenarioTimeEventDefinition<T = unknown> {
   id: string;
@@ -94,6 +110,38 @@ function assertValidDefinitions(
           );
         }
 
+        continue;
+      }
+
+      if (effect.type === 'appendDecisionObservedEffect') {
+        const decision = state.decisions.find(
+          (candidate) => candidate.id === effect.decisionId,
+        );
+
+        if (!decision?.selectedActionId) {
+          throw new Error(
+            `Scenario event ${definition.id} references an unrecorded Decision: ${effect.decisionId}`,
+          );
+        }
+
+        if (!effect.effect.description.trim()) {
+          throw new Error(
+            `Scenario event ${definition.id} must describe its observed Decision effect.`,
+          );
+        }
+
+        for (const entityId of effect.effect.entityIds ?? []) {
+          if (!state.entitiesById[entityId]) {
+            throw new Error(
+              `Observed Decision effect for ${effect.decisionId} references unknown entity: ${entityId}`,
+            );
+          }
+        }
+
+        continue;
+      }
+
+      if (effect.type === 'updateScenarioPhase') {
         continue;
       }
 
@@ -175,6 +223,13 @@ function materializeObservation(observation: Observation): Observation {
   };
 }
 
+function cloneEffect(effect: Effect): Effect {
+  return {
+    ...effect,
+    ...(effect.entityIds ? { entityIds: [...effect.entityIds] } : {}),
+  };
+}
+
 function compareDefinitions(
   left: ScenarioTimeEventDefinition,
   right: ScenarioTimeEventDefinition,
@@ -251,6 +306,82 @@ function applyActionLifecycleEffects(
   return actions;
 }
 
+function applyDecisionObservedEffects(
+  state: ScenarioRuntimeState,
+  definitions: readonly ScenarioTimeEventDefinition[],
+): ScenarioRuntimeState['decisions'] {
+  let decisions = [...state.decisions];
+
+  for (const definition of definitions) {
+    for (const effect of definition.effects ?? []) {
+      if (effect.type !== 'appendDecisionObservedEffect') {
+        continue;
+      }
+
+      const decisionIndex = decisions.findIndex(
+        (decision) => decision.id === effect.decisionId,
+      );
+      const decision = decisions[decisionIndex];
+
+      if (!decision?.selectedActionId) {
+        throw new Error(
+          `Scenario event ${definition.id} references an unrecorded Decision: ${effect.decisionId}`,
+        );
+      }
+
+      decisions = decisions.map((candidate, index) =>
+        index === decisionIndex
+          ? {
+              ...candidate,
+              observedEffects: [
+                ...candidate.observedEffects,
+                cloneEffect(effect.effect),
+              ],
+            }
+          : candidate,
+      );
+    }
+  }
+
+  return decisions;
+}
+
+const phaseOrder: readonly ScenarioPhase[] = [
+  'baseline',
+  'detection',
+  'dependency',
+  'escalation',
+  'resolution',
+];
+
+function applyScenarioPhaseEffects(
+  state: ScenarioRuntimeState,
+  definitions: readonly ScenarioTimeEventDefinition[],
+): ScenarioPhase {
+  let phase = state.phase;
+
+  for (const definition of definitions) {
+    for (const effect of definition.effects ?? []) {
+      if (effect.type !== 'updateScenarioPhase' || effect.phase === phase) {
+        continue;
+      }
+
+      const currentIndex = phaseOrder.indexOf(phase);
+      const nextIndex = phaseOrder.indexOf(effect.phase);
+
+      if (nextIndex !== currentIndex + 1) {
+        throw new Error(
+          `Invalid scenario phase transition in ${definition.id}: ${phase} -> ${effect.phase}`,
+        );
+      }
+
+      phase = effect.phase;
+    }
+  }
+
+  return phase;
+}
+
 export function processDueScenarioTimeEvents(
   state: ScenarioRuntimeState,
   definitions: readonly ScenarioTimeEventDefinition[],
@@ -296,9 +427,12 @@ export function processDueScenarioTimeEvents(
       .map((effect) => materializeObservation(effect.observation)),
   );
   const actions = applyActionLifecycleEffects(state, dueDefinitions);
+  const decisions = applyDecisionObservedEffects(state, dueDefinitions);
+  const phase = applyScenarioPhaseEffects(state, dueDefinitions);
 
   return {
     ...state,
+    phase,
     events: [
       ...state.events,
       ...dueDefinitions.map((definition) =>
@@ -310,5 +444,6 @@ export function processDueScenarioTimeEvents(
       ...newObservations,
     ],
     actions,
+    decisions,
   };
 }

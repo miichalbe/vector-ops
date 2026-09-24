@@ -3,7 +3,10 @@ import { describe, expect, it } from 'vitest';
 import type { ActionId, DecisionId } from '../../core/contracts';
 import { recordDecisionSelection } from '../../core/runtime-decision-selection';
 import { advanceScenarioRuntime } from '../../core/runtime-step';
-import type { ScenarioRuntimeState } from '../../core/runtime-state';
+import type {
+  ScenarioPhase,
+  ScenarioRuntimeState,
+} from '../../core/runtime-state';
 import {
   activeAssessmentFamilies,
   activeProjectionFamilies,
@@ -104,6 +107,7 @@ function auditPath(path: AuditPath): ScenarioRuntimeState {
   let state = scenario01InitialState;
   let previousNow = state.now;
   const decidedOrder: DecisionId[] = [];
+  const seenPhases = new Set<ScenarioPhase>([state.phase]);
 
   for (let step = 0; step < MAX_RUNTIME_STEPS; step += 1) {
     if (state.status === 'completed') {
@@ -141,6 +145,7 @@ function auditPath(path: AuditPath): ScenarioRuntimeState {
         actionForDecision(path, pending.id),
         RECORDED_AT,
       );
+      seenPhases.add(state.phase);
       continue;
     }
 
@@ -151,6 +156,7 @@ function auditPath(path: AuditPath): ScenarioRuntimeState {
       RECORDED_AT,
     );
 
+    seenPhases.add(state.phase);
     expect(state.now).toBeGreaterThanOrEqual(previousNow);
     previousNow = state.now;
     expect(activeAssessmentFamilies(state.assessments).length).toBeLessThanOrEqual(2);
@@ -165,8 +171,38 @@ function auditPath(path: AuditPath): ScenarioRuntimeState {
     scenario01Decision2Ids.generatorRecommendation,
     scenario01Decision3Ids.coordinationPosture,
   ]);
+  expect([...seenPhases]).toEqual([
+    'baseline',
+    'detection',
+    'dependency',
+    'escalation',
+    'resolution',
+  ]);
   expect(state.decisions).toHaveLength(3);
   expect(state.decisions.every((decision) => decision.selectedActionId)).toBe(true);
+  expect(
+    state.decisions.every((decision) => decision.observedEffects.length > 0),
+  ).toBe(true);
+
+  for (const decision of state.decisions) {
+    const selected = state.actions.find(
+      (action) => action.id === decision.selectedActionId,
+    );
+    const alternatives = state.actions.filter(
+      (action) =>
+        decision.actionIds.includes(action.id) &&
+        action.id !== decision.selectedActionId,
+    );
+
+    expect(selected?.lifecycle, `${decision.id} selected Action did not complete`).toBe(
+      'completed',
+    );
+    expect(
+      alternatives.every((action) => action.lifecycle === 'expired'),
+      `${decision.id} retained an available unselected alternative`,
+    ).toBe(true);
+  }
+
   expect(
     state.events.some((event) => event.type === 'operational.handover.prepared'),
   ).toBe(true);
