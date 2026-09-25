@@ -3,7 +3,7 @@
 **Date:** 25 September 2026  
 **Branch:** `build/vertical-slice`  
 **Scenario:** Scenario 01 — Infrastructure disruption, Mazowieckie Voivodeship  
-**Status:** Automated coverage passed; same-seed replay manually confirmed
+**Status:** Automated coverage passed; Replay and New run manually confirmed
 
 ## Purpose
 
@@ -100,6 +100,8 @@ This checks deterministic reconstruction beyond the initial configuration: ident
 
 ## Manual validation
 
+### Replay same seed
+
 On 25 September 2026 the completed reference run with seed `8F4C` was manually replayed from its After-Action Report.
 
 Observed behaviour:
@@ -112,9 +114,36 @@ Observed behaviour:
 
 This confirms the user-facing same-seed replay lifecycle for the reference run.
 
+### New run
+
+The `New run` path was also manually exercised from the AAR on 25 September 2026.
+
+Observed behaviour:
+
+- the completed AAR was exited into a fresh runtime;
+- the displayed seed changed from the completed run seed;
+- the new run started from the scenario baseline rather than inheriting completed state;
+- the fresh run used the same Scenario 01 run factory rather than a duplicated branch-specific bootstrap.
+
+This confirms the public-facing fresh-run lifecycle at the UI level.
+
+### Status-language semantic review
+
+Manual review also identified two operator-facing labels that implied stronger semantics than the implementation supported:
+
+- `Modules: 4 active` suggested live runtime module-health reporting even though the alpha currently exposes four configured operational domains rather than a health-checked module registry;
+- entity badge `ACTION` could be interpreted as a directly executable domain `Action`, even though the badge represented attention level derived from an active Assessment or Projection.
+
+The UI was refined to:
+
+- `Operational domains: 4`, with Power, Water, Communications and Critical Services & Response exposed as supporting context;
+- `URGENT` for the highest entity attention state, preserving `Action` as the domain term for an operator-reviewable operational step inside Decision Focus Mode.
+
+The resulting semantics were manually reviewed and accepted.
+
 ## Verification gate
 
-After the fresh-seed regression was added, the local developer verification gate was reported green for:
+After the fresh-seed regression, run-lifecycle integration and status-language refinement, the local developer verification gate was reported green for:
 
 ```text
 npm test
@@ -132,12 +161,12 @@ Current coverage is deliberately layered:
 
 - all 27 Decision combinations: fixed reference seed `8F4C`;
 - all opening variants × dominant profiles: representative complete Decision path;
-- same-seed replay: automated deterministic comparison plus manual reference-run replay.
+- same-seed replay: automated deterministic comparison plus manual reference-run replay;
+- fresh-run lifecycle: manual New run confirmation.
 
 The following remain before public deployment:
 
 - manual execution of representative fresh-seed runs, including visible differences between opening variants;
-- manual verification of the `New run` UI path from AAR;
 - final keyboard / focus / acknowledgement / Timeline / AAR regression on the public-demo build;
 - minimal synthetic-data / non-live onboarding disclosure;
 - production deployment and post-deploy fresh-seed smoke tests.
