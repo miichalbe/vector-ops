@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import './VectorOpsApp.css';
 import ActionReceipt from './ActionReceipt';
 import ActionReview from './ActionReview';
+import AfterActionReport from './AfterActionReport';
 import {
   activeAssessmentFamilies,
   activeProjectionFamilies,
@@ -22,6 +23,7 @@ import {
   buildOperationalTimeline,
   type OperationalTimelineClaimKind,
 } from './operational-timeline';
+import RunCompletionControls from './RunCompletionControls';
 import type {
   ActionId,
   Assessment,
@@ -31,15 +33,17 @@ import type {
   Projection,
 } from '../core/contracts';
 import { recordDecisionSelection } from '../core/runtime-decision-selection';
+import { createFreshRunSeed } from '../core/run-seed';
 import { advanceScenarioRuntime } from '../core/runtime-step';
 import type { ScenarioRuntimeState } from '../core/runtime-state';
 import {
-  scenario01InitialState,
-  scenario01RuntimeDefinition,
+  createScenario01Run,
+  SCENARIO_01_DEFAULT_SEED,
 } from '../scenarios/scenario-01/scenario';
 
 const SIMULATION_TICK_MS = 4_000;
-const initialEntityId = scenario01InitialState.entityOrder[0];
+const initialScenarioRun = createScenario01Run(SCENARIO_01_DEFAULT_SEED);
+const initialEntityId = initialScenarioRun.initialState.entityOrder[0];
 
 if (!initialEntityId) {
   throw new Error('Scenario 01 runtime state contains no entities.');
@@ -191,8 +195,9 @@ interface ReceiptReference {
 }
 
 export default function VectorOpsApp() {
+  const [scenarioRun, setScenarioRun] = useState(initialScenarioRun);
   const [runtimeState, setRuntimeState] =
-    useState<ScenarioRuntimeState>(scenario01InitialState);
+    useState<ScenarioRuntimeState>(initialScenarioRun.initialState);
   const [selectedEntityId, setSelectedEntityId] =
     useState<EntityId>(initialEntityId);
   const [selectedAssessmentId, setSelectedAssessmentId] =
@@ -213,14 +218,14 @@ export default function VectorOpsApp() {
         advanceScenarioRuntime(
           currentState,
           1,
-          scenario01RuntimeDefinition,
+          scenarioRun.runtimeDefinition,
           new Date().toISOString(),
         ),
       );
     }, SIMULATION_TICK_MS);
 
     return () => window.clearInterval(intervalId);
-  }, [isManuallyPaused, runtimeState.status]);
+  }, [isManuallyPaused, runtimeState.status, scenarioRun.runtimeDefinition]);
 
   const currentAssessments = currentAssessmentFamilies(runtimeState.assessments);
   const currentProjections = currentProjectionFamilies(runtimeState.projections);
@@ -250,7 +255,7 @@ export default function VectorOpsApp() {
         )
       : undefined;
   const pendingDecisionGate = pendingDecision
-    ? scenario01RuntimeDefinition.decisionGates.find(
+    ? scenarioRun.runtimeDefinition.decisionGates.find(
         (gate) => gate.id === pendingDecision.id,
       )
     : undefined;
@@ -280,6 +285,24 @@ export default function VectorOpsApp() {
         (action) => action.id === receiptReference.actionId,
       )
     : undefined;
+
+  function startRun(seed: string) {
+    const nextRun = createScenario01Run(seed);
+    const nextEntityId = nextRun.initialState.entityOrder[0];
+
+    if (!nextEntityId) {
+      throw new Error('Scenario 01 runtime state contains no entities.');
+    }
+
+    setScenarioRun(nextRun);
+    setRuntimeState(nextRun.initialState);
+    setSelectedEntityId(nextEntityId);
+    setSelectedAssessmentId(null);
+    setSelectedProjectionId(null);
+    setIsManuallyPaused(false);
+    setReceiptReference(null);
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }
 
   function handleDecisionConfirm(actionId: ActionId) {
     if (!pendingDecision) {
@@ -353,6 +376,9 @@ export default function VectorOpsApp() {
         </span>
         <span>
           <strong>Entities:</strong> {runtimeState.entityOrder.length} monitored
+        </span>
+        <span>
+          <strong>Seed:</strong> {runtimeState.run.seed}
         </span>
         <span>
           <strong>Run:</strong> {runStatusLabel}
@@ -509,6 +535,19 @@ export default function VectorOpsApp() {
           </section>
         </aside>
       </div>
+
+      {runtimeState.status === 'completed' ? (
+        <>
+          <AfterActionReport runtimeState={runtimeState} />
+          <RunCompletionControls
+            seed={runtimeState.run.seed}
+            onReplay={() => startRun(runtimeState.run.seed)}
+            onNewRun={() =>
+              startRun(createFreshRunSeed(runtimeState.run.seed))
+            }
+          />
+        </>
+      ) : null}
     </main>
   );
 }
