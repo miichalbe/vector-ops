@@ -367,7 +367,12 @@ export default function VectorOpsApp() {
       </header>
 
       <section className="system-bar" aria-label="System and data status">
-        <span><strong>Modules:</strong> 4 active</span>
+        <span
+          title="Power · Water · Communications · Critical Services & Response"
+          aria-label="Operational domains: 4. Power, Water, Communications, Critical Services and Response."
+        >
+          <strong>Operational domains:</strong> 4
+        </span>
         <span>
           <strong>Data:</strong> {runtimeState.observations.length} observations
           {delayedObservationCount > 0
