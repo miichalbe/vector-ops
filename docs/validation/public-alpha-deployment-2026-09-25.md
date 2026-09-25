@@ -3,11 +3,11 @@
 **Date:** 25 September 2026  
 **Branch:** `build/vertical-slice`  
 **Milestone:** M5 — Public Demo  
-**Status:** Production deployment active; production smoke test pending
+**Status:** Production deployment and smoke validation PASS
 
 ## Purpose
 
-This document records the first production deployment of the VECTOR OPS public alpha and separates deployment infrastructure validation from the remaining production interaction smoke test.
+This document records the production deployment of the VECTOR OPS public alpha and the final reduced production smoke test used to close M5.
 
 ## Deployment architecture
 
@@ -47,7 +47,7 @@ This keeps the public demo isolated from the existing portfolio hosting while pr
 Cloudflare Pages successfully:
 
 - connected to the GitHub repository;
-- built the `build/vertical-slice` branch;
+- built the accepted public-alpha branch;
 - produced and deployed the static Astro application;
 - exposed the generated Pages deployment successfully;
 - accepted the custom domain `vector.michalbiernacki.com`.
@@ -74,9 +74,9 @@ This establishes that:
 - HTTPS is active;
 - the production static site is being served successfully.
 
-## Validation already completed before deployment
+## Validation completed before deployment
 
-Before production deployment, the current alpha passed:
+Before production deployment, the alpha passed:
 
 - automated runtime tests;
 - Astro / TypeScript checking;
@@ -86,33 +86,45 @@ Before production deployment, the current alpha passed:
 - onboarding / synthetic-data disclosure validation;
 - Decision Focus, Timeline, AAR, Replay and New run checks.
 
-The deployed build therefore follows a locally accepted release candidate rather than serving as the first validation environment.
+The deployed build therefore followed a locally accepted release candidate rather than serving as the first validation environment.
 
-## Remaining production gate
+## Production smoke test
 
-Deployment infrastructure is **PASS**.
+A reduced production smoke test was completed on `https://vector.michalbiernacki.com` after deployment.
 
-The remaining M5 gate is a reduced production smoke test on `https://vector.michalbiernacki.com`.
+The production environment was manually verified for:
 
-Required checks:
+- first-load onboarding and `07:40` ready state;
+- `Start scenario` runtime progression;
+- `About this demo` open / close behaviour, including backdrop and Escape dismissal;
+- Live Activity, entity state and selected-entity inspection;
+- Assessment and Projection presentation;
+- all three Decision Focus interactions;
+- reference run `8F4C` through completion and After-Action Report;
+- same-seed Replay returning to the `07:40` baseline with `8F4C` preserved;
+- New run generating a different seed and valid baseline;
+- a representative fresh-seed run through completion and AAR;
+- correct fresh-run seed / configuration reconstruction;
+- no observed missing assets, routing failures, HTTPS failures, cache-related breakage or material layout regression.
 
-- first-load onboarding appears and holds scenario time at `07:40`;
-- `Start scenario` begins progression;
-- `About this demo` opens and closes without state loss;
-- Live Activity, entity selection, Assessment and Projection render correctly;
-- all three Decision Focus points remain operable;
-- the reference run reaches AAR;
-- Replay same seed resets correctly;
-- New run produces a different seed and valid baseline;
-- at least one fresh-seed production run reaches AAR;
-- no asset, routing, caching or HTTPS issue appears in the deployed environment.
+**Production smoke result: PASS.**
 
-## Conclusion
+## Release conclusion
 
-VECTOR OPS is now publicly reachable on its production custom domain:
+The public alpha acceptance chain is complete:
+
+```text
+automated regression
++ local manual acceptance
++ production deployment
++ production smoke validation
+= PASS
+```
+
+VECTOR OPS is publicly reachable at:
 
 `https://vector.michalbiernacki.com`
 
 The deployment path is confirmed as **GitHub → Cloudflare Pages → OVH-managed CNAME → custom HTTPS domain**.
 
-M5 should be considered complete only after the production smoke test passes and its result is recorded.
+M5 — Public Demo is complete. Further work moves to portfolio integration, case-study production and launch communication rather than additional public-alpha feature scope.
