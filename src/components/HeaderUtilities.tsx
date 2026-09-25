@@ -1,6 +1,24 @@
-export default function HeaderUtilities() {
+export default function HeaderUtilities({
+  onOpenAbout,
+}: {
+  onOpenAbout: () => void;
+}) {
   return (
-    <div className="header-utilities" aria-label="Planned workspace utilities">
+    <div className="header-utilities" aria-label="Workspace utilities">
+      <button
+        type="button"
+        className="header-utility header-utility--active"
+        aria-label="About this demo"
+        data-tooltip="About this demo"
+        onClick={onOpenAbout}
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 11v5" />
+          <path d="M12 8h.01" />
+        </svg>
+      </button>
+
       <span
         className="header-utility"
         aria-label="Operational history, coming soon"
@@ -38,12 +56,28 @@ export default function HeaderUtilities() {
           display: grid;
           width: 34px;
           height: 34px;
+          padding: 0;
           place-items: center;
           border: 1px solid #2f4053;
           border-radius: 6px;
           background: #111923;
           color: #72879a;
           cursor: help;
+        }
+
+        button.header-utility--active {
+          color: #9ab4cc;
+          cursor: pointer;
+        }
+
+        button.header-utility--active:hover {
+          border-color: #52769a;
+          color: #c3d8ea;
+        }
+
+        button.header-utility--active:focus-visible {
+          outline: 2px solid #8bc4ff;
+          outline-offset: 2px;
         }
 
         .header-utility svg {
@@ -82,7 +116,8 @@ export default function HeaderUtilities() {
           pointer-events: none;
         }
 
-        .header-utility:hover::after {
+        .header-utility:hover::after,
+        .header-utility:focus-visible::after {
           opacity: 1;
           visibility: visible;
           transform: translateY(0);
