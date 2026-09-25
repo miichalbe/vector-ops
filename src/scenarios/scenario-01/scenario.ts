@@ -3,6 +3,8 @@ import type { ScenarioRuntimeDefinition } from '../../core/runtime-step';
 import {
   createInitialRuntimeState,
   type ScenarioInitialData,
+  type ScenarioRunConfig,
+  type ScenarioRuntimeState,
 } from '../../core/runtime-state';
 import { scenario01AssessmentRules } from './assessments';
 import {
@@ -45,21 +47,6 @@ export const scenario01InitialData = {
 
 export const SCENARIO_01_DEFAULT_SEED = '8F4C';
 
-export const scenario01DefaultRunConfig = resolveScenarioRunConfig({
-  scenarioId: scenario01InitialData.id,
-  scenarioVersion: scenario01InitialData.version,
-  seed: SCENARIO_01_DEFAULT_SEED,
-});
-
-export const scenario01InitialState = createInitialRuntimeState(
-  scenario01InitialData,
-  scenario01DefaultRunConfig,
-);
-
-export const scenario01TimeEvents = decorateScenario01OpeningEvents(
-  createScenario01TimeEvents(scenario01DefaultRunConfig),
-);
-
 export const scenario01ProjectionRules = [
   ...scenario01BaseProjectionRules,
   scenario01WaterServiceProjectionRule,
@@ -70,19 +57,54 @@ export const scenario01DecisionGates = [
   scenario01Decision3Gate,
 ] as const;
 
-export const scenario01RuntimeDefinition = {
-  timeEvents: scenario01TimeEvents,
-  dynamicTimeEvents(state) {
-    return decorateScenario01DynamicEvents(state, [
-      ...createScenario01Act2TimeEvents(state),
-      ...createScenario01Act3TimeEvents(state),
-      ...createScenario01Act4TimeEvents(state),
-    ]);
-  },
-  assessmentRules: scenario01AssessmentRules,
-  projectionRules: scenario01ProjectionRules,
-  decisionGates: scenario01DecisionGates,
-  completionRules: [scenario01CompletionRule],
-} satisfies ScenarioRuntimeDefinition;
+export interface Scenario01Run {
+  runConfig: ScenarioRunConfig;
+  initialState: ScenarioRuntimeState;
+  runtimeDefinition: ScenarioRuntimeDefinition;
+}
+
+export function createScenario01Run(seed: string): Scenario01Run {
+  const runConfig = resolveScenarioRunConfig({
+    scenarioId: scenario01InitialData.id,
+    scenarioVersion: scenario01InitialData.version,
+    seed,
+  });
+  const initialState = createInitialRuntimeState(
+    scenario01InitialData,
+    runConfig,
+  );
+  const runtimeDefinition = {
+    timeEvents: decorateScenario01OpeningEvents(
+      createScenario01TimeEvents(runConfig),
+    ),
+    dynamicTimeEvents(state) {
+      return decorateScenario01DynamicEvents(state, [
+        ...createScenario01Act2TimeEvents(state),
+        ...createScenario01Act3TimeEvents(state),
+        ...createScenario01Act4TimeEvents(state),
+      ]);
+    },
+    assessmentRules: scenario01AssessmentRules,
+    projectionRules: scenario01ProjectionRules,
+    decisionGates: scenario01DecisionGates,
+    completionRules: [scenario01CompletionRule],
+  } satisfies ScenarioRuntimeDefinition;
+
+  return {
+    runConfig,
+    initialState,
+    runtimeDefinition,
+  };
+}
+
+const scenario01DefaultRun = createScenario01Run(
+  SCENARIO_01_DEFAULT_SEED,
+);
+
+export const scenario01DefaultRunConfig = scenario01DefaultRun.runConfig;
+export const scenario01InitialState = scenario01DefaultRun.initialState;
+export const scenario01RuntimeDefinition =
+  scenario01DefaultRun.runtimeDefinition;
+export const scenario01TimeEvents = scenario01RuntimeDefinition.timeEvents;
 
 export { scenario01AssessmentRules };
