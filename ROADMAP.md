@@ -301,6 +301,66 @@ Items intentionally deferred beyond M5 include full Operational History, explici
 
 ---
 
+## Post-alpha product iteration backlog
+
+These items are intentionally **not part of M6 launch scope**. They describe product work for later iterations after the public alpha and case-study launch. The sequence below reflects recommended implementation priority, not a commitment to specific release dates.
+
+### Priority 1 — Refine seeded scenario variation
+
+**Goal:** Make run variation more deliberate, understandable and traceable without turning Scenario 01 into duplicated narrative branches.
+
+Planned refinement:
+
+- [ ] Revisit and clarify the randomization model behind the three opening variants: `power-first`, `communications-first` and `water-first`.
+- [ ] Revisit and clarify the four condition profiles that emphasize different operational constraints.
+- [ ] Audit which resolved profile parameters materially affect runtime behaviour and remove or implement parameters that are currently weak, redundant or effectively unused.
+- [ ] Define the intended relationship between opening variant, dominant profile, secondary profile and visible operator experience.
+- [ ] Preserve deterministic same-seed replay while improving meaningful run-to-run variation.
+- [ ] Update validation coverage and AAR/run metadata if the configuration model changes.
+
+**Why first:** this work strengthens the core operational experience and the credibility of the seeded-run model already exposed in the public alpha.
+
+### Priority 2 — Product release communication
+
+**Goal:** Give returning users a clear way to understand what changed and what is planned next.
+
+Planned capability:
+
+- [ ] Define lightweight product versioning for public demo releases.
+- [ ] Add an in-product `What's new` / changelog surface.
+- [ ] Publish concise release notes for meaningful changes rather than every implementation commit.
+- [ ] Add a public-facing view of near-term planned improvements where useful.
+- [ ] Keep roadmap communication clearly separated from promises or fixed delivery dates.
+
+**Why second:** once meaningful post-alpha iterations begin, users need a simple way to understand changes across releases. This layer is most useful when there is actual product evolution to communicate.
+
+### Priority 3 — Real authentication and session lifecycle
+
+**Goal:** Replace the open demo entry with a real login / logout mechanism while preserving frictionless public access to the simulation.
+
+Planned capability:
+
+- [ ] Implement a real authentication flow with server-side credential verification and session lifecycle rather than a client-only visual gate.
+- [ ] Add explicit login and logout states to the application shell.
+- [ ] Use intentionally public demo credentials so any visitor can enter the simulation while still experiencing a realistic authenticated product boundary.
+- [ ] Ensure the implementation is deployable within the project's available hosting architecture, including evaluation of an OVH-compatible server-side option if needed.
+- [ ] Do not present shared public demo credentials as a security control; the purpose is product realism and authenticated-session behaviour.
+- [ ] Keep real credentials, secrets and session-signing material out of the client bundle and repository.
+
+**Why third:** authentication improves product realism and allows future user-specific behaviour, but it does not currently solve a more important operator problem than scenario fidelity or release communication. It also introduces server-side/session infrastructure into an otherwise static deployment and should therefore be added deliberately.
+
+### Sequencing principle
+
+```text
+core scenario fidelity
+→ release/change communication
+→ authenticated product boundary
+```
+
+This ordering may change if external feedback reveals a stronger user or portfolio need, but new infrastructure should not outrun product value.
+
+---
+
 ## Roadmap principles
 
 1. **Discovery before screens.**
