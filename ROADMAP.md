@@ -1,7 +1,7 @@
 # VECTOR OPS — Roadmap
 
-**Current phase:** Working Prototype / Public-demo preparation  
-**Current milestone:** M5 — Public Demo preparation, with targeted M3/M4 refinement continuing against working UI  
+**Current phase:** Public Demo deployed / production validation  
+**Current milestone:** M5 — Public Demo production smoke testing  
 **Project status:** Active  
 **Last updated:** 25 September 2026
 
@@ -12,15 +12,17 @@ The roadmap is intentionally outcome-based. Each milestone should leave behind a
 ## Near-term delivery target
 
 **Testable vertical slice:** achieved for the complete Scenario 01 runtime — D1 → D2 → D3 → final progression → handover → completion → factual AAR — with deterministic seeded replay and bounded fresh-run variation.  
-**Public prototype / alpha:** complete representative fresh-run manual validation → minimal public-demo onboarding / synthetic-data disclosure → production deployment and smoke testing.
+**Public prototype / alpha:** deployed at `https://vector.michalbiernacki.com`; complete the reduced production smoke test and record the final M5 validation result.
 
 **Latest validation artifacts:**  
 - [Scenario 01 Runtime and Interaction Audit — 24 September 2026](docs/validation/scenario-01-runtime-audit-2026-09-24.md)  
-- [Scenario 01 Fresh-Seed and Replay Validation — 25 September 2026](docs/validation/scenario-01-fresh-seed-replay-validation-2026-09-25.md)
+- [Scenario 01 Fresh-Seed and Replay Validation — 25 September 2026](docs/validation/scenario-01-fresh-seed-replay-validation-2026-09-25.md)  
+- [Public Alpha Acceptance Checklist — 25 September 2026](docs/validation/public-alpha-acceptance-checklist-2026-09-25.md)  
+- [Public Alpha Deployment Validation — 25 September 2026](docs/validation/public-alpha-deployment-2026-09-25.md)
 
 The alpha remains a narrow end-to-end demonstration: one primary operator, one synthetic cascading-infrastructure scenario, one operational area, three bounded opening variants and three meaningful decision moments. It must remain structurally open to additional modules and scenarios after launch.
 
-There is no separate D2-only preview release in the current plan. Public deployment follows completion and validation of the full alpha contract.
+There is no separate D2-only preview release in the current plan. The full public alpha is now deployed; final M5 closure depends on production smoke validation rather than additional feature work.
 
 The time box changes delivery breadth, not the architectural principles. Shared entities, state, events, module registration, scenario data and consequence rules must not be hard-coded into individual UI components.
 
@@ -225,7 +227,8 @@ application shell
 → fresh-seed opening-variant regression
 → representative manual fresh-run validation
 → public-demo onboarding / disclosure
-→ deployment and production smoke test
+→ deployment
+→ production smoke test
 ```
 
 ---
@@ -253,18 +256,20 @@ application shell
 - [x] Add scenario replay / New run lifecycle with same-seed reproducibility
 - [x] Validate `power-first`, `communications-first` and `water-first` automatically through complete Scenario 01 runs
 - [x] Run full automated regression, type checking and production build verification after AAR / replay / fresh-seed integration
-- [ ] Run final manual end-to-end tests across representative fresh-seed D1/D2/D3 paths, including keyboard/focus, Timeline, acknowledgements, AAR, Replay and New run
+- [x] Run final manual end-to-end tests across the reference and representative fresh-seed D1/D2/D3 paths, including keyboard/focus, Timeline, acknowledgements, AAR, Replay and New run
 - [x] Reassess current scenario pacing with Live Activity visible for the fixed-seed full run
 - [x] Complete focused runtime / interaction audit before AAR implementation
 - [x] Resolve the high-impact entity-state / inspection layout issue exposed by full-run validation
-- [ ] Add minimal public-demo onboarding and synthetic-data / non-live disclosure
+- [x] Add minimal public-demo onboarding and synthetic-data / non-live disclosure
 - [ ] Optimize performance and production build where measurement indicates a need
-- [ ] Confirm OVH deployment path
-- [ ] Configure `vector.michalbiernacki.com`
-- [ ] Deploy static production build only after the full alpha acceptance path is green
-- [ ] Smoke-test several fresh seeds in production
+- [x] Confirm production deployment path: GitHub → Cloudflare Pages, with OVH-managed DNS
+- [x] Configure `vector.michalbiernacki.com`
+- [x] Deploy the accepted static production build
+- [ ] Smoke-test the reference run and representative fresh seeds in production
 - [ ] Integrate with michalbiernacki.com
 - [ ] Publish supporting project documentation / Discovery Brief PDF when ready
+
+**Production deployment:** `https://vector.michalbiernacki.com` is live over HTTPS through Cloudflare Pages. DNS for the portfolio domain remains at OVH, with `vector` delegated by CNAME to the Pages project. See [Public Alpha Deployment Validation](docs/validation/public-alpha-deployment-2026-09-25.md).
 
 ---
 
