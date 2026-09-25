@@ -1,7 +1,7 @@
 # VECTOR OPS — Public Alpha Deployment Validation
 
 **Date:** 25 September 2026  
-**Branch:** `build/vertical-slice`  
+**Production branch:** `main`  
 **Milestone:** M5 — Public Demo  
 **Status:** Production deployment and smoke validation PASS
 
@@ -18,7 +18,7 @@ GitHub repository
 miichalbe/vector-ops
         ↓
 production branch
-build/vertical-slice
+main
         ↓
 Cloudflare Pages build
 npm run build
@@ -47,12 +47,14 @@ This keeps the public demo isolated from the existing portfolio hosting while pr
 Cloudflare Pages successfully:
 
 - connected to the GitHub repository;
-- built the accepted public-alpha branch;
+- built the accepted public-alpha release;
 - produced and deployed the static Astro application;
 - exposed the generated Pages deployment successfully;
 - accepted the custom domain `vector.michalbiernacki.com`.
 
 The custom-domain DNS record was added manually in the OVH DNS zone.
+
+The first accepted public deployment was produced from `build/vertical-slice`. After the alpha acceptance chain passed, `main` was fast-forwarded to the identical accepted release state and Cloudflare Pages production branch control was changed to `main`. This leaves the public deployment pipeline in its intended release configuration without changing the accepted application behaviour.
 
 ## External availability check
 
@@ -109,6 +111,8 @@ The production environment was manually verified for:
 
 **Production smoke result: PASS.**
 
+After switching Cloudflare production branch control to `main`, the public endpoint was checked again and continued to return `HTTP/2 200` and load correctly in the browser.
+
 ## Release conclusion
 
 The public alpha acceptance chain is complete:
@@ -125,6 +129,6 @@ VECTOR OPS is publicly reachable at:
 
 `https://vector.michalbiernacki.com`
 
-The deployment path is confirmed as **GitHub → Cloudflare Pages → OVH-managed CNAME → custom HTTPS domain**.
+The release pipeline is now **GitHub `main` → Cloudflare Pages → OVH-managed CNAME → custom HTTPS domain**.
 
 M5 — Public Demo is complete. Further work moves to portfolio integration, case-study production and launch communication rather than additional public-alpha feature scope.
