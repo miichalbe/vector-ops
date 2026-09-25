@@ -49,21 +49,21 @@ const metricLabels: Record<string, string> = {
   'logistics.estimatedTravelTime': 'Travel time',
 };
 
-type EntityStatus = 'Normal' | 'Review' | 'Action';
+type EntityAttention = 'Normal' | 'Review' | 'Urgent';
 
-const entityStatusDescriptions: Record<EntityStatus, string> = {
+const entityAttentionDescriptions: Record<EntityAttention, string> = {
   Normal:
     'No active Assessment or Projection currently requires attention for this entity.',
   Review:
     'This entity is referenced by an active Assessment or Projection and requires operator review.',
-  Action:
-    'An active critical Assessment or Projection indicates that operator action may be required.',
+  Urgent:
+    'An active Assessment or Projection involving this entity requires immediate operator attention.',
 };
 
-function getEntityStatus(
+function getEntityAttention(
   entityId: EntityId,
   claims: readonly (Assessment | Projection)[],
-): EntityStatus {
+): EntityAttention {
   const relatedClaims = claims.filter((claim) =>
     claim.entityIds.includes(entityId),
   );
@@ -74,10 +74,14 @@ function getEntityStatus(
         claim.attention === 'act' || claim.severity === 'critical',
     )
   ) {
-    return 'Action';
+    return 'Urgent';
   }
 
   return relatedClaims.length > 0 ? 'Review' : 'Normal';
+}
+
+function attentionBadgeModifier(attention: EntityAttention): string {
+  return attention === 'Urgent' ? 'action' : attention.toLowerCase();
 }
 
 function observationLabel(observation: Observation): string {
@@ -105,7 +109,7 @@ export function EntityGrid({
         const metrics = resolveEntityMetricSlots(observations, schema.tile);
         const selected = entity.id === selectedEntityId;
         const dataCondition = getEntityDataCondition(observations);
-        const entityStatus = getEntityStatus(entity.id, activeClaims);
+        const entityAttention = getEntityAttention(entity.id, activeClaims);
         const statusTooltipId = `status-tooltip-${entity.id.replaceAll('.', '-')}`;
 
         return (
@@ -121,16 +125,16 @@ export function EntityGrid({
                 <h3>{entity.name}</h3>
               </div>
               <span
-                className={`status-badge status-badge--${entityStatus.toLowerCase()}`}
+                className={`status-badge status-badge--${attentionBadgeModifier(entityAttention)}`}
                 aria-describedby={statusTooltipId}
               >
-                {entityStatus}
+                {entityAttention}
                 <span
                   className="status-tooltip"
                   id={statusTooltipId}
                   role="tooltip"
                 >
-                  {entityStatusDescriptions[entityStatus]}
+                  {entityAttentionDescriptions[entityAttention]}
                 </span>
               </span>
             </div>
