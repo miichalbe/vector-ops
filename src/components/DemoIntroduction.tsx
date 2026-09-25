@@ -39,6 +39,11 @@ export default function DemoIntroduction({
       aria-modal="true"
       aria-labelledby="demo-introduction-title"
       aria-describedby="demo-introduction-summary"
+      onMouseDown={(event) => {
+        if (mode === 'about' && event.target === event.currentTarget) {
+          onContinue();
+        }
+      }}
     >
       <div className="demo-introduction__panel">
         <header className="demo-introduction__hero">
