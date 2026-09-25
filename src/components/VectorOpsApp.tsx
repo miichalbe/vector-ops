@@ -11,6 +11,7 @@ import {
   currentProjectionFamilies,
   selectedClaimFamily,
 } from './claim-selection';
+import DemoIntroduction from './DemoIntroduction';
 import { EntityGrid, SelectedEntityPanel } from './EntityWorkspace';
 import {
   formatObservationSource,
@@ -205,11 +206,17 @@ export default function VectorOpsApp() {
   const [selectedProjectionId, setSelectedProjectionId] =
     useState<string | null>(null);
   const [isManuallyPaused, setIsManuallyPaused] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
+  const [isAboutOpen, setIsAboutOpen] = useState(true);
   const [receiptReference, setReceiptReference] =
     useState<ReceiptReference | null>(null);
 
   useEffect(() => {
-    if (isManuallyPaused || runtimeState.status !== 'running') {
+    if (
+      !hasStarted ||
+      isManuallyPaused ||
+      runtimeState.status !== 'running'
+    ) {
       return undefined;
     }
 
@@ -225,7 +232,12 @@ export default function VectorOpsApp() {
     }, SIMULATION_TICK_MS);
 
     return () => window.clearInterval(intervalId);
-  }, [isManuallyPaused, runtimeState.status, scenarioRun.runtimeDefinition]);
+  }, [
+    hasStarted,
+    isManuallyPaused,
+    runtimeState.status,
+    scenarioRun.runtimeDefinition,
+  ]);
 
   const currentAssessments = currentAssessmentFamilies(runtimeState.assessments);
   const currentProjections = currentProjectionFamilies(runtimeState.projections);
@@ -261,16 +273,18 @@ export default function VectorOpsApp() {
     : undefined;
   const decisionRequired =
     pendingDecision !== undefined && pendingDecisionGate !== undefined;
-  const runStatusLabel =
-    runtimeState.status === 'awaitingDecision'
+  const runStatusLabel = !hasStarted
+    ? 'Ready'
+    : runtimeState.status === 'awaitingDecision'
       ? 'Awaiting decision'
       : isManuallyPaused
         ? 'Paused'
         : runtimeState.status === 'running'
           ? 'Running'
           : runtimeState.status;
-  const runtimeControlLabel =
-    runtimeState.status === 'awaitingDecision'
+  const runtimeControlLabel = !hasStarted
+    ? 'Start required'
+    : runtimeState.status === 'awaitingDecision'
       ? 'Decision required'
       : isManuallyPaused
         ? 'Resume'
@@ -300,6 +314,8 @@ export default function VectorOpsApp() {
     setSelectedAssessmentId(null);
     setSelectedProjectionId(null);
     setIsManuallyPaused(false);
+    setHasStarted(true);
+    setIsAboutOpen(false);
     setReceiptReference(null);
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
   }
@@ -349,7 +365,7 @@ export default function VectorOpsApp() {
         </div>
 
         <div className="scenario-controls">
-          <HeaderUtilities />
+          <HeaderUtilities onOpenAbout={() => setIsAboutOpen(true)} />
           <div className="scenario-clock" aria-label="Scenario time">
             <span>Scenario time</span>
             <strong>{formatScenarioTime(runtimeState.now)}</strong>
@@ -358,7 +374,7 @@ export default function VectorOpsApp() {
             type="button"
             className="runtime-control"
             aria-pressed={isManuallyPaused}
-            disabled={runtimeState.status !== 'running'}
+            disabled={!hasStarted || runtimeState.status !== 'running'}
             onClick={() => setIsManuallyPaused((paused) => !paused)}
           >
             {runtimeControlLabel}
@@ -552,6 +568,17 @@ export default function VectorOpsApp() {
             }
           />
         </>
+      ) : null}
+
+      {isAboutOpen ? (
+        <DemoIntroduction
+          mode={hasStarted ? 'about' : 'intro'}
+          seed={runtimeState.run.seed}
+          onContinue={() => {
+            setHasStarted(true);
+            setIsAboutOpen(false);
+          }}
+        />
       ) : null}
     </main>
   );
