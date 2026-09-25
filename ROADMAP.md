@@ -1,9 +1,9 @@
 # VECTOR OPS — Roadmap
 
 **Current phase:** Working Prototype / Public-demo preparation  
-**Current milestone:** M4 — Working Prototype, with M3 interaction refinement continuing against working UI  
+**Current milestone:** M5 — Public Demo preparation, with targeted M3/M4 refinement continuing against working UI  
 **Project status:** Active  
-**Last updated:** 24 September 2026
+**Last updated:** 25 September 2026
 
 This roadmap tracks the evolution of VECTOR OPS from early discovery to a public working demonstrator and portfolio case study.
 
@@ -11,10 +11,12 @@ The roadmap is intentionally outcome-based. Each milestone should leave behind a
 
 ## Near-term delivery target
 
-**Testable vertical slice:** achieved for the complete fixed-seed Scenario 01 runtime — D1 → D2 → D3 → final progression → handover → completion — on 24 September 2026  
-**Public prototype / alpha:** complete the remaining alpha layers before deployment: simple factual After-Action Report → fresh-seed / replay flow → full opening-variant regression and manual validation → production deployment
+**Testable vertical slice:** achieved for the complete Scenario 01 runtime — D1 → D2 → D3 → final progression → handover → completion → factual AAR — with deterministic seeded replay and bounded fresh-run variation.  
+**Public prototype / alpha:** complete representative fresh-run manual validation → minimal public-demo onboarding / synthetic-data disclosure → production deployment and smoke testing.
 
-**Latest validation artifact:** [Scenario 01 Runtime and Interaction Audit — 24 September 2026](docs/validation/scenario-01-runtime-audit-2026-09-24.md)
+**Latest validation artifacts:**  
+- [Scenario 01 Runtime and Interaction Audit — 24 September 2026](docs/validation/scenario-01-runtime-audit-2026-09-24.md)  
+- [Scenario 01 Fresh-Seed and Replay Validation — 25 September 2026](docs/validation/scenario-01-fresh-seed-replay-validation-2026-09-25.md)
 
 The alpha remains a narrow end-to-end demonstration: one primary operator, one synthetic cascading-infrastructure scenario, one operational area, three bounded opening variants and three meaningful decision moments. It must remain structurally open to additional modules and scenarios after launch.
 
@@ -102,14 +104,26 @@ M3 no longer blocks implementation. Remaining interaction work is intentionally 
 - [x] Design Common Operational Picture structure
 - [x] Establish cross-domain Live Activity timeline pattern
 - [ ] Finalize alert / attention queue relationship
-- [ ] Finalize asset detail interaction
+- [x] Finalize current entity detail interaction for the primary scenario
 - [x] Implement and refine reusable decision-review flow for D1/D2/D3
-- [ ] Design degraded-state interactions
-- [ ] Resolve final Live Activity vs workspace placement / view model
+- [ ] Design degraded-state interactions beyond current data-quality treatments
+- [x] Resolve Live Activity vs workspace placement / view model for the public alpha
 - [ ] Create remaining low-fidelity wireframes only where running UI still leaves structural uncertainty
 - [x] Validate current primary scenario against public-demo pacing for the fixed-seed full run
 
 Primary flow and runtime behaviour are specified in [Primary Operator Flow & Scenario Runtime Contract](docs/design/primary-operator-flow.md). Running UI remains the primary validation surface for unresolved interaction details.
+
+The primary operational view now explicitly separates:
+
+```text
+Entity tile       → current state
+Selected entity   → current detail, provenance and dependencies
+Live Activity     → what changed and when
+Assessment        → current interpretation
+Projection        → possible downstream consequence
+```
+
+This refinement is documented in [Entity State Presentation](docs/design/entity-state-presentation.md).
 
 ---
 
@@ -142,11 +156,13 @@ Primary flow and runtime behaviour are specified in [Primary Operator Flow & Sce
 - [x] Implement Decision 2 downstream external response and deployment progress
 - [x] Add hospital / critical-service consequence
 - [x] Complete Decision 3 downstream progression, resolution checkpoint and operational handover
-- [x] Add deterministic runtime audit across all 27 D1 × D2 × D3 action combinations for the current fixed-seed run
-- [ ] Add simple factual After-Action Report
+- [x] Add deterministic runtime audit across all 27 D1 × D2 × D3 Action combinations for the documented reference run
+- [x] Add simple factual After-Action Report
+- [x] Add deterministic Scenario 01 run factory and same-seed replay lifecycle
+- [x] Add fresh-seed end-to-end regression across all opening variants and dominant condition profiles
 - [ ] Complete Operational History / audit interaction beyond the minimum alpha AAR where needed
 
-**Current implementation checkpoint:** The browser prototype now supports the stable baseline, seeded opening variation, live Observation progression, inspectable Assessment / Projection reasoning, blocking Decision Focus Mode for the guided simulation, recorded Actions, D1-dependent information / coordination outcomes, Act 2 physical progression, D2 resource conflict and downstream AG-400 / restoration branches, hospital continuity consequence, D3 coordination posture, final stabilisation / controlled deterioration, operational handover and runtime completion. Live Activity links current Assessment / Projection families back to their inspection panels, and Decision records retain expected and observed effects for later AAR reconstruction.
+**Current implementation checkpoint:** The browser prototype now supports the stable baseline, seeded opening variation, live Observation progression, stable current-state entity tiles, inspectable entity detail, Assessment / Projection reasoning, blocking Decision Focus Mode for the guided simulation, recorded Actions, D1-dependent information / coordination outcomes, Act 2 physical progression, D2 resource conflict and downstream AG-400 / restoration branches, hospital continuity consequence, D3 coordination posture, final stabilisation / controlled deterioration, operational handover, factual After-Action Report, same-seed replay and fresh-run generation.
 
 The current tested runtime spine is:
 
@@ -168,11 +184,19 @@ baseline
 → resolution checkpoint
 → operational handover
 → completed runtime
+→ factual After-Action Report
+→ Replay same seed OR New run
 ```
 
-The runtime already contains three opening variants — `power-first`, `communications-first`, `water-first` — and four condition profiles. Run resolution is deterministic from seed, but the application currently boots the fixed documented seed `8F4C`. Public-demo preparation should replace that fixed bootstrap with a fresh-seed run factory / reset flow rather than introduce duplicated scenario branches.
+The runtime contains three opening variants — `power-first`, `communications-first`, `water-first` — and four condition profiles. Run resolution is deterministic from seed. The application retains `8F4C` as the documented reference run on initial load, while completed runs can be replayed from the same seed or restarted through a newly generated seed using the same Scenario 01 run factory.
 
-The 24 September runtime audit is recorded in [Scenario 01 Runtime and Interaction Audit](docs/validation/scenario-01-runtime-audit-2026-09-24.md). It documents automated coverage, manual validation, discovered regressions and corrective changes, plus explicit remaining limitations.
+Validation is deliberately layered rather than exhaustively Cartesian:
+
+- all 27 D1 × D2 × D3 Action combinations are audited on the documented `8F4C` reference run;
+- a 12-case matrix covers 3 opening variants × 4 dominant profiles end-to-end through completion;
+- same-seed deterministic replay is covered automatically and the `8F4C` replay lifecycle has been manually confirmed.
+
+See [Scenario 01 Runtime and Interaction Audit](docs/validation/scenario-01-runtime-audit-2026-09-24.md) and [Scenario 01 Fresh-Seed and Replay Validation](docs/validation/scenario-01-fresh-seed-replay-validation-2026-09-25.md).
 
 ### First implementation sequence
 
@@ -197,8 +221,10 @@ application shell
 → runtime / interaction audit
 → simple factual After-Action Report
 → fresh-seed run bootstrap + replay
-→ pacing / high-impact interaction polish
-→ full opening-variant regression + manual scenario validation
+→ entity-state / inspection refinement
+→ fresh-seed opening-variant regression
+→ representative manual fresh-run validation
+→ public-demo onboarding / disclosure
 → deployment and production smoke test
 ```
 
@@ -222,17 +248,17 @@ application shell
 - [x] Complete D2 downstream external response, deployment progress and resulting consequence revisions
 - [x] Add hospital / critical-service consequence and Decision 3
 - [x] Complete final stabilisation or controlled-deterioration sequence and operational handover
-- [ ] Add simple factual After-Action Report with run configuration, key chronology, D1/D2/D3 selections, expected versus observed effects and unresolved items
-- [ ] Replace fixed seed bootstrap with fresh deterministic run seed
-- [ ] Add scenario reset / replay / New run with same-seed reproducibility
-- [ ] Validate `power-first`, `communications-first` and `water-first` through the complete Scenario 01 path
-- [ ] Run final full automated regression, type checking and production build verification after AAR / replay integration
-- [ ] Run final manual end-to-end tests across representative D1/D2/D3 paths, including keyboard/focus, Timeline, acknowledgements, AAR and replay
+- [x] Add simple factual After-Action Report with run configuration, key chronology, D1/D2/D3 selections, expected versus observed effects and unresolved items
+- [x] Replace fixed-only bootstrap architecture with deterministic run factory and fresh run seeds
+- [x] Add scenario replay / New run lifecycle with same-seed reproducibility
+- [x] Validate `power-first`, `communications-first` and `water-first` automatically through complete Scenario 01 runs
+- [x] Run full automated regression, type checking and production build verification after AAR / replay / fresh-seed integration
+- [ ] Run final manual end-to-end tests across representative fresh-seed D1/D2/D3 paths, including keyboard/focus, Timeline, acknowledgements, AAR, Replay and New run
 - [x] Reassess current scenario pacing with Live Activity visible for the fixed-seed full run
 - [x] Complete focused runtime / interaction audit before AAR implementation
-- [ ] Resolve only the remaining high-impact layout questions exposed by full-run validation
+- [x] Resolve the high-impact entity-state / inspection layout issue exposed by full-run validation
 - [ ] Add minimal public-demo onboarding and synthetic-data / non-live disclosure
-- [ ] Optimize performance and production build
+- [ ] Optimize performance and production build where measurement indicates a need
 - [ ] Confirm OVH deployment path
 - [ ] Configure `vector.michalbiernacki.com`
 - [ ] Deploy static production build only after the full alpha acceptance path is green
