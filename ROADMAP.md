@@ -1,7 +1,7 @@
 # VECTOR OPS — Roadmap
 
-**Current phase:** Public Demo deployed / production validation  
-**Current milestone:** M5 — Public Demo production smoke testing  
+**Current phase:** Public alpha live / case-study preparation  
+**Current milestone:** M6 — Case Study & Launch  
 **Project status:** Active  
 **Last updated:** 25 September 2026
 
@@ -11,8 +11,8 @@ The roadmap is intentionally outcome-based. Each milestone should leave behind a
 
 ## Near-term delivery target
 
-**Testable vertical slice:** achieved for the complete Scenario 01 runtime — D1 → D2 → D3 → final progression → handover → completion → factual AAR — with deterministic seeded replay and bounded fresh-run variation.  
-**Public prototype / alpha:** deployed at `https://vector.michalbiernacki.com`; complete the reduced production smoke test and record the final M5 validation result.
+**Public prototype / alpha:** complete and live at `https://vector.michalbiernacki.com`.  
+**Next target:** package the validated public alpha into a coherent portfolio case study, integrate it with `michalbiernacki.com`, prepare launch assets and review the repository for eventual public visibility.
 
 **Latest validation artifacts:**  
 - [Scenario 01 Runtime and Interaction Audit — 24 September 2026](docs/validation/scenario-01-runtime-audit-2026-09-24.md)  
@@ -20,11 +20,9 @@ The roadmap is intentionally outcome-based. Each milestone should leave behind a
 - [Public Alpha Acceptance Checklist — 25 September 2026](docs/validation/public-alpha-acceptance-checklist-2026-09-25.md)  
 - [Public Alpha Deployment Validation — 25 September 2026](docs/validation/public-alpha-deployment-2026-09-25.md)
 
-The alpha remains a narrow end-to-end demonstration: one primary operator, one synthetic cascading-infrastructure scenario, one operational area, three bounded opening variants and three meaningful decision moments. It must remain structurally open to additional modules and scenarios after launch.
+The alpha remains a deliberately narrow end-to-end demonstration: one primary operator, one synthetic cascading-infrastructure scenario, one operational area, three bounded opening variants and three meaningful decision moments. It remains structurally open to additional modules and scenarios after launch.
 
-There is no separate D2-only preview release in the current plan. The full public alpha is now deployed; final M5 closure depends on production smoke validation rather than additional feature work.
-
-The time box changes delivery breadth, not the architectural principles. Shared entities, state, events, module registration, scenario data and consequence rules must not be hard-coded into individual UI components.
+The public alpha is now deployed and smoke-tested. Further product expansion is deferred unless later case-study review or external feedback exposes a comprehension or credibility problem in the released experience.
 
 ---
 
@@ -115,7 +113,7 @@ M3 no longer blocks implementation. Remaining interaction work is intentionally 
 
 Primary flow and runtime behaviour are specified in [Primary Operator Flow & Scenario Runtime Contract](docs/design/primary-operator-flow.md). Running UI remains the primary validation surface for unresolved interaction details.
 
-The primary operational view now explicitly separates:
+The primary operational view explicitly separates:
 
 ```text
 Entity tile       → current state
@@ -164,9 +162,9 @@ This refinement is documented in [Entity State Presentation](docs/design/entity-
 - [x] Add fresh-seed end-to-end regression across all opening variants and dominant condition profiles
 - [ ] Complete Operational History / audit interaction beyond the minimum alpha AAR where needed
 
-**Current implementation checkpoint:** The browser prototype now supports the stable baseline, seeded opening variation, live Observation progression, stable current-state entity tiles, inspectable entity detail, Assessment / Projection reasoning, blocking Decision Focus Mode for the guided simulation, recorded Actions, D1-dependent information / coordination outcomes, Act 2 physical progression, D2 resource conflict and downstream AG-400 / restoration branches, hospital continuity consequence, D3 coordination posture, final stabilisation / controlled deterioration, operational handover, factual After-Action Report, same-seed replay and fresh-run generation.
+**Current implementation checkpoint:** The browser prototype supports the stable baseline, seeded opening variation, live Observation progression, stable current-state entity tiles, inspectable entity detail, Assessment / Projection reasoning, blocking Decision Focus Mode for the guided simulation, recorded Actions, D1-dependent information / coordination outcomes, Act 2 physical progression, D2 resource conflict and downstream AG-400 / restoration branches, hospital continuity consequence, D3 coordination posture, final stabilisation / controlled deterioration, operational handover, factual After-Action Report, same-seed replay and fresh-run generation.
 
-The current tested runtime spine is:
+The tested runtime spine is:
 
 ```text
 baseline
@@ -196,11 +194,12 @@ Validation is deliberately layered rather than exhaustively Cartesian:
 
 - all 27 D1 × D2 × D3 Action combinations are audited on the documented `8F4C` reference run;
 - a 12-case matrix covers 3 opening variants × 4 dominant profiles end-to-end through completion;
-- same-seed deterministic replay is covered automatically and the `8F4C` replay lifecycle has been manually confirmed.
+- same-seed deterministic replay is covered automatically and manually;
+- representative fresh-seed interaction and presentation are manually validated.
 
 See [Scenario 01 Runtime and Interaction Audit](docs/validation/scenario-01-runtime-audit-2026-09-24.md) and [Scenario 01 Fresh-Seed and Replay Validation](docs/validation/scenario-01-fresh-seed-replay-validation-2026-09-25.md).
 
-### First implementation sequence
+### Implementation sequence
 
 ```text
 application shell
@@ -244,8 +243,8 @@ application shell
 - Full automated regression and manual end-to-end validation completed before deployment
 - Polished-enough visual and interaction system
 - Stable deployment
-- Documentation links
-- Public project page / portfolio integration
+- Public custom domain
+- Production smoke validation
 
 ### Planned work
 - [x] Complete D2 downstream external response, deployment progress and resulting consequence revisions
@@ -261,15 +260,16 @@ application shell
 - [x] Complete focused runtime / interaction audit before AAR implementation
 - [x] Resolve the high-impact entity-state / inspection layout issue exposed by full-run validation
 - [x] Add minimal public-demo onboarding and synthetic-data / non-live disclosure
-- [ ] Optimize performance and production build where measurement indicates a need
 - [x] Confirm production deployment path: GitHub → Cloudflare Pages, with OVH-managed DNS
 - [x] Configure `vector.michalbiernacki.com`
 - [x] Deploy the accepted static production build
-- [ ] Smoke-test the reference run and representative fresh seeds in production
-- [ ] Integrate with michalbiernacki.com
-- [ ] Publish supporting project documentation / Discovery Brief PDF when ready
+- [x] Smoke-test the reference run and a representative fresh-seed run in production
 
-**Production deployment:** `https://vector.michalbiernacki.com` is live over HTTPS through Cloudflare Pages. DNS for the portfolio domain remains at OVH, with `vector` delegated by CNAME to the Pages project. See [Public Alpha Deployment Validation](docs/validation/public-alpha-deployment-2026-09-25.md).
+**Status:** Complete on 25 September 2026.
+
+**Production:** `https://vector.michalbiernacki.com` is live over HTTPS through Cloudflare Pages. DNS for the portfolio domain remains at OVH, with `vector` delegated by CNAME to the Pages project. Production smoke validation passed after deployment. See [Public Alpha Deployment Validation](docs/validation/public-alpha-deployment-2026-09-25.md).
+
+Items intentionally deferred beyond M5 include full Operational History, explicit runtime module-health registry, richer degraded-state interactions and broader alert / attention-queue design. Their absence did not block public-alpha acceptance.
 
 ---
 
@@ -282,8 +282,9 @@ application shell
 - Process narrative
 - Architecture diagrams
 - Demo screenshots / recordings
+- Portfolio integration
 - LinkedIn launch material
-- Public repository
+- Repository prepared for public visibility
 
 ### Planned work
 - [ ] Write final case-study narrative
@@ -291,10 +292,11 @@ application shell
 - [ ] Create final architecture visuals
 - [ ] Capture polished screenshots
 - [ ] Prepare short demo clip / GIF
+- [ ] Integrate VECTOR OPS with `michalbiernacki.com`
 - [ ] Prepare LinkedIn launch post
 - [ ] Review repository for public release
 - [ ] Add license if appropriate
-- [ ] Switch repository visibility to Public
+- [ ] Switch repository visibility to Public when ready
 - [ ] Publish launch
 
 ---
