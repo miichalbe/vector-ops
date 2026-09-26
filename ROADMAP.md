@@ -1,7 +1,8 @@
 # VECTOR OPS — Roadmap
 
 **Current phase:** Public alpha live / case study published / continuous product development  
-**Current milestone:** M6 — Case Study & Launch  
+**Current product-development milestone:** M7 — Product Evolution Visibility
+**Parallel launch milestone:** M6 — Case Study & Launch (in progress)  
 **Project status:** Active  
 **Last updated:** 26 September 2026
 
@@ -304,70 +305,98 @@ Items intentionally deferred beyond M5 include full Operational History, explici
 
 ---
 
-## Continued product development
+## M7 — Product Evolution Visibility
 
-This section is part of the **same project roadmap**, not a separate roadmap or detached backlog. VECTOR OPS is a live working system that continues to evolve while remaining M6 launch work is completed. Earlier incomplete roadmap items remain visible for traceability and may be completed, superseded or explicitly deferred as implementation needs evolve.
+**Goal:** Make the continued evolution of VECTOR OPS visible from the live product while keeping this repository roadmap as the canonical project record.
 
-The sequence below is the agreed order for the next product iterations, not a commitment to specific release dates.
+### Outcomes
+- Lightweight public product-version convention
+- Current version visible from the live product
+- Direct, readable access from the product to the canonical repository roadmap
+- Clear distinction between current capability, completed milestones and planned milestones without duplicating roadmap content in the application
 
-### Priority 1 — Changelog / What's New / Release plan
-
-**Goal:** Establish the release-communication layer before the first substantial post-alpha product iteration, so returning users can understand what changed and what is planned next.
-
-Planned capability:
-
+### Planned work
 - [ ] Define lightweight product versioning for public demo releases.
-- [ ] Add an in-product `What's new` / changelog surface.
-- [ ] Publish concise release notes for meaningful changes rather than every implementation commit.
-- [ ] Add a public-facing release plan covering the next intended product improvements without promising fixed delivery dates.
-- [ ] Include real login / logout and authenticated session behaviour explicitly in the release plan as the next planned product capability.
-- [ ] Keep release-plan communication clearly separated from commitments or fixed delivery dates.
+- [ ] Define how the current version is exposed in the live product.
+- [ ] Add an in-product entry point to this canonical roadmap.
+- [ ] Define a minimal returning-user pattern for discovering meaningful product changes without creating a parallel changelog or release-plan content store.
+- [ ] Review existing product-context surfaces (including About / header utilities) and choose the lowest-noise placement.
+- [ ] Replace roadmap-adjacent `Coming soon` language where it implies a delivery promise with wording consistent with milestone status.
+- [ ] Validate that release/evolution communication remains outside the operational information hierarchy and does not add dashboard noise.
 
-**Why first:** the public alpha is already live. Before changing the product further, VECTOR OPS should establish a simple, credible way to communicate versions, completed changes and intended next steps. The release plan then becomes the visible contract for subsequent iterations rather than a retrospective list added later.
+**Planning rule:** `ROADMAP.md` remains the single canonical source for delivered, current and planned product work. Product UI and public project surfaces may link to or selectively present information derived from this roadmap, but must not create a separately maintained planning narrative.
 
-### Priority 2 — Real authentication and session lifecycle
+**Status:** Current product-development milestone.
 
-**Goal:** Replace the open demo entry with a real login / logout mechanism while preserving frictionless public access to the simulation.
+---
 
-This capability must first appear in the Release plan created in Priority 1, then be implemented as the next product iteration.
+## M8 — Authentication & Session Lifecycle
 
-Planned capability:
+**Goal:** Add a genuine authenticated product boundary while preserving low-friction public access to the simulation.
 
-- [ ] Implement a real authentication flow with server-side credential verification and session lifecycle rather than a client-only visual gate.
-- [ ] Add explicit login and logout states to the application shell.
-- [ ] Use intentionally public demo credentials so any visitor can enter the simulation while still experiencing a realistic authenticated product boundary.
-- [ ] Ensure the implementation is deployable within the project's available production architecture; evaluate Cloudflare-side server functionality and an OVH-compatible server-side option before choosing the mechanism.
-- [ ] Do not present shared public demo credentials as a security control; the purpose is product realism and authenticated-session behaviour.
-- [ ] Keep secrets and session-signing material out of the client bundle and repository.
-- [ ] Record the delivered authentication capability in What's New / changelog and update the Release plan after release.
+### Outcomes
+- Real login screen before the operational workspace
+- Server-side credential verification
+- Authenticated session lifecycle
+- Explicit logout
+- Public demo access that is clearly presented as simulation access rather than a meaningful security barrier
+- Deployment architecture compatible with the existing production setup
 
-**Why second:** login / logout is a concrete, visible post-alpha product capability and gives the demonstrator a more realistic system boundary. Publishing it in the Release plan first also validates that the release-communication mechanism is useful before broader iteration work begins.
+### Planned work
+- [ ] Add a real login screen before access to the operational workspace.
+- [ ] Implement server-side credential verification rather than a client-only visual gate.
+- [ ] Implement a real authenticated session lifecycle.
+- [ ] Add explicit logout behaviour.
+- [ ] Use intentionally public demo username/password values so every visitor can enter the simulation.
+- [ ] Present shared demo credentials clearly as access to the simulation, not as a meaningful security control.
+- [ ] Keep session-signing material and real secrets outside the client bundle and repository.
+- [ ] Evaluate Cloudflare-side server functionality and an OVH-compatible server-side option before selecting the mechanism.
+- [ ] Preserve the low-friction public-demo experience despite the authenticated boundary.
+- [ ] Update this roadmap and README when the capability is production-validated.
 
-### Priority 3 — Refine seeded scenario variation
+**Status:** Planned after M7.
 
-**Goal:** Make run variation more deliberate, understandable and traceable without turning Scenario 01 into duplicated narrative branches.
+---
 
-Planned refinement:
+## M9 — Seeded Scenario Variation Refinement
 
-- [ ] Revisit and clarify the randomization model behind the three opening variants: `power-first`, `communications-first` and `water-first`.
+**Goal:** Make run-to-run variation more deliberate, meaningful and explainable while preserving deterministic replay.
+
+### Outcomes
+- Clearer relationship between opening variant and condition profiles
+- Runtime parameters with demonstrable operational effects
+- Meaningful fresh-seed variation without duplicated narrative branches
+- Preserved same-seed reproducibility
+- Updated validation and AAR/run metadata where required
+
+### Planned work
+- [ ] Revisit and clarify the three opening variants: `power-first`, `communications-first` and `water-first`.
 - [ ] Revisit and clarify the four condition profiles that emphasize different operational constraints.
-- [ ] Audit which resolved profile parameters materially affect runtime behaviour and remove or implement parameters that are currently weak, redundant or effectively unused.
+- [ ] Audit which resolved profile parameters materially affect runtime behaviour.
+- [ ] Remove, replace or implement parameters that are currently weak, redundant or effectively unused.
 - [ ] Define the intended relationship between opening variant, dominant profile, secondary profile and visible operator experience.
-- [ ] Preserve deterministic same-seed replay while improving meaningful run-to-run variation.
-- [ ] Update validation coverage and AAR/run metadata if the configuration model changes.
-- [ ] Publish the resulting user-visible changes through the changelog / What's New mechanism established in Priority 1.
+- [ ] Preserve deterministic same-seed Replay.
+- [ ] Improve meaningful fresh-seed variation without multiplying Scenario 01 into duplicated narrative branches.
+- [ ] Update automated regression, run metadata and AAR reconstruction if the configuration model changes.
+- [ ] Update this roadmap and README when the refinement is production-validated.
 
-**Why third:** seeded variation is a deeper refinement of the scenario model. Doing it after the release-communication and authentication iterations lets the project first establish a visible release cadence, then use that same mechanism to explain a more substantial change to scenario behaviour.
+**Status:** Planned after M8.
 
-### Sequencing principle
+---
+
+### Continuing deferred work
+
+Earlier unfinished roadmap items remain visible in their original milestones for traceability. Current deferred areas from the public-alpha scope include fuller Operational History / audit interaction, explicit runtime module-health registry, richer degraded-state interactions and broader alert / attention-queue design. They are not separate roadmap items unless evidence and scope justify promoting them into a future milestone.
+
+The current product-development sequence is:
 
 ```text
-release communication + Release plan
-→ real authenticated product boundary
-→ seeded scenario variation refinement
+M7 — Product Evolution Visibility
+→ M8 — Authentication & Session Lifecycle
+→ M9 — Seeded Scenario Variation Refinement
 ```
 
-The Release plan should stay current as each item moves from planned → delivered. The order may change only if external feedback reveals a stronger user, product or portfolio need.
+This order communicates current intent, not fixed delivery dates. Change the sequence in this roadmap if evidence, implementation constraints or feedback justify a different priority.
 
 ---
 
@@ -383,5 +412,5 @@ The Release plan should stay current as each item moves from planned → deliver
 8. **New modules and scenarios must not require rewriting the application core.**
 9. **Do not expand the architecture conceptually without a concrete implementation need.**
 10. **Once the implementation contract is sufficient, resolve remaining interaction detail against working software.**
-11. **Keep one roadmap.** README status and sequencing must remain consistent with this file; do not create parallel planning narratives.
+11. **Keep one roadmap.** `ROADMAP.md` is the canonical record of delivered, current and planned product work. README and public/in-product project communication must remain consistent with it; do not create parallel planning narratives.
 12. **Keep unfinished work visible.** An open item may remain in an earlier milestone when that accurately reflects project history and current status; close, supersede or defer it explicitly rather than rewriting history.
