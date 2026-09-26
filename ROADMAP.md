@@ -1,6 +1,6 @@
 # VECTOR OPS — Roadmap
 
-**Current phase:** Public alpha live / case study published / launch preparation  
+**Current phase:** Public alpha live / case study published / continuous product development  
 **Current milestone:** M6 — Case Study & Launch  
 **Project status:** Active  
 **Last updated:** 26 September 2026
@@ -13,7 +13,7 @@ The roadmap is intentionally outcome-based. Each milestone should leave behind a
 
 **Public prototype / alpha:** complete and live at `https://vector.michalbiernacki.com`.  
 **Portfolio case study:** published on `michalbiernacki.com` on 26 September 2026.  
-**Next target:** finish the remaining launch assets and repository-publication work, then publish the broader launch communication.
+**Next target:** continue product development against this single roadmap while completing the remaining launch and repository-publication work. The live product is the primary demonstration surface; launch communication should link directly to it rather than introduce a separate demo clip.
 
 **Latest validation artifacts:**  
 - [Scenario 01 Runtime and Interaction Audit — 24 September 2026](docs/validation/scenario-01-runtime-audit-2026-09-24.md)  
@@ -23,7 +23,7 @@ The roadmap is intentionally outcome-based. Each milestone should leave behind a
 
 The alpha remains a deliberately narrow end-to-end demonstration: one primary operator, one synthetic cascading-infrastructure scenario, one operational area, three bounded opening variants and three meaningful decision moments. It remains structurally open to additional modules and scenarios after launch.
 
-The public alpha is deployed and smoke-tested, and the portfolio case study is now published. Further product expansion is deferred until the remaining M6 launch work is complete unless external feedback exposes a comprehension or credibility problem in the released experience.
+The public alpha is deployed and smoke-tested, and the portfolio case study is now published. VECTOR OPS remains an actively developed working system. Product iteration may continue while remaining M6 launch work is completed; unfinished earlier roadmap items remain visible unless they are explicitly completed, superseded or intentionally deferred.
 
 ---
 
@@ -282,7 +282,7 @@ Items intentionally deferred beyond M5 include full Operational History, explici
 - Portfolio case study
 - Process narrative
 - Architecture diagrams
-- Demo screenshots / recordings
+- Product screenshots and direct access to the live system
 - Portfolio integration
 - LinkedIn launch material
 - Repository prepared for public visibility
@@ -292,7 +292,6 @@ Items intentionally deferred beyond M5 include full Operational History, explici
 - [x] Select key decisions and trade-offs
 - [x] Create final architecture visuals
 - [x] Capture polished screenshots
-- [ ] Prepare short demo clip / GIF
 - [x] Integrate VECTOR OPS with `michalbiernacki.com`
 - [x] Publish the portfolio case study and VECTOR OPS update on `michalbiernacki.com`
 - [ ] Prepare LinkedIn launch post
@@ -301,13 +300,15 @@ Items intentionally deferred beyond M5 include full Operational History, explici
 - [ ] Switch repository visibility to Public when ready
 - [ ] Publish broader launch communication
 
-**Status:** In progress. The portfolio/case-study portion was completed and deployed on 26 September 2026. Remaining M6 work is launch packaging and repository-publication readiness; it does not block the already-live public alpha or published case study.
+**Status:** In progress. The portfolio/case-study portion was completed and deployed on 26 September 2026. No additional demo clip / GIF is planned: the live product is the demonstration surface, supported by the screenshots already used in the case study and earlier launch communication. Remaining M6 work is launch communication and repository-publication readiness; it does not block continued product development.
 
 ---
 
-## Post-alpha product iteration backlog
+## Continued product development
 
-These items are intentionally **not part of M6 launch scope**. They describe product work for later iterations after the public alpha and case-study launch. The sequence below is the agreed implementation order, not a commitment to specific release dates.
+This section is part of the **same project roadmap**, not a separate roadmap or detached backlog. VECTOR OPS is a live working system that continues to evolve while remaining M6 launch work is completed. Earlier incomplete roadmap items remain visible for traceability and may be completed, superseded or explicitly deferred as implementation needs evolve.
+
+The sequence below is the agreed order for the next product iterations, not a commitment to specific release dates.
 
 ### Priority 1 — Changelog / What's New / Release plan
 
@@ -382,3 +383,5 @@ The Release plan should stay current as each item moves from planned → deliver
 8. **New modules and scenarios must not require rewriting the application core.**
 9. **Do not expand the architecture conceptually without a concrete implementation need.**
 10. **Once the implementation contract is sufficient, resolve remaining interaction detail against working software.**
+11. **Keep one roadmap.** README status and sequencing must remain consistent with this file; do not create parallel planning narratives.
+12. **Keep unfinished work visible.** An open item may remain in an earlier milestone when that accurately reflects project history and current status; close, supersede or defer it explicitly rather than rewriting history.
