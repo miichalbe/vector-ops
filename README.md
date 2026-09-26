@@ -7,7 +7,7 @@ A modular operations coordination concept for distributed teams, autonomous asse
 > **Project status:** Public alpha live  
 > **Version:** 0.1  
 > **Started:** 21 September 2026  
-> **Last updated:** 25 September 2026  
+> **Last updated:** 26 September 2026  
 > **Live demo:** https://vector.michalbiernacki.com
 
 ## What is VECTOR OPS?
@@ -244,15 +244,11 @@ Remaining M6 work is launch communication and repository-publication readiness r
 - switch repository visibility to Public when ready;
 - publish the broader launch communication.
 
-Product development continues in parallel with the remaining M6 work, within the same roadmap. The next agreed product sequence is:
+Product development continues in parallel with the remaining M6 work, within the same milestone-based roadmap. **M7 — Product Evolution Visibility** is the current product-development milestone, followed by **M8 — Authentication & Session Lifecycle** and **M9 — Seeded Scenario Variation Refinement**.
 
-```text
-release communication + Release plan
-→ real authentication and session lifecycle
-→ seeded scenario variation refinement
-```
+M7 will make the current product version and continued development discoverable from the live product while linking back to the repository roadmap rather than duplicating planning information in a separate release plan or changelog. M8 adds a genuine authenticated product boundary with public demo access. M9 refines the three opening variants and four condition profiles while preserving deterministic same-seed replay.
 
-The scenario-variation refinement covers the three opening variants and four dominant condition profiles while preserving deterministic same-seed replay. README should summarize this status only; `ROADMAP.md` remains the canonical planning detail.
+README summarizes the current state only; `ROADMAP.md` remains the canonical record of delivered, current and planned work.
 
 ---
 
