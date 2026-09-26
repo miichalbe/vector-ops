@@ -222,19 +222,28 @@ The public alpha intentionally does not attempt to provide:
 
 These are not hidden omissions. They are explicit scope boundaries for a portfolio demonstrator.
 
-## Next phase
+## Current phase
 
-M5 — Public Demo is complete.
+M5 — Public Demo is complete. The public alpha is live and production-validated.
 
-The next phase is **M6 — Case Study & Launch**:
+**M6 — Case Study & Launch** is in progress. The portfolio/case-study portion was completed and published on 26 September 2026:
 
-- package the design and systems-thinking narrative;
-- select key decisions and trade-offs;
-- create architecture visuals;
-- capture polished screenshots and a short demo recording;
-- integrate the demo with `michalbiernacki.com`;
-- prepare launch communication;
-- review the repository for eventual public visibility.
+- the final case-study narrative is published on `michalbiernacki.com`;
+- key product, systems and interaction decisions are presented as part of the case study;
+- architecture/system visuals and polished product screenshots are included;
+- VECTOR OPS is integrated into the portfolio and featured as the current operational-systems project;
+- a portfolio update announcing the public alpha is published.
+
+Remaining M6 work is launch packaging rather than product-alpha completion:
+
+- prepare a short demo clip / GIF;
+- prepare the broader LinkedIn launch communication;
+- review the repository for public release;
+- add a license if appropriate;
+- switch repository visibility to Public when ready;
+- publish the broader launch communication.
+
+Post-alpha product iteration remains sequenced separately in the roadmap and does not replace the remaining M6 launch work.
 
 ---
 
