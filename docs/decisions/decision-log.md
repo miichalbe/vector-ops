@@ -179,3 +179,21 @@ This document records product decisions made during discovery so that future cha
 **Reasoning:** The first working Decision 1 screen exposed two problems: too much reasoning detail competed with the actual choice, and the Action Review looked too similar to routine monitoring. A dedicated focus mode better matches the consequence of a blocking decision while progressive transparency keeps the reasoning inspectable without forcing all detail into the default view.
 
 **Consequence:** The reusable interaction contract is maintained in [Action Review Pattern](../design/action-review-pattern.md) and [UX Requirements](../design/ux-requirements.md). Future Decision 2 and Decision 3 implementations should reuse this pattern rather than introduce separate decision-specific presentation logic.
+
+## 26 September 2026 — v0.4
+
+### D20 — Single roadmap and milestone-based continued development
+**Decision:** Keep `ROADMAP.md` as the single canonical planning record for VECTOR OPS and continue post-alpha product development through the same milestone model used by the rest of the project. Do not maintain a separate Release Plan or a duplicated product-planning narrative.
+
+**Documentation boundary:** The repository remains the canonical source of truth for project state, decisions, implementation and planning. `README.md` summarizes the current state and links to the roadmap. Public and in-product project communication may expose the current version and link to, or selectively present information derived from, the repository roadmap, but must remain subordinate to it.
+
+**Milestone model:** Post-alpha work continues as M7 — Product Evolution Visibility, M8 — Authentication & Session Lifecycle and M9 — Seeded Scenario Variation Refinement rather than a separate `Priority 1 / 2 / 3` planning system. Earlier incomplete milestones may remain open when that truthfully represents project history; milestones do not need to behave as mutually blocking phases.
+
+**Release-history boundary:** Do not introduce a separate changelog merely to duplicate milestone completion information. Git history, issues, the Decision Log and dated milestone status already preserve different levels of project history. A separate release-history artifact should only be introduced later if a concrete user or project need is demonstrated.
+
+**Dates:** Record completion dates at meaningful milestone or release boundaries where useful. Do not date every roadmap checkbox; Git history remains the detailed implementation chronology.
+
+**Reasoning:** The previous Release Plan repeated information already present in `ROADMAP.md` and introduced a second planning vocabulary after M6. Consolidating future work into milestones reduces documentation drift, preserves the repository as the working project artifact, and lets the repository itself serve both the project team and interested public users.
+
+**Consequence:** Remove `RELEASE_PLAN.md` after preserving its unique requirements in the roadmap. M7 should solve discoverability of product evolution from the live application without creating another independently maintained planning surface.
+
