@@ -224,7 +224,9 @@ These are not hidden omissions. They are explicit scope boundaries for a portfol
 
 ## Current phase
 
-M5 — Public Demo is complete. The public alpha is live and production-validated.
+M5 — Public Demo is complete. The public alpha is live and production-validated. VECTOR OPS remains an actively developed working system.
+
+The project uses **one roadmap: [ROADMAP.md](ROADMAP.md)**. It is the canonical source for milestone status, unfinished earlier work, launch work and the ordered next product iterations. Open items remain visible until they are completed, superseded or explicitly deferred.
 
 **M6 — Case Study & Launch** is in progress. The portfolio/case-study portion was completed and published on 26 September 2026:
 
@@ -234,16 +236,23 @@ M5 — Public Demo is complete. The public alpha is live and production-validate
 - VECTOR OPS is integrated into the portfolio and featured as the current operational-systems project;
 - a portfolio update announcing the public alpha is published.
 
-Remaining M6 work is launch packaging rather than product-alpha completion:
+Remaining M6 work is launch communication and repository-publication readiness rather than product-alpha completion. No separate demo clip / GIF is planned: the live product is the primary demonstration surface, supported by the published case-study screenshots and earlier communication:
 
-- prepare a short demo clip / GIF;
 - prepare the broader LinkedIn launch communication;
 - review the repository for public release;
 - add a license if appropriate;
 - switch repository visibility to Public when ready;
 - publish the broader launch communication.
 
-Post-alpha product iteration remains sequenced separately in the roadmap and does not replace the remaining M6 launch work.
+Product development continues in parallel with the remaining M6 work, within the same roadmap. The next agreed product sequence is:
+
+```text
+release communication + Release plan
+→ real authentication and session lifecycle
+→ seeded scenario variation refinement
+```
+
+The scenario-variation refinement covers the three opening variants and four dominant condition profiles while preserving deterministic same-seed replay. README should summarize this status only; `ROADMAP.md` remains the canonical planning detail.
 
 ---
 
