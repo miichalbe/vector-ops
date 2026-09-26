@@ -1,6 +1,6 @@
 # VECTOR OPS — Roadmap
 
-**Current phase:** Public alpha live / case-study preparation  
+**Current phase:** Public alpha live / case study published / launch preparation  
 **Current milestone:** M6 — Case Study & Launch  
 **Project status:** Active  
 **Last updated:** 26 September 2026
@@ -12,7 +12,8 @@ The roadmap is intentionally outcome-based. Each milestone should leave behind a
 ## Near-term delivery target
 
 **Public prototype / alpha:** complete and live at `https://vector.michalbiernacki.com`.  
-**Next target:** package the validated public alpha into a coherent portfolio case study, integrate it with `michalbiernacki.com`, prepare launch assets and review the repository for eventual public visibility.
+**Portfolio case study:** published on `michalbiernacki.com` on 26 September 2026.  
+**Next target:** finish the remaining launch assets and repository-publication work, then publish the broader launch communication.
 
 **Latest validation artifacts:**  
 - [Scenario 01 Runtime and Interaction Audit — 24 September 2026](docs/validation/scenario-01-runtime-audit-2026-09-24.md)  
@@ -22,7 +23,7 @@ The roadmap is intentionally outcome-based. Each milestone should leave behind a
 
 The alpha remains a deliberately narrow end-to-end demonstration: one primary operator, one synthetic cascading-infrastructure scenario, one operational area, three bounded opening variants and three meaningful decision moments. It remains structurally open to additional modules and scenarios after launch.
 
-The public alpha is now deployed and smoke-tested. Further product expansion is deferred unless later case-study review or external feedback exposes a comprehension or credibility problem in the released experience.
+The public alpha is deployed and smoke-tested, and the portfolio case study is now published. Further product expansion is deferred until the remaining M6 launch work is complete unless external feedback exposes a comprehension or credibility problem in the released experience.
 
 ---
 
@@ -287,17 +288,20 @@ Items intentionally deferred beyond M5 include full Operational History, explici
 - Repository prepared for public visibility
 
 ### Planned work
-- [ ] Write final case-study narrative
-- [ ] Select key decisions and trade-offs
-- [ ] Create final architecture visuals
-- [ ] Capture polished screenshots
+- [x] Write final case-study narrative
+- [x] Select key decisions and trade-offs
+- [x] Create final architecture visuals
+- [x] Capture polished screenshots
 - [ ] Prepare short demo clip / GIF
-- [ ] Integrate VECTOR OPS with `michalbiernacki.com`
+- [x] Integrate VECTOR OPS with `michalbiernacki.com`
+- [x] Publish the portfolio case study and VECTOR OPS update on `michalbiernacki.com`
 - [ ] Prepare LinkedIn launch post
 - [ ] Review repository for public release
 - [ ] Add license if appropriate
 - [ ] Switch repository visibility to Public when ready
-- [ ] Publish launch
+- [ ] Publish broader launch communication
+
+**Status:** In progress. The portfolio/case-study portion was completed and deployed on 26 September 2026. Remaining M6 work is launch packaging and repository-publication readiness; it does not block the already-live public alpha or published case study.
 
 ---
 
