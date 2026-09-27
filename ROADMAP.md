@@ -2,7 +2,6 @@
 
 **Current phase:** Public alpha live / case study published / continuous product development  
 **Current product-development milestone:** M7 — Product Evolution Visibility
-**Parallel launch milestone:** M6 — Case Study & Launch (in progress)  
 **Project status:** Active  
 **Last updated:** 27 September 2026
 
@@ -14,7 +13,7 @@ The roadmap is intentionally outcome-based. Each milestone should leave behind a
 
 **Public prototype / alpha:** complete and live at `https://vector.michalbiernacki.com`.  
 **Portfolio case study:** published on `michalbiernacki.com` on 26 September 2026.  
-**Next target:** continue product development against this single roadmap while completing the remaining launch communication. The live product is the primary demonstration surface; launch communication should link directly to it rather than introduce a separate demo clip.
+**Next target:** continue product development against this single roadmap. M6 — Case Study & Launch is complete; the scheduled LinkedIn launch communication will publish on 28 September 2026. The live product remains the primary demonstration surface.
 
 **Latest validation artifacts:**  
 - [Scenario 01 Runtime and Interaction Audit — 24 September 2026](docs/validation/scenario-01-runtime-audit-2026-09-24.md)  
@@ -24,7 +23,7 @@ The roadmap is intentionally outcome-based. Each milestone should leave behind a
 
 The alpha remains a deliberately narrow end-to-end demonstration: one primary operator, one synthetic cascading-infrastructure scenario, one operational area, three bounded opening variants and three meaningful decision moments. It remains structurally open to additional modules and scenarios after launch.
 
-The public alpha is deployed and smoke-tested, and the portfolio case study is now published. VECTOR OPS remains an actively developed working system. Product iteration may continue while remaining M6 launch work is completed; unfinished earlier roadmap items remain visible unless they are explicitly completed, superseded or intentionally deferred.
+The public alpha is deployed and smoke-tested, the portfolio case study is published, the repository is public, and broader launch communication is scheduled. M6 — Case Study & Launch is complete. VECTOR OPS remains an actively developed working system; unfinished earlier roadmap items remain visible unless they are explicitly completed, superseded or intentionally deferred.
 
 ---
 
@@ -295,13 +294,13 @@ Items intentionally deferred beyond M5 include full Operational History, explici
 - [x] Capture polished screenshots
 - [x] Integrate VECTOR OPS with `michalbiernacki.com`
 - [x] Publish the portfolio case study and VECTOR OPS update on `michalbiernacki.com`
-- [ ] Prepare LinkedIn launch post
+- [x] Prepare LinkedIn launch post
 - [x] Review repository for public release
 - [x] Define repository licensing posture: no open-source license; original VECTOR OPS materials remain all rights reserved under the repository copyright notice
 - [x] Switch repository visibility to Public
-- [ ] Publish broader launch communication
+- [x] Schedule broader LinkedIn launch communication
 
-**Status:** In progress. The portfolio/case-study portion was completed and deployed on 26 September 2026. The repository was reviewed and made public on 27 September 2026 with an explicit all-rights-reserved copyright boundary and no open-source license. No additional demo clip / GIF is planned: the live product is the demonstration surface, supported by the screenshots already used in the case study and earlier launch communication. Remaining M6 work is launch communication; it does not block continued product development.
+**Status:** Complete on 27 September 2026. The portfolio/case-study portion was completed and deployed on 26 September 2026. The repository was reviewed and made public on 27 September 2026 with an explicit all-rights-reserved copyright boundary and no open-source license. The broader LinkedIn launch communication was prepared and scheduled for 28 September 2026. No additional demo clip / GIF is planned: the live product is the demonstration surface, supported by the case study, public repository and product screenshots.
 
 ---
 
