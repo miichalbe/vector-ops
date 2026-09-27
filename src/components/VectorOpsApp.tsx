@@ -25,6 +25,7 @@ import {
   type OperationalTimelineClaimKind,
 } from './operational-timeline';
 import RunCompletionControls from './RunCompletionControls';
+import SiteFooter from './SiteFooter';
 import type {
   ActionId,
   Assessment,
@@ -569,6 +570,8 @@ export default function VectorOpsApp() {
           />
         </>
       ) : null}
+
+      <SiteFooter />
 
       {isAboutOpen ? (
         <DemoIntroduction
