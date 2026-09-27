@@ -4,7 +4,7 @@
 **Current product-development milestone:** M7 — Product Evolution Visibility
 **Parallel launch milestone:** M6 — Case Study & Launch (in progress)  
 **Project status:** Active  
-**Last updated:** 26 September 2026
+**Last updated:** 27 September 2026
 
 This roadmap tracks the evolution of VECTOR OPS from early discovery to a public working demonstrator and portfolio case study.
 
@@ -14,7 +14,7 @@ The roadmap is intentionally outcome-based. Each milestone should leave behind a
 
 **Public prototype / alpha:** complete and live at `https://vector.michalbiernacki.com`.  
 **Portfolio case study:** published on `michalbiernacki.com` on 26 September 2026.  
-**Next target:** continue product development against this single roadmap while completing the remaining launch and repository-publication work. The live product is the primary demonstration surface; launch communication should link directly to it rather than introduce a separate demo clip.
+**Next target:** continue product development against this single roadmap while completing the remaining launch communication. The live product is the primary demonstration surface; launch communication should link directly to it rather than introduce a separate demo clip.
 
 **Latest validation artifacts:**  
 - [Scenario 01 Runtime and Interaction Audit — 24 September 2026](docs/validation/scenario-01-runtime-audit-2026-09-24.md)  
@@ -296,12 +296,12 @@ Items intentionally deferred beyond M5 include full Operational History, explici
 - [x] Integrate VECTOR OPS with `michalbiernacki.com`
 - [x] Publish the portfolio case study and VECTOR OPS update on `michalbiernacki.com`
 - [ ] Prepare LinkedIn launch post
-- [ ] Review repository for public release
-- [ ] Add license if appropriate
-- [ ] Switch repository visibility to Public when ready
+- [x] Review repository for public release
+- [x] Define repository licensing posture: no open-source license; original VECTOR OPS materials remain all rights reserved under the repository copyright notice
+- [x] Switch repository visibility to Public
 - [ ] Publish broader launch communication
 
-**Status:** In progress. The portfolio/case-study portion was completed and deployed on 26 September 2026. No additional demo clip / GIF is planned: the live product is the demonstration surface, supported by the screenshots already used in the case study and earlier launch communication. Remaining M6 work is launch communication and repository-publication readiness; it does not block continued product development.
+**Status:** In progress. The portfolio/case-study portion was completed and deployed on 26 September 2026. The repository was reviewed and made public on 27 September 2026 with an explicit all-rights-reserved copyright boundary and no open-source license. No additional demo clip / GIF is planned: the live product is the demonstration surface, supported by the screenshots already used in the case study and earlier launch communication. Remaining M6 work is launch communication; it does not block continued product development.
 
 ---
 
