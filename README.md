@@ -7,7 +7,7 @@ A modular operations coordination concept for distributed teams, autonomous asse
 > **Project status:** Public alpha live  
 > **Version:** 0.1  
 > **Started:** 21 September 2026  
-> **Last updated:** 26 September 2026  
+> **Last updated:** 27 September 2026  
 > **Live demo:** https://vector.michalbiernacki.com
 
 ## What is VECTOR OPS?
@@ -236,12 +236,9 @@ The project uses **one roadmap: [ROADMAP.md](ROADMAP.md)**. It is the canonical 
 - VECTOR OPS is integrated into the portfolio and featured as the current operational-systems project;
 - a portfolio update announcing the public alpha is published.
 
-Remaining M6 work is launch communication and repository-publication readiness rather than product-alpha completion. No separate demo clip / GIF is planned: the live product is the primary demonstration surface, supported by the published case-study screenshots and earlier communication:
+The repository was reviewed and made public on 27 September 2026 with an explicit all-rights-reserved copyright boundary and no open-source license. Remaining M6 work is launch communication rather than product-alpha completion. No separate demo clip / GIF is planned: the live product is the primary demonstration surface, supported by the published case-study screenshots and earlier communication:
 
 - prepare the broader LinkedIn launch communication;
-- review the repository for public release;
-- add a license if appropriate;
-- switch repository visibility to Public when ready;
 - publish the broader launch communication.
 
 Product development continues in parallel with the remaining M6 work, within the same milestone-based roadmap. **M7 — Product Evolution Visibility** is the current product-development milestone, followed by **M8 — Authentication & Session Lifecycle** and **M9 — Seeded Scenario Variation Refinement**.
