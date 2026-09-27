@@ -228,7 +228,7 @@ M5 — Public Demo is complete. The public alpha is live and production-validate
 
 The project uses **one roadmap: [ROADMAP.md](ROADMAP.md)**. It is the canonical source for milestone status, unfinished earlier work, launch work and the ordered next product iterations. Open items remain visible until they are completed, superseded or explicitly deferred.
 
-**M6 — Case Study & Launch** is in progress. The portfolio/case-study portion was completed and published on 26 September 2026:
+**M6 — Case Study & Launch** is complete. The portfolio/case-study portion was completed and published on 26 September 2026:
 
 - the final case-study narrative is published on `michalbiernacki.com`;
 - key product, systems and interaction decisions are presented as part of the case study;
@@ -236,10 +236,7 @@ The project uses **one roadmap: [ROADMAP.md](ROADMAP.md)**. It is the canonical 
 - VECTOR OPS is integrated into the portfolio and featured as the current operational-systems project;
 - a portfolio update announcing the public alpha is published.
 
-The repository was reviewed and made public on 27 September 2026 with an explicit all-rights-reserved copyright boundary and no open-source license. Remaining M6 work is launch communication rather than product-alpha completion. No separate demo clip / GIF is planned: the live product is the primary demonstration surface, supported by the published case-study screenshots and earlier communication:
-
-- prepare the broader LinkedIn launch communication;
-- publish the broader launch communication.
+The repository was reviewed and made public on 27 September 2026 with an explicit all-rights-reserved copyright boundary and no open-source license. The broader LinkedIn launch communication was prepared and scheduled on 27 September 2026 for publication on 28 September 2026. No separate demo clip / GIF is planned: the live product is the primary demonstration surface, supported by the published case study, public repository and product screenshots.
 
 Product development continues in parallel with the remaining M6 work, within the same milestone-based roadmap. **M7 — Product Evolution Visibility** is the current product-development milestone, followed by **M8 — Authentication & Session Lifecycle** and **M9 — Seeded Scenario Variation Refinement**.
 
