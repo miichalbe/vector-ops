@@ -197,3 +197,12 @@ This document records product decisions made during discovery so that future cha
 
 **Consequence:** Remove `RELEASE_PLAN.md` after preserving its unique requirements in the roadmap. M7 should solve discoverability of product evolution from the live application without creating another independently maintained planning surface.
 
+### D21 — Public repository copyright boundary
+**Decision:** Publish the VECTOR OPS repository for portfolio, evaluation and educational viewing while retaining copyright in the project's original materials. Do not release VECTOR OPS under an open-source license at this stage.
+
+**Boundary:** Original VECTOR OPS source code, documentation, design materials, scenario materials, research synthesis and other original content remain all rights reserved unless a specific file states otherwise. Third-party dependencies and materials remain subject to their respective licenses.
+
+**Reasoning:** Public repository access supports portfolio transparency and makes the project's research, decisions, architecture, implementation and iteration inspectable. An open-source license would grant reuse rights that are not required to achieve that goal.
+
+**Consequence:** Maintain a prominent repository notice in `README.md` and the full terms in `COPYRIGHT.md`. Public repository visibility must not be described as an open-source release.
+
