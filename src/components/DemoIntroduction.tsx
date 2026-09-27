@@ -103,6 +103,29 @@ export default function DemoIntroduction({
           </p>
         </section>
 
+        <section className="demo-introduction__project" aria-label="About the project">
+          <div>
+            <strong>About the project</strong>
+            <p>
+              VECTOR OPS is an independent portfolio project by Michał Biernacki.
+              The public repository exposes the research, product decisions,
+              architecture, implementation and roadmap behind this demonstrator.
+            </p>
+            <p className="demo-introduction__copyright">
+              © 2026 Michał Biernacki · Publicly viewable, not open-source software.
+              All rights reserved.
+            </p>
+          </div>
+          <nav aria-label="Project links">
+            <a href="https://michalbiernacki.com/work/vector-ops/" target="_blank" rel="noreferrer">
+              Case Study ↗
+            </a>
+            <a href="https://github.com/miichalbe/vector-ops" target="_blank" rel="noreferrer">
+              GitHub ↗
+            </a>
+          </nav>
+        </section>
+
         <footer className="demo-introduction__footer">
           <p>
             {isIntro
@@ -251,6 +274,59 @@ export default function DemoIntroduction({
           line-height: 1.5;
         }
 
+        .demo-introduction__project {
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          gap: 24px;
+          margin: 14px 30px 0;
+          padding: 13px 15px;
+          border: 1px solid #293a4d;
+          border-radius: 8px;
+          background: rgba(10, 16, 23, 0.52);
+        }
+
+        .demo-introduction__project strong {
+          color: #c5d7e8;
+          font-size: 0.76rem;
+        }
+
+        .demo-introduction__project p {
+          max-width: 620px;
+          margin: 5px 0 0;
+          color: #8fa4b8;
+          font-size: 0.74rem;
+          line-height: 1.5;
+        }
+
+        .demo-introduction__project .demo-introduction__copyright {
+          color: #71869a;
+          font-size: 0.68rem;
+        }
+
+        .demo-introduction__project nav {
+          display: flex;
+          flex-shrink: 0;
+          gap: 12px;
+        }
+
+        .demo-introduction__project a {
+          color: #9ccaff;
+          font-size: 0.75rem;
+          font-weight: 700;
+          text-decoration: none;
+        }
+
+        .demo-introduction__project a:hover {
+          text-decoration: underline;
+        }
+
+        .demo-introduction__project a:focus-visible {
+          border-radius: 3px;
+          outline: 2px solid #9fd0ff;
+          outline-offset: 3px;
+        }
+
         .demo-introduction__footer {
           display: flex;
           align-items: center;
@@ -292,6 +368,7 @@ export default function DemoIntroduction({
           }
 
           .demo-introduction__hero,
+          .demo-introduction__project,
           .demo-introduction__footer {
             align-items: flex-start;
             flex-direction: column;
