@@ -253,3 +253,12 @@ README summarizes the current state only; `ROADMAP.md` remains the canonical rec
 ---
 
 **VECTOR OPS** is an independent Polish portfolio project exploring how contemporary product design, software development and AI-assisted tools can support operational resilience and coordination.
+
+## Copyright and source use
+
+**VECTOR OPS is publicly viewable, but it is not open-source software.**
+
+Copyright © 2026 Michał Biernacki. All rights reserved. The source code, documentation, design materials, scenario materials, research synthesis and other original repository content are made available for portfolio, evaluation and educational viewing. No license is granted for copying, modification, redistribution, sublicensing, commercial use or derivative works except where permitted by applicable law or GitHub's Terms of Service.
+
+See [COPYRIGHT.md](./COPYRIGHT.md) for the full repository notice. Third-party dependencies remain subject to their own licenses.
+
