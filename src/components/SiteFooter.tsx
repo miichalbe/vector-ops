@@ -19,21 +19,21 @@ export default function SiteFooter() {
           bottom: 0;
           left: 0;
           display: flex;
-          min-height: 26px;
+          min-height: 46px;
           align-items: center;
           justify-content: center;
           gap: 8px;
-          padding: 5px 14px;
+          padding: 9px 18px;
           border-top: 1px solid #202d3b;
-          background: rgba(9, 14, 20, 0.96);
-          color: #65798c;
-          font-size: 0.66rem;
+          background: rgba(17, 25, 35, 0.97);
+          box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.22);\n          color: #7d91a4;
+          font-size: 0.75rem;
           line-height: 1.2;
           backdrop-filter: blur(8px);
         }
 
         .site-footer a {
-          color: #8199af;
+          color: #9ab4cc;
           font-weight: 650;
           text-decoration: none;
         }
@@ -51,7 +51,7 @@ export default function SiteFooter() {
         @media (max-width: 480px) {
           .site-footer {
             gap: 6px;
-            font-size: 0.62rem;
+            font-size: 0.7rem;
           }
         }
       `}</style>
