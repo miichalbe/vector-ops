@@ -238,9 +238,9 @@ The project uses **one roadmap: [ROADMAP.md](ROADMAP.md)**. It is the canonical 
 
 The repository was reviewed and made public on 27 September 2026 with an explicit all-rights-reserved copyright boundary and no open-source license. The broader LinkedIn launch communication was prepared and scheduled on 27 September 2026 for publication on 28 September 2026. No separate demo clip / GIF is planned: the live product is the primary demonstration surface, supported by the published case study, public repository and product screenshots.
 
-Product development continues in parallel with the remaining M6 work, within the same milestone-based roadmap. **M7 — Product Evolution Visibility** is the current product-development milestone, followed by **M8 — Authentication & Session Lifecycle** and **M9 — Seeded Scenario Variation Refinement**.
+Product development now continues with **M8 — Authentication & Session Lifecycle**, followed by **M9 — Seeded Scenario Variation Refinement**. **M7 — Product Evolution Visibility** was completed on 27 September 2026 by using the public GitHub repository as the canonical surface for source, documentation, history and roadmap visibility, with lightweight links from the live product.
 
-M7 will make the current product version and continued development discoverable from the live product while linking back to the repository roadmap rather than duplicating planning information in a separate release plan or changelog. M8 adds a genuine authenticated product boundary with public demo access. M9 refines the three opening variants and four condition profiles while preserving deterministic same-seed replay.
+M7 deliberately avoided a bespoke in-product changelog, release centre or duplicated roadmap: GitHub and `ROADMAP.md` provide that visibility using standard project infrastructure. M8 adds a genuine authenticated product boundary with public demo access. M9 refines the three opening variants and four condition profiles while preserving deterministic same-seed replay.
 
 README summarizes the current state only; `ROADMAP.md` remains the canonical record of delivered, current and planned work.
 
