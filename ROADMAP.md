@@ -1,7 +1,7 @@
 # VECTOR OPS — Roadmap
 
 **Current phase:** Public alpha live / case study published / continuous product development  
-**Current product-development milestone:** M7 — Product Evolution Visibility
+**Current product-development milestone:** M8 — Authentication & Session Lifecycle
 **Project status:** Active  
 **Last updated:** 27 September 2026
 
@@ -306,26 +306,26 @@ Items intentionally deferred beyond M5 include full Operational History, explici
 
 ## M7 — Product Evolution Visibility
 
-**Goal:** Make the continued evolution of VECTOR OPS visible from the live product while keeping this repository roadmap as the canonical project record.
+**Goal:** Make continued VECTOR OPS development discoverable from the live product without creating a parallel release, changelog or roadmap system.
 
-### Outcomes
-- Lightweight public product-version convention
-- Current version visible from the live product
-- Direct, readable access from the product to the canonical repository roadmap
-- Clear distinction between current capability, completed milestones and planned milestones without duplicating roadmap content in the application
+### Outcome
+- Public GitHub repository is the canonical surface for inspecting continued project evolution.
+- The live product provides direct access to the public project repository through About and the persistent project footer.
+- `ROADMAP.md` remains the single canonical record of completed, current and planned work.
+- Repository README provides the current project state and points to the canonical roadmap.
+- No bespoke in-product What's New, release centre, duplicated roadmap or returning-user change feed is maintained.
 
 ### Planned work
-- [ ] Define lightweight product versioning for public demo releases.
-- [ ] Define how the current version is exposed in the live product.
-- [ ] Add an in-product entry point to this canonical roadmap.
-- [ ] Define a minimal returning-user pattern for discovering meaningful product changes without creating a parallel changelog or release-plan content store.
-- [ ] Review existing product-context surfaces (including About / header utilities) and choose the lowest-noise placement.
-- [ ] Replace roadmap-adjacent `Coming soon` language where it implies a delivery promise with wording consistent with milestone status.
-- [ ] Validate that release/evolution communication remains outside the operational information hierarchy and does not add dashboard noise.
+- [x] Decide how continued product evolution should be exposed publicly.
+- [x] Use the public GitHub repository rather than create a bespoke release / changelog system.
+- [x] Keep `ROADMAP.md` as the canonical planning and milestone record.
+- [x] Add low-noise in-product access to the public repository through About and the persistent project footer.
+- [x] Keep portfolio / project chrome outside the operational information hierarchy.
+- [x] Make the repository copyright and source-use boundary explicit before public visibility.
 
-**Planning rule:** `ROADMAP.md` remains the single canonical source for delivered, current and planned product work. Product UI and public project surfaces may link to or selectively present information derived from this roadmap, but must not create a separately maintained planning narrative.
+**Decision:** The initial M7 concept included possible product-version UI, an in-product roadmap entry and a returning-user changes pattern. These were intentionally not implemented. Once the repository became public, GitHub already provided the standard inspectable surface needed for source, history, documentation and roadmap visibility. Duplicating that capability inside VECTOR OPS would add maintenance cost and non-operational UI without solving an additional operator problem.
 
-**Status:** Current product-development milestone.
+**Status:** Complete on 27 September 2026. The milestone was resolved through simplification and use of the public GitHub repository as the project-evolution surface, with lightweight links from the live product.
 
 ---
 
@@ -353,7 +353,7 @@ Items intentionally deferred beyond M5 include full Operational History, explici
 - [ ] Preserve the low-friction public-demo experience despite the authenticated boundary.
 - [ ] Update this roadmap and README when the capability is production-validated.
 
-**Status:** Planned after M7.
+**Status:** Current product-development milestone.
 
 ---
 
@@ -390,8 +390,7 @@ Earlier unfinished roadmap items remain visible in their original milestones for
 The current product-development sequence is:
 
 ```text
-M7 — Product Evolution Visibility
-→ M8 — Authentication & Session Lifecycle
+M8 — Authentication & Session Lifecycle
 → M9 — Seeded Scenario Variation Refinement
 ```
 
